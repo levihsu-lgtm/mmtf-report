@@ -45,8 +45,8 @@
         const data = {
             mirror: Number(params.get('mirror')) || 0,
             matrix: Number(params.get('matrix')) || 0,
-            flow: Number(params.get('flow')) || 0,
-            safe: Number(params.get('safe')) || 0
+            flow: Number(params.get('informationFlow')) || 0,
+            safe: Number(params.get('psychologicalSafety')) || 0
         };
 
         document.getElementById('date').innerText = new Date().toLocaleDateString();
