@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MMTF診斷報告</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { font-family: Arial; padding: 30px; background:#f5f5f5;}
+.box { background:white; padding:20px; margin:20px 0; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+h1 { text-align:center; }
+.high { color:red; }
+.mid { color:orange; }
+.low { color:green; }
+</style>
+</head>
+
+<body>
+
+<h1>MMTF 組織診斷報告</h1>
+
+<div class="box">
+<h2>📊 分數結果</h2>
+<p>Mirror：<span id="mirror"></span></p>
+<p>Matrix：<span id="matrix"></span></p>
+<p>Information Flow：<span id="flow"></span></p>
+<p>Psychological Safety：<span id="safe"></span></p>
+</div>
+
+<div class="box">
+<h2>📈 雷達圖</h2>
+<canvas id="chart"></canvas>
+</div>
+
+<div class="box">
+<h2>🧠 AI分析結果</h2>
+<div id="analysis"></div>
+</div>
+
+<div class="box">
+<h2>⚠️ 風險評估</h2>
+<div id="risk"></div>
+</div>
+
+<script>
+// 讀URL參數
+const params = new URLSearchParams(window.location.search);
+
+let mirror = Number(params.get("mirror"));
+let matrix = Number(params.get("matrix"));
+let flow = Number(params.get("flow"));
+let safe = Number(params.get("safe"));
+
+// 顯示分數
+document.getElementById("mirror").innerText = mirror;
+document.getElementById("matrix").innerText = matrix;
+document.getElementById("flow").innerText = flow;
+document.getElementById("safe").innerText = safe;
+
+// 雷達圖
+new Chart(document.getElementById("chart"), {
+type: 'radar',
+data: {
+labels: ["Mirror", "Matrix", "Flow", "Safety"],
+datasets: [{
+label: "MMTF",
+data: [mirror, matrix, flow, safe],
+fill: true
+}]
+}
+});
+
+// AI分析
+let analysis = "";
+
+if(mirror < 20) analysis += "🔴 Mirror偏低：回饋與認知存在落差<br>";
+if(matrix < 20) analysis += "🔴 Matrix偏低：組織結構與角色不清<br>";
+if(flow < 20) analysis += "🔴 Information Flow偏低：溝通流程不順<br>";
+if(safe < 20) analysis += "🔴 Psychological Safety偏低：員工不敢表達<br>";
+
+if(analysis === ""){
+  analysis = "🟢 整體運作良好，各構面均衡";
+}
+
+document.getElementById("analysis").innerHTML = analysis;
+
+// 風險評估
+let total = mirror + matrix + flow + safe;
+let riskText = "";
+
+if(total < 80){
+  riskText = "<span class='high'>🔴 高風險組織</span>";
+}else if(total < 120){
+  riskText = "<span class='mid'>🟡 中度風險</span>";
+}else{
+  riskText = "<span class='low'>🟢 健康組織</span>";
+}
+
+document.getElementById("risk").innerHTML = riskText;
+
+</script>
+
+</body>
+</html>
