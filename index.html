@@ -1,401 +1,222 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMTF 組織診斷結果報告</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --high: #ff4d4f; --mid: #faad14; --low: #52c41a; --primary: #4a90e2;
-            --bg: #f8f9fb; --card-bg: #ffffff;
-        }
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1000px; margin: auto; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        
-        /* 總體風險區 */
-        .summary-box { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #fff; border: 1px solid #f0f0f0; border-radius: 15px; padding: 25px; margin-bottom: 30px; }
-        .total-score-circle { width: 120px; height: 120px; border: 10px solid var(--high); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; }
-        
-        /* 四大維度橫條圖樣式 */
-        .dim-section { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
-        .progress-container { margin-bottom: 15px; }
-        .progress-bar-bg { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin: 8px 0; }
-        .progress-bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease-in-out; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MMTF 組織診斷報告</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* AI 分析結果區卡片 */
-        .analysis-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px; }
-        .analysis-card { background: #fffafb; border: 1px solid #ffeef0; padding: 20px; border-radius: 12px; }
-        .analysis-card h4 { margin-top: 0; display: flex; align-items: center; }
-        .analysis-card.mid { background: #fffbf6; border-color: #fff1e0; }
-        .analysis-card.low { background: #f9fffb; border-color: #e6fff1; }
-        
-        .action-list { font-size: 13px; color: #666; padding-left: 18px; margin: 10px 0 0 0; }
-        
-        .suggest-footer { background: #f0f7ff; padding: 25px; border-radius: 12px; border-left: 6px solid var(--primary); margin-top: 30px; }
-        .footer { text-align: center; font-size: 12px; color: #aaa; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
-    </style>
+<style>
+:root{
+ --high:#ff4d4f; --mid:#faad14; --low:#52c41a;
+ --primary:#4a90e2; --bg:#f5f7fa;
+}
+body{
+ font-family:"Microsoft JhengHei";
+ background:var(--bg);
+ margin:0; padding:20px;
+}
+.container{
+ max-width:1000px;
+ margin:auto;
+ background:#fff;
+ padding:40px;
+ border-radius:12px;
+ box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+.summary{
+ display:flex; gap:30px; align-items:center;
+ margin-bottom:30px;
+}
+.circle{
+ width:120px;height:120px;
+ border:10px solid var(--high);
+ border-radius:50%;
+ display:flex;flex-direction:column;
+ justify-content:center;align-items:center;
+}
+.progress-bar-bg{background:#eee;height:10px;border-radius:5px;}
+.progress-bar-fill{height:100%;border-radius:5px;}
+.analysis-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:20px;
+}
+.analysis-card{
+ padding:15px;
+ border-radius:10px;
+ background:#fafafa;
+ border-left:5px solid var(--primary);
+}
+.footer-box{
+ margin-top:30px;
+ padding:20px;
+ background:#f0f7ff;
+ border-left:5px solid var(--primary);
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <div style="text-align:center; margin-bottom:40px;">
-        <h1 style="margin:0; letter-spacing: 2px;">MMTF 組織診斷結果報告</h1>
-        <p style="color:#888;">透過四大維度評估組織當前運作狀態，提供改善建議與行動方向</p>
-    </div>
 
-    <div class="summary-box">
-        <div style="display:flex; align-items:center; gap:30px; border-right: 1px solid #eee;">
-            <div class="total-score-circle" id="main-circle">
-                <span style="font-size:36px; font-weight:bold;" id="t-score">0</span>
-                <span style="font-size:12px; color:#999;">/ 100</span>
-            </div>
-            <div>
-                <h3 style="margin:0; color:#888;">整體風險等級</h3>
-                <h2 id="rank-name" style="margin:5px 0; font-size:32px;">計算中...</h2>
-                <p style="margin:0; font-size:13px; color:#666;">組織在多項維度存在明顯風險，建議優先改善以降低潛在影響。</p>
-            </div>
-        </div>
-        <div style="padding-left: 20px;">
-            <h4 style="margin-top:0;">💡 風險等級說明</h4>
-            <div style="font-size:13px; line-height:2;">
-                <span style="color:var(--high)">●</span> <b>高風險 (0-50分)</b>：需立即關注與改善<br>
-                <span style="color:var(--mid)">●</span> <b>中風險 (51-75分)</b>：建議積極改善強化<br>
-                <span style="color:var(--low)">●</span> <b>低風險 (76-100分)</b>：組織狀態良好，持續維持
-            </div>
-        </div>
-    </div>
+<h1 style="text-align:center;">MMTF 組織診斷報告</h1>
 
-    <div class="dim-section">
-        <div>
-            <h3 style="margin-bottom:20px;">📊 四大維度得分</h3>
-            <div id="progress-area"></div>
-        </div>
-        <div style="text-align:center;">
-            <h3 style="margin-bottom:10px;">MMTF 四維度雷達圖</h3>
-            <canvas id="radarChart" style="max-height: 280px;"></canvas>
-        </div>
-    </div>
-
-    <h3 style="display:flex; align-items:center; gap:10px;">🧠 AI 分析結果</h3>
-    <div class="analysis-grid" id="analysis-area"></div>
-
-    <div class="suggest-footer">
-        <h3 style="margin-top:0;">💡 總結與建議</h3>
-        <p id="final-summary" style="font-size:14px; line-height:1.8; color:#444;"></p>
-    </div>
-
-    <div class="footer">
-        本報告由 MMTF 組織診斷系統自動產出 | 報告產生時間：<span id="date-str"></span>
-    </div>
+<!-- 總覽 -->
+<div class="summary">
+ <div class="circle" id="circle">
+   <span id="total" style="font-size:32px;font-weight:bold;">0</span>
+   <span>/100</span>
+ </div>
+ <div>
+   <h2 id="rank">分析中</h2>
+   <div id="model"></div>
+ </div>
 </div>
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const s = {
-        mirror: parseInt(urlParams.get('mirror')) || 0,
-        matrix: parseInt(urlParams.get('matrix')) || 0,
-        flow: parseInt(urlParams.get('flow')) || parseInt(urlParams.get('informationFlow')) || 0,
-        safe: parseInt(urlParams.get('safe')) || parseInt(urlParams.get('psychologicalSafety')) || 0
-    };
-function getMMTFModel(s){
-  let top = (s.mirror + s.matrix)/2;
-  let bottom = (s.flow + s.safe)/2;
+<!-- 維度 -->
+<h3>📊 四大維度</h3>
+<div id="bars"></div>
 
-  if(top < 12 && bottom < 12){
-    return {key:"collapse", name:"Collapse Model", zh:"全面崩壞型"};
-  }
-  if(top >= 15 && bottom < 12){
-    return {key:"disconnect", name:"Disconnect Model", zh:"制度失真型"};
-  }
-  if(top < 12 && bottom >= 15){
-    return {key:"bureaucratic", name:"Bureaucratic Model", zh:"官僚失衡型"};
-  }
-  if(top >= 18 && bottom >= 18){
-    return {key:"high", name:"High Performance Model", zh:"高效能型"};
-  }
+<!-- 雷達 -->
+<canvas id="radar" style="max-height:300px;"></canvas>
 
-  return {key:"mixed", name:"Transitional Model", zh:"過渡型"};
-}
+<!-- AI分析 -->
+<h3>🧠 AI顧問分析</h3>
+<div class="analysis-grid" id="analysis"></div>
 
-let model = getMMTFModel(s);
-    const total = s.mirror + s.matrix + s.flow + s.safe;
-    document.getElementById('t-score').innerText = total;
-    document.getElementById('date-str').innerText = new Date().toISOString().split('T')[0];
-
-    // 等級判定
-    let rank = { n: "低風險", c: "var(--low)" };
-    if(total <= 50) rank = { n: "高風險", c: "var(--high)" };
-    else if(total <= 75) rank = { n: "中風險", c: "var(--mid)" };
-    document.getElementById('rank-name').innerHTML = `
-${rank.n}<br>
-<span style="font-size:14px;color:#888;">(${model.zh})</span>
-`;
-    document.getElementById('rank-name').style.color = rank.c;
-    document.getElementById('main-circle').style.borderColor = rank.c;
-
-    // 維度定義
-    const config = [
-        { k: 'mirror', l: 'Mirror (鏡像)', d: '代表組織內回饋機制與認知落差。', a: ['建立雙向回饋機制','定期進行意見收集','強化主管同理與傾聽能力'] },
-        { k: 'matrix', l: 'Matrix (結構)', d: '代表組織結構、職責劃分與權責定義。', a: ['釐清角色與職責','優化組織架構與流程','建立清晰的決策機制'] },
-        { k: 'flow', l: 'Information Flow (資訊流)', d: '代表資訊傳遞、溝通流程與共享效率。', a: ['建立有效的資訊共享平台','強化跨部門溝通管道','減少資訊傳遞層級'] },
-        { k: 'safe', l: 'Psychological Safety (心理安全)', d: '代表團隊信任感、表達自由度與心理安全。', a: ['建立信任與包容的文化','鼓勵表達不同觀點','領導者以身作則示範支持'] }
-    ];
-
-    let progressHtml = '';
-    let analysisHtml = '';
-    let weakPoints = [];
-
-    config.forEach(item => {
-        let val = s[item.k];
-        let color = "var(--low)"; let label = "低風險"; let cClass = "low";
-        if(val <= 12) { color = "var(--high)"; label = "高風險"; cClass = "high"; weakPoints.push(item.l); }
-        else let insight = "";
-let actions = [];
-
-if(val <= 12){
-  insight = "此構面已影響組織運作，屬關鍵風險區。";
-  actions = item.a;
-}
-else if(val <= 18){
-  insight = "此構面尚可，但存在優化空間，可能影響整體效率。";
-  actions = item.a;
-}
-else{
-  insight = "此構面表現良好，建議持續強化並形成組織優勢。";
-  actions = [
-    "建立標準化流程（Best Practice）",
-    "跨部門經驗複製",
-    "轉化為組織競爭力"
-  ];
-}
-
-analysisHtml += `
-<div class="analysis-card ${cClass}">
-    <h4><span style="color:${color}; margin-right:8px;">●</span> ${item.l}</h4>
-    <p style="font-size:13px; margin:5px 0;">${insight}</p>
-    <div style="font-size:12px; font-weight:bold; margin-top:10px;">建議行動：</div>
-    <ul class="action-list">${actions.map(a=>`<li>${a}</li>`).join('')}</ul>
-</div>`; color = "var(--mid)"; label = "中風險"; cClass = "mid"; }
-
-        // 生成進度條
-        progressHtml += `
-            <div class="progress-container">
-                <div style="display:flex; justify-content:space-between; font-size:13px;">
-                    <span>${item.l}</span>
-                    <span><b>${val}</b> / 25 <small style="color:${color}; margin-left:10px;">${label}</small></span>
-                </div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${(val/25)*100}%; background:${color};"></div></div>
-            </div>`;
-
-        // 生成 AI 分析卡片 (只要不是低風險就顯示建議)
-        if(val <= 18) {
-            analysisHtml += `
-                <div class="analysis-card ${cClass}">
-                    <h4><span style="color:${color}; margin-right:8px;">●</span> ${item.l} 偏低</h4>
-                    <p style="font-size:13px; margin:5px 0;">${item.d}</p>
-                    <div style="font-size:12px; font-weight:bold; color:#444; margin-top:10px;">建議行動：</div>
-                    <ul class="action-list">${item.a.map(act => `<li>${act}</li>`).join('')}</ul>
-                </div>`;
-        }
-    });
-
-    document.getElementById('progress-area').innerHTML = progressHtml;
-    document.getElementById('analysis-area').innerHTML = analysisHtml || "<p style='grid-column: span 2; text-align:center; color:#999;'>各項維度表現優異，暫無特定改善建議。</p>";
-
-    // 總結文字
-    let summaryText = `
-本次診斷總分為 <b>${total}</b>，整體屬於 <b style="color:${rank.c}">${rank.n}</b>。
-
-🧠【MMTF診斷模型】
-本組織屬於 <b>${model.zh}</b>（${model.name}）
-
-`;
-
-if(model.key === "disconnect"){
-  summaryText += `
-📉【核心問題】
-組織制度存在，但未有效落實至實際運作層，
-形成「決策層與現場脫節」現象。
-
-⚠️【風險】
-- 管理決策依據失真
-- 員工問題不上報
-- 跨部門協作困難
-
-🚀【建議】
-優先強化資訊流（Flow）與心理安全（Safety），
-使制度真正落地。
-`;
-}
-
-else if(model.key === "collapse"){
-  summaryText += `
-📉【核心問題】
-組織在結構與運作層皆已失效。
-
-🚀【建議】
-優先重建組織架構與基本管理制度。
-`;
-}
-
-else if(model.key === "bureaucratic"){
-  summaryText += `
-📉【核心問題】
-基層運作正常，但制度過於僵化。
-
-🚀【建議】
-簡化流程、提升決策效率。
-`;
-}
-
-else if(model.key === "high"){
-  summaryText += `
-📈【核心優勢】
-制度與行為高度一致，組織運作成熟。
-
-🚀【建議】
-建立最佳實務並擴散至整體組織。
-`;
-}
-
-else{
-  summaryText += `
-📊【狀態】
-組織處於轉型過程中，各構面發展不均。
-
-🚀【建議】
-優先改善低分構面以達平衡。
-`;
-}
-
-document.getElementById('final-summary').innerHTML = summaryText;
-
-    // 雷達圖
-    new Chart(document.getElementById('radarChart'), {
-        type: 'radar',
-        data: {
-            labels: ['Mirror', 'Matrix', 'Info Flow', 'Psych Safety'],
-            datasets: [{
-                label: '您的得分',
-                data: [s.mirror, s.matrix, s.flow, s.safe],
-                backgroundColor: 'rgba(74, 144, 226, 0.2)',
-                borderColor: '#4a90e2',
-                borderWidth: 2,
-                pointBackgroundColor: '#4a90e2'
-            }]
-        },
-        options: {
-            scales: { r: { min: 0, max: 25, ticks: { stepSize: 5, display: false } } },
-            plugins: { legend: { display: false } }
-        }
-    });
-</script>
-</body>
-</html>
-
-<h1 style="text-align:center;">MMTF 組織診斷報告（AI分析升級版）</h1>
-
-<div class="summary-box">
-    <div style="display:flex;gap:20px;align-items:center;">
-        <div class="total-score-circle" id="circle">
-            <span id="total" style="font-size:36px;font-weight:bold;">0</span>
-            <span style="font-size:12px;">/100</span>
-        </div>
-        <div>
-            <h2 id="level">分析中</h2>
-            <p style="font-size:13px;color:#666;">整體組織風險評估</p>
-        </div>
-    </div>
-</div>
-
-<div class="dim-section">
-    <div id="bars"></div>
-    <canvas id="radar"></canvas>
-</div>
-
-<h3>🧠 AI進階分析模組</h3>
-<div id="aiModule" class="analysis-grid"></div>
-
-<div class="suggest-footer">
-    <h3>📌 組織診斷策略建議（進階版）</h3>
-    <div id="strategy"></div>
+<!-- 結論 -->
+<div class="footer-box">
+<h3>📌 顧問結論</h3>
+<div id="summary"></div>
 </div>
 
 </div>
 
 <script>
+
+// ===== 讀取參數 =====
+const p=new URLSearchParams(location.search);
 const s={
-mirror:+new URLSearchParams(location.search).get('mirror')||0,
-matrix:+new URLSearchParams(location.search).get('matrix')||0,
-flow:+new URLSearchParams(location.search).get('flow')||0,
-safe:+new URLSearchParams(location.search).get('safe')||0
+ mirror:+p.get('mirror')||0,
+ matrix:+p.get('matrix')||0,
+ flow:+p.get('flow')||0,
+ safe:+p.get('safe')||0
 };
 
+// ===== 總分 =====
 const total=s.mirror+s.matrix+s.flow+s.safe;
 document.getElementById('total').innerText=total;
 
-let level="低風險",color="var(--low)";
-if(total<=50){level="高風險";color="var(--high)"}
-else if(total<=75){level="中風險";color="var(--mid)"}
+// ===== 風險 =====
+let rank="低風險",color="var(--low)";
+if(total<=50){rank="高風險";color="var(--high)"}
+else if(total<=75){rank="中風險";color="var(--mid)"}
 
-document.getElementById('level').innerText=level;
+document.getElementById('rank').innerText=rank;
+document.getElementById('rank').style.color=color;
 document.getElementById('circle').style.borderColor=color;
 
-document.getElementById('bars').innerHTML=[
-['Mirror',s.mirror],['Matrix',s.matrix],['Flow',s.flow],['Safety',s.safe]
-].map(([k,v])=>`
-<div>
-<div style="display:flex;justify-content:space-between;font-size:13px;">
-<span>${k}</span><b>${v}/25</b>
-</div>
-<div class="progress-bar-bg">
-<div class="progress-bar-fill" style="width:${v/25*100}%;background:${color}"></div>
-</div>
-</div>`).join('');
+// ===== MMTF模型 =====
+function getModel(s){
+ let top=(s.mirror+s.matrix)/2;
+ let bottom=(s.flow+s.safe)/2;
 
-new Chart(document.getElementById('radar'),{
-type:'radar',
-data:{labels:['Mirror','Matrix','Flow','Safety'],datasets:[{data:[s.mirror,s.matrix,s.flow,s.safe],borderColor:'#4a90e2',backgroundColor:'rgba(74,144,226,.2)'}]},
-options:{scales:{r:{min:0,max:25}}}
-});
+ if(top<12&&bottom<12)return ["全面崩壞型","Collapse Model"];
+ if(top>=15&&bottom<12)return ["制度失真型","Disconnect Model"];
+ if(top<12&&bottom>=15)return ["官僚失衡型","Bureaucratic Model"];
+ if(top>=18&&bottom>=18)return ["高效能型","High Performance Model"];
+ return ["過渡型","Transitional Model"];
+}
+const model=getModel(s);
+document.getElementById('model').innerHTML=`模型：${model[0]} (${model[1]})`;
 
+// ===== 維度 =====
 const dims=[
-{name:'Mirror',v:s.mirror,insight:'回饋機制不足將導致資訊失真與決策偏差',action:'建立雙向回饋＋匿名回饋系統'},
-{name:'Matrix',v:s.matrix,insight:'結構模糊會造成責任不清與效率下降',action:'重構RACI權責模型'},
-{name:'Flow',v:s.flow,insight:'資訊延遲會造成跨部門協作失效',action:'建立即時資訊儀表板'},
-{name:'Safety',v:s.safe,insight:'心理安全不足會抑制創新與回饋',action:'導入心理安全訓練'}
+ {name:"Mirror",v:s.mirror,desc:"回饋與認知"},
+ {name:"Matrix",v:s.matrix,desc:"結構與權責"},
+ {name:"Flow",v:s.flow,desc:"資訊流"},
+ {name:"Safety",v:s.safe,desc:"心理安全"}
 ];
 
-// AI分析模組
-let aiHTML='';
+// ===== 進度條 =====
+document.getElementById('bars').innerHTML=dims.map(d=>{
+ let c=d.v<=12?"var(--high)":d.v<=18?"var(--mid)":"var(--low)";
+ return `
+ <div style="margin-bottom:10px;">
+ <div style="display:flex;justify-content:space-between;font-size:13px;">
+ ${d.name} (${d.desc}) <b>${d.v}/25</b>
+ </div>
+ <div class="progress-bar-bg">
+ <div class="progress-bar-fill" style="width:${d.v/25*100}%;background:${c}"></div>
+ </div>
+ </div>`;
+}).join('');
 
-dims.forEach(d=>{
-const risk=d.v<=12?'high':d.v<=18?'mid':'low';
-if(risk!=='low'){
-aiHTML+=`
-<div class="analysis-card ${risk}">
-<h4>${d.name}風險分析</h4>
-<p><b>洞察：</b>${d.insight}</p>
-<p><b>建議：</b>${d.action}</p>
-</div>`;
-}
+// ===== 雷達圖 =====
+new Chart(document.getElementById('radar'),{
+ type:'radar',
+ data:{
+  labels:['Mirror','Matrix','Flow','Safety'],
+  datasets:[{
+   data:[s.mirror,s.matrix,s.flow,s.safe],
+   borderColor:'#4a90e2',
+   backgroundColor:'rgba(74,144,226,.2)'
+  }]
+ },
+ options:{scales:{r:{min:0,max:25}}}
 });
 
-document.getElementById('aiModule').innerHTML=aiHTML||"<p>目前無顯著風險</p>";
+// ===== AI分析 =====
+let html="";
+dims.forEach(d=>{
+ let insight="",actions=[];
+ if(d.v<=12){
+  insight="屬於關鍵風險區，已影響組織運作";
+  actions=["立即改善","導入制度","主管介入"];
+ }
+ else if(d.v<=18){
+  insight="存在優化空間，影響效率";
+  actions=["優化流程","強化管理","提升協作"];
+ }
+ else{
+  insight="表現良好，具備優勢";
+  actions=["建立標準化","擴散成功經驗"];
+ }
 
-// 策略引擎
-let strategy='';
-if(total<=50){
-strategy='⚠️ 建議啟動組織重整專案（90天改善計畫）';
-}else if(total<=75){
-strategy='🔧 建議導入流程優化與溝通改善專案（60天）';
-}else{
-strategy='✅ 建議維持並導入持續改善機制（KPI監控）';
+ html+=`
+ <div class="analysis-card">
+ <h4>${d.name}</h4>
+ <p>${insight}</p>
+ <ul>${actions.map(a=>"<li>"+a+"</li>").join('')}</ul>
+ </div>`;
+});
+document.getElementById('analysis').innerHTML=html;
+
+// ===== 顧問結論 =====
+let summary="";
+
+switch(model[0]){
+ case "制度失真型":
+ summary="制度存在但未落地，決策層與現場脫節，建議強化資訊流與心理安全";
+ break;
+ case "全面崩壞型":
+ summary="組織基礎失效，需進行結構與管理重建";
+ break;
+ case "官僚失衡型":
+ summary="流程僵化影響效率，建議提升決策彈性";
+ break;
+ case "高效能型":
+ summary="組織成熟穩定，建議擴散最佳實務形成競爭優勢";
+ break;
+ default:
+ summary="組織處於轉型期，建議優先改善低分構面";
 }
 
-document.getElementById('strategy').innerText=strategy;
+document.getElementById('summary').innerText=summary;
+
 </script>
+
 </body>
 </html>
-
