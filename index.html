@@ -58,4 +58,78 @@
 
 </div>
 
+<script>
+const s={
+mirror:+new URLSearchParams(location.search).get('mirror')||0,
+matrix:+new URLSearchParams(location.search).get('matrix')||0,
+flow:+new URLSearchParams(location.search).get('flow')||0,
+safe:+new URLSearchParams(location.search).get('safe')||0
+};
+
+const total=s.mirror+s.matrix+s.flow+s.safe;
+document.getElementById('total').innerText=total;
+
+let level="低風險",color="var(--low)";
+if(total<=50){level="高風險";color="var(--high)"}
+else if(total<=75){level="中風險";color="var(--mid)"}
+
+document.getElementById('level').innerText=level;
+document.getElementById('circle').style.borderColor=color;
+
+document.getElementById('bars').innerHTML=[
+['Mirror',s.mirror],['Matrix',s.matrix],['Flow',s.flow],['Safety',s.safe]
+].map(([k,v])=>`
+<div>
+<div style="display:flex;justify-content:space-between;font-size:13px;">
+<span>${k}</span><b>${v}/25</b>
+</div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width:${v/25*100}%;background:${color}"></div>
+</div>
+</div>`).join('');
+
+new Chart(document.getElementById('radar'),{
+type:'radar',
+data:{labels:['Mirror','Matrix','Flow','Safety'],datasets:[{data:[s.mirror,s.matrix,s.flow,s.safe],borderColor:'#4a90e2',backgroundColor:'rgba(74,144,226,.2)'}]},
+options:{scales:{r:{min:0,max:25}}}
+});
+
+const dims=[
+{name:'Mirror',v:s.mirror,insight:'回饋機制不足將導致資訊失真與決策偏差',action:'建立雙向回饋＋匿名回饋系統'},
+{name:'Matrix',v:s.matrix,insight:'結構模糊會造成責任不清與效率下降',action:'重構RACI權責模型'},
+{name:'Flow',v:s.flow,insight:'資訊延遲會造成跨部門協作失效',action:'建立即時資訊儀表板'},
+{name:'Safety',v:s.safe,insight:'心理安全不足會抑制創新與回饋',action:'導入心理安全訓練'}
+];
+
+// AI分析模組
+let aiHTML='';
+
+dims.forEach(d=>{
+const risk=d.v<=12?'high':d.v<=18?'mid':'low';
+if(risk!=='low'){
+aiHTML+=`
+<div class="analysis-card ${risk}">
+<h4>${d.name}風險分析</h4>
+<p><b>洞察：</b>${d.insight}</p>
+<p><b>建議：</b>${d.action}</p>
+</div>`;
+}
+});
+
+document.getElementById('aiModule').innerHTML=aiHTML||"<p>目前無顯著風險</p>";
+
+// 策略引擎
+let strategy='';
+if(total<=50){
+strategy='⚠️ 建議啟動組織重整專案（90天改善計畫）';
+}else if(total<=75){
+strategy='🔧 建議導入流程優化與溝通改善專案（60天）';
+}else{
+strategy='✅ 建議維持並導入持續改善機制（KPI監控）';
+}
+
+document.getElementById('strategy').innerText=strategy;
+</script>
+</body>
 </html>
+
