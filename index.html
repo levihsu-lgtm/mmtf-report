@@ -6,18 +6,18 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body { font-family: Arial; background:#f4f6f9; margin:0; padding:20px;}
+body { font-family: Arial; background:#f4f6f9; padding:20px;}
 .container { max-width:1100px; margin:auto; }
+
 .card {
   background:white;
-  padding:20px;
+  padding:25px;
   border-radius:12px;
   margin-bottom:20px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
 }
-h1 { text-align:center; }
 
-.grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+h1,h2 { text-align:center; }
 
 .bar { background:#eee; border-radius:10px; overflow:hidden; margin:10px 0;}
 .fill { height:20px; }
@@ -26,16 +26,14 @@ h1 { text-align:center; }
 .orange { background:#fb8c00;}
 .green { background:#43a047;}
 
-.center { text-align:center; }
-
 .circle {
-  width:150px;
-  height:150px;
+  width:160px;
+  height:160px;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:28px;
+  font-size:32px;
   margin:auto;
   color:white;
 }
@@ -48,9 +46,10 @@ h1 { text-align:center; }
 
 <h1>MMTF 組織診斷報告</h1>
 
-<div class="card center">
+<div class="card">
 <h2>整體健康指數</h2>
 <div id="circle" class="circle"></div>
+<p id="summary" style="text-align:center;margin-top:15px;"></p>
 </div>
 
 <div class="card">
@@ -71,17 +70,17 @@ Psychological Safety
 </div>
 
 <div class="card">
-<h2>雷達圖</h2>
+<h2>雷達圖分析</h2>
 <canvas id="chart"></canvas>
 </div>
 
 <div class="card">
-<h2>AI診斷分析</h2>
+<h2>🧠 專業分析結果</h2>
 <div id="analysis"></div>
 </div>
 
 <div class="card">
-<h2>改善建議</h2>
+<h2>📌 改善與發展建議</h2>
 <div id="advice"></div>
 </div>
 
@@ -89,7 +88,7 @@ Psychological Safety
 
 <script>
 
-// 讀URL參數
+// 讀取參數
 const p = new URLSearchParams(window.location.search);
 
 let mirror = Number(p.get("mirror"));
@@ -97,69 +96,82 @@ let matrix = Number(p.get("matrix"));
 let flow = Number(p.get("flow"));
 let safe = Number(p.get("safe"));
 
-// 總分
 let total = mirror + matrix + flow + safe;
 
-// ===== 圓形指數 =====
+// ===== 總體指數 =====
 let circle = document.getElementById("circle");
-
 circle.innerText = total;
 
+let summary = "";
+
 if(total < 80){
-  circle.style.background = "#e53935";
-}else if(total < 120){
-  circle.style.background = "#fb8c00";
-}else{
-  circle.style.background = "#43a047";
+  circle.style.background="#e53935";
+  summary = "🔴 組織處於高風險狀態，建議立即進行結構與管理調整。";
 }
+else if(total < 120){
+  circle.style.background="#fb8c00";
+  summary = "🟡 組織運作尚可，但仍存在優化空間。";
+}
+else{
+  circle.style.background="#43a047";
+  summary = "🟢 組織整體運作良好，可進一步強化競爭優勢。";
+}
+
+document.getElementById("summary").innerHTML = summary;
 
 // ===== 條狀圖 =====
-function setBar(id, val){
+function setBar(id,val){
   let el = document.getElementById(id);
-  el.style.width = (val*4) + "%";
+  el.style.width = (val*4)+"%";
 
-  if(val < 15) el.className = "fill red";
-  else if(val < 25) el.className = "fill orange";
-  else el.className = "fill green";
+  if(val < 15) el.className="fill red";
+  else if(val < 25) el.className="fill orange";
+  else el.className="fill green";
 }
 
-setBar("b1", mirror);
-setBar("b2", matrix);
-setBar("b3", flow);
-setBar("b4", safe);
+setBar("b1",mirror);
+setBar("b2",matrix);
+setBar("b3",flow);
+setBar("b4",safe);
 
 // ===== 雷達圖 =====
 new Chart(document.getElementById("chart"), {
-type: 'radar',
-data: {
-labels: ["Mirror","Matrix","Flow","Safety"],
-datasets: [{
-label:"MMTF",
-data:[mirror,matrix,flow,safe],
-fill:true
-}]
+type:'radar',
+data:{
+labels:["Mirror","Matrix","Flow","Safety"],
+datasets:[{data:[mirror,matrix,flow,safe]}]
 }
 });
 
-// ===== AI分析 =====
-let txt = "";
+// ===== 分析 =====
+function analyze(name,val,low,mid,high){
+  if(val < 15) return `🔴 ${name}偏低：${low}<br>`;
+  else if(val < 25) return `🟡 ${name}中等：${mid}<br>`;
+  else return `🟢 ${name}良好：${high}<br>`;
+}
 
-if(mirror < 15) txt += "🔴 Mirror偏低：回饋與認知失衡<br>";
-if(matrix < 15) txt += "🔴 Matrix偏低：組織結構混亂<br>";
-if(flow < 15) txt += "🟡 Flow偏低：溝通效率低<br>";
-if(safe < 15) txt += "🟡 Safety偏低：心理安全不足<br>";
+let analysis = "";
+analysis += analyze("Mirror",mirror,"回饋與認知落差","回饋機制尚可","回饋文化成熟");
+analysis += analyze("Matrix",matrix,"結構不清","結構需優化","結構清晰穩定");
+analysis += analyze("Information Flow",flow,"溝通不順","資訊流需優化","溝通順暢");
+analysis += analyze("Psychological Safety",safe,"心理安全不足","安全感尚可","高度信任文化");
 
-if(txt==="") txt="🟢 組織運作良好";
+document.getElementById("analysis").innerHTML = analysis;
 
-document.getElementById("analysis").innerHTML = txt;
+// ===== 建議（關鍵升級）=====
+function adviceGen(name,val){
+  if(val < 15) return `【${name}】優先改善，屬關鍵風險項目。<br>`;
+  else if(val < 25) return `【${name}】建議優化，提升運作效率。<br>`;
+  else return `【${name}】持續強化，建立競爭優勢。<br>`;
+}
 
-// ===== 建議 =====
-let advice = `
-1. 優先調整組織結構（Matrix）<br>
-2. 建立回饋機制（Mirror）<br>
-3. 優化溝通流程（Flow）<br>
-4. 建立心理安全文化（Safety）
-`;
+let advice = "";
+advice += adviceGen("Mirror",mirror);
+advice += adviceGen("Matrix",matrix);
+advice += adviceGen("Information Flow",flow);
+advice += adviceGen("Psychological Safety",safe);
+
+advice += "<br>👉 建議依優先順序逐步改善，以提升整體組織效能。";
 
 document.getElementById("advice").innerHTML = advice;
 
