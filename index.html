@@ -13,54 +13,46 @@
         body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
         .container { max-width: 1000px; margin: auto; background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 40px; }
         
-        /* 頂部標題與總分 */
-        .header { text-align: center; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
+        /* 總分環狀圖 */
         .summary-grid { display: flex; align-items: center; justify-content: space-around; background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 30px; }
         .total-score-circle { width: 140px; height: 140px; border: 10px solid var(--mid); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .total-score-circle big { font-size: 48px; font-weight: bold; line-height: 1; }
         
-        /* 維度得分卡片 */
-        .dimension-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 40px; }
-        .dim-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .dim-card h4 { margin: 10px 0; color: #666; font-size: 14px; }
+        /* 四大維度卡片 */
+        .dimension-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        .dim-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; padding: 20px; text-align: center; }
         .dim-score { font-size: 28px; font-weight: bold; margin: 10px 0; }
         .risk-label { display: inline-block; padding: 2px 12px; border-radius: 20px; color: #fff; font-size: 12px; font-weight: bold; }
 
-        /* 圖表與分析並排 */
-        .content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
-        .analysis-box { background: #fafafa; border-radius: 12px; padding: 25px; }
-        .analysis-item { margin-bottom: 20px; }
-        .analysis-item b { color: var(--primary); display: block; margin-bottom: 5px; }
+        /* 圖表與分析 */
+        .content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .analysis-box { background: #fafafa; border-radius: 12px; padding: 25px; min-height: 300px; }
+        .analysis-item { margin-bottom: 15px; font-size: 14px; line-height: 1.6; border-left: 3px solid #eee; padding-left: 10px; }
 
-        /* 建議區塊 */
-        .suggest-section { margin-top: 40px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
-        .suggest-box { background: #fff; border: 1px solid #eef2f7; padding: 25px; border-radius: 12px; border-left: 6px solid var(--primary); }
-        .action-box { background: #f0f7ff; padding: 25px; border-radius: 12px; }
-        
-        .footer { text-align: center; font-size: 12px; color: #aaa; margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; }
+        .suggest-box { margin-top: 30px; background: #f0f7ff; padding: 25px; border-radius: 12px; border-left: 6px solid var(--primary); }
+        .footer { text-align: center; font-size: 12px; color: #aaa; margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
+    <div class="header" style="text-align:center; margin-bottom:30px;">
         <h1>MMTF 組織診斷結果報告</h1>
-        <p>感謝您的填答，以下為您組織的診斷結果與分析建議</p>
+        <p>感謝您的填答，以下為根據 Mirror Matrix Theory Feedback 所產出之即時分析</p>
     </div>
 
     <div class="summary-grid">
         <div class="total-score-circle" id="main-border">
             <big id="t-score">0</big>
             <span>總分</span>
-            <small>(滿分 100)</small>
         </div>
         <div style="flex: 1; padding-left: 50px;">
             <p style="color:#888; margin-bottom:5px;">整體等級：</p>
             <h2 id="rank-name" style="margin:0; font-size:32px;">計算中...</h2>
-            <p id="rank-tip" style="color:#666; margin-top:10px;">建議優先改善較弱維度，以提升整體組織效能</p>
+            <p style="color:#666; margin-top:10px;">建議優先改善最低分維度，以提升整體組織效能</p>
         </div>
         <div style="border-left: 1px solid #eee; padding-left: 40px;">
-            <h4 style="margin-top:0;">風險等級說明</h4>
+            <h4 style="margin:0 0 10px 0;">風險評等說明</h4>
             <ul style="list-style:none; padding:0; font-size:13px; line-height:2;">
                 <li><span style="color:var(--high)">●</span> 高風險 (0-50分)</li>
                 <li><span style="color:var(--mid)">●</span> 中風險 (51-75分)</li>
@@ -69,7 +61,6 @@
         </div>
     </div>
 
-    <h3 style="text-align:center; margin-bottom:20px;">各維度得分</h3>
     <div class="dimension-grid" id="dim-container"></div>
 
     <div class="content-layout">
@@ -78,24 +69,17 @@
             <canvas id="radarChart"></canvas>
         </div>
         <div class="analysis-box">
-            <h3>🔍 分析結果</h3>
+            <h3>🔍 診斷分析結果</h3>
             <div id="detailed-analysis"></div>
         </div>
     </div>
 
-    <div class="suggest-section">
-        <div class="suggest-box">
-            <h3>🎯 綜合建議</h3>
-            <div id="summary-suggest" style="font-size:14px; line-height:2;"></div>
-        </div>
-        <div class="action-box">
-            <h3 style="margin-top:0;">✅ 下一步行動建議</h3>
-            <ul style="font-size:14px; line-height:2; padding-left:20px;">
-                <li>安排團隊討論，針對弱項擬定改善計畫</li>
-                <li>設定改善目標與行動指標，定期追蹤進度</li>
-                <li>建議 3 個月後重新評估，檢視改善成效</li>
-            </ul>
-        </div>
+    <div class="suggest-box">
+        <h3>🎯 綜合建議與下一步</h3>
+        <ul id="summary-suggest" style="font-size:15px; line-height:2;">
+            <li>安排團隊討論，針對弱項擬定改善計畫。</li>
+            <li>設定改善指標，建議 3 個月後重新評估。</li>
+        </ul>
     </div>
 
     <div class="footer">
@@ -105,58 +89,68 @@
 </div>
 
 <script>
-    // 1. 抓取 URL 參數
+    // 修正點：確保參數名稱與網址 ?mirror=13&matrix=17&flow=12&safe=12 一致
     const urlParams = new URLSearchParams(window.location.search);
     const s = {
         mirror: parseInt(urlParams.get('mirror')) || 0,
         matrix: parseInt(urlParams.get('matrix')) || 0,
-        flow: parseInt(urlParams.get('informationFlow')) || 0, // 注意名稱需對應圖片
-        safe: parseInt(urlParams.get('psychologicalSafety')) || 0
+        flow: parseInt(urlParams.get('flow')) || 0,
+        safe: parseInt(urlParams.get('safe')) || 0
     };
 
     const total = s.mirror + s.matrix + s.flow + s.safe;
     document.getElementById('t-score').innerText = total;
-    document.getElementById('date-str').innerText = new Date().toISOString().split('T')[0];
+    document.getElementById('date-str').innerText = new Date().toLocaleDateString();
 
-    // 2. 判斷等級與顏色
-    let rank = { n: "低風險", c: "#52c41a" };
-    if(total <= 50) rank = { n: "高風險", c: "#ff4d4f" };
-    else if(total <= 75) rank = { n: "中風險", c: "#faad14" };
+    // 判斷等級與顏色
+    let rank = { n: "低風險", c: "var(--low)" };
+    if(total <= 50) rank = { n: "高風險", c: "var(--high)" };
+    else if(total <= 75) rank = { n: "中風險", c: "var(--mid)" };
     
     document.getElementById('rank-name').innerText = rank.n;
     document.getElementById('rank-name').style.color = rank.c;
     document.getElementById('main-border').style.borderColor = rank.c;
 
-    // 3. 渲染維度卡片
+    // 渲染卡片邏輯
     const config = [
-        { k: 'mirror', l: 'Mirror (鏡像)', d: '回饋與認知落差' },
-        { k: 'matrix', l: 'Matrix (結構)', d: '組織結構與職責' },
-        { k: 'flow', l: 'Information Flow (資訊流)', d: '溝通流程與傳遞' },
-        { k: 'safe', l: 'Psychological Safety (心理安全)', d: '心理安全與信任' }
+        { k: 'mirror', l: 'Mirror (鏡像)' },
+        { k: 'matrix', l: 'Matrix (結構)' },
+        { k: 'flow', l: 'Info Flow (資訊流)' },
+        { k: 'safe', l: 'Psych Safety (心理安全)' }
     ];
 
     let cards = '';
+    let analysis = '';
     config.forEach(item => {
-        let rColor = "#52c41a"; let rText = "低風險";
-        if(s[item.k] <= 12) { rColor = "#ff4d4f"; rText = "高風險"; }
-        else if(s[item.k] <= 18) { rColor = "#faad14"; rText = "中風險"; }
+        let rColor = "var(--low)"; let rText = "低風險";
+        let val = s[item.k];
+        if(val <= 12) { 
+            rColor = "var(--high)"; rText = "高風險"; 
+            // 動態生成分析文字
+            if(item.k === 'mirror') analysis += `<div class="analysis-item"><b>Mirror 低：</b>代表組織內回饋與認知存在落差。</div>`;
+            if(item.k === 'matrix') analysis += `<div class="analysis-item"><b>Matrix 低：</b>代表組織結構不清或職責重疊。</div>`;
+            if(item.k === 'flow') analysis += `<div class="analysis-item"><b>Info Flow 低：</b>代表資訊傳遞不順或溝通斷層。</div>`;
+            if(item.k === 'safe') analysis += `<div class="analysis-item"><b>Psych Safety 低：</b>代表組織心理安全不足，員工不敢表達。</div>`;
+        }
+        else if(val <= 18) { rColor = "var(--mid)"; rText = "中風險"; }
 
         cards += `
         <div class="dim-card">
-            <h4>${item.l}</h4>
-            <div class="dim-score">${s[item.k]} <small style="color:#ccc; font-size:14px;">/ 25</small></div>
+            <h4 style="margin:0; color:#666;">${item.l}</h4>
+            <div class="dim-score">${val} <small style="color:#ccc; font-size:14px;">/ 25</small></div>
             <div class="risk-label" style="background:${rColor}">${rText}</div>
         </div>`;
     });
     document.getElementById('dim-container').innerHTML = cards;
+    document.getElementById('detailed-analysis').innerHTML = analysis || "各維度表現尚可，請持續維持。";
 
-    // 4. 雷達圖
+    // 雷達圖繪製
     new Chart(document.getElementById('radarChart'), {
         type: 'radar',
         data: {
             labels: ['Mirror', 'Matrix', 'Info Flow', 'Psych Safety'],
             datasets: [{
-                label: '您的得分',
+                label: '組織得分',
                 data: [s.mirror, s.matrix, s.flow, s.safe],
                 backgroundColor: 'rgba(74, 144, 226, 0.2)',
                 borderColor: '#4a90e2',
@@ -169,21 +163,6 @@
             plugins: { legend: { display: false } }
         }
     });
-
-    // 5. 動態分析與建議邏輯
-    let analysis = "";
-    let suggest = "";
-
-    if(s.mirror < 18) analysis += `<div class="analysis-item"><b>● Mirror (鏡像) 偏低</b>代表組織內回饋機制不佳，員工可能感受不到被理解，建議強化雙向回饋。</div>`;
-    if(s.safe < 18) analysis += `<div class="analysis-item"><b>● Psychological Safety 偏低</b>員工可能感到不安，影響創新與表達，建議營造更支持的環境。</div>`;
-    // ... 可依此類推增加其他維度判斷
-
-    document.getElementById('detailed-analysis').innerHTML = analysis || "各維度表現穩定，請持續維持現有管理模式。";
-    document.getElementById('summary-suggest').innerHTML = `
-        1. <b>優先改善心理安全感：</b>從建立信任開始，讓成員感到安全，才能激發績效。<br>
-        2. <b>強化溝通與資訊透明：</b>建立固定的資訊同步機制，確保流程不遺漏。<br>
-        3. <b>優化組織結構與流程：</b>檢視職責清晰度，確保運作順暢。`;
-
 </script>
 </body>
 </html>
