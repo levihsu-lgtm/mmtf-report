@@ -98,7 +98,27 @@
         flow: parseInt(urlParams.get('flow')) || parseInt(urlParams.get('informationFlow')) || 0,
         safe: parseInt(urlParams.get('safe')) || parseInt(urlParams.get('psychologicalSafety')) || 0
     };
+function getMMTFModel(s){
+  let top = (s.mirror + s.matrix)/2;
+  let bottom = (s.flow + s.safe)/2;
 
+  if(top < 12 && bottom < 12){
+    return {key:"collapse", name:"Collapse Model", zh:"全面崩壞型"};
+  }
+  if(top >= 15 && bottom < 12){
+    return {key:"disconnect", name:"Disconnect Model", zh:"制度失真型"};
+  }
+  if(top < 12 && bottom >= 15){
+    return {key:"bureaucratic", name:"Bureaucratic Model", zh:"官僚失衡型"};
+  }
+  if(top >= 18 && bottom >= 18){
+    return {key:"high", name:"High Performance Model", zh:"高效能型"};
+  }
+
+  return {key:"mixed", name:"Transitional Model", zh:"過渡型"};
+}
+
+let model = getMMTFModel(s);
     const total = s.mirror + s.matrix + s.flow + s.safe;
     document.getElementById('t-score').innerText = total;
     document.getElementById('date-str').innerText = new Date().toISOString().split('T')[0];
@@ -107,7 +127,10 @@
     let rank = { n: "低風險", c: "var(--low)" };
     if(total <= 50) rank = { n: "高風險", c: "var(--high)" };
     else if(total <= 75) rank = { n: "中風險", c: "var(--mid)" };
-    document.getElementById('rank-name').innerText = rank.n;
+    document.getElementById('rank-name').innerHTML = `
+${rank.n}<br>
+<span style="font-size:14px;color:#888;">(${model.zh})</span>
+`;
     document.getElementById('rank-name').style.color = rank.c;
     document.getElementById('main-circle').style.borderColor = rank.c;
 
@@ -127,7 +150,33 @@
         let val = s[item.k];
         let color = "var(--low)"; let label = "低風險"; let cClass = "low";
         if(val <= 12) { color = "var(--high)"; label = "高風險"; cClass = "high"; weakPoints.push(item.l); }
-        else if(val <= 18) { color = "var(--mid)"; label = "中風險"; cClass = "mid"; }
+        else let insight = "";
+let actions = [];
+
+if(val <= 12){
+  insight = "此構面已影響組織運作，屬關鍵風險區。";
+  actions = item.a;
+}
+else if(val <= 18){
+  insight = "此構面尚可，但存在優化空間，可能影響整體效率。";
+  actions = item.a;
+}
+else{
+  insight = "此構面表現良好，建議持續強化並形成組織優勢。";
+  actions = [
+    "建立標準化流程（Best Practice）",
+    "跨部門經驗複製",
+    "轉化為組織競爭力"
+  ];
+}
+
+analysisHtml += `
+<div class="analysis-card ${cClass}">
+    <h4><span style="color:${color}; margin-right:8px;">●</span> ${item.l}</h4>
+    <p style="font-size:13px; margin:5px 0;">${insight}</p>
+    <div style="font-size:12px; font-weight:bold; margin-top:10px;">建議行動：</div>
+    <ul class="action-list">${actions.map(a=>`<li>${a}</li>`).join('')}</ul>
+</div>`; color = "var(--mid)"; label = "中風險"; cClass = "mid"; }
 
         // 生成進度條
         progressHtml += `
@@ -155,13 +204,72 @@
     document.getElementById('analysis-area').innerHTML = analysisHtml || "<p style='grid-column: span 2; text-align:center; color:#999;'>各項維度表現優異，暫無特定改善建議。</p>";
 
     // 總結文字
-    let summaryText = `整體來看，組織目前處於 <b>${rank.n}</b> 狀態。`;
-    if(weakPoints.length > 0) {
-        summaryText += `特別是在 <b>${weakPoints.join(' 與 ')}</b> 構面表現最弱。建議優先從建立清晰的回饋機制與優化組織結構著手，逐步改善溝通與心理安全，打造更高效、協作且具韌性的組織。`;
-    } else {
-        summaryText += `各維度均表現穩定，建議維持現有的溝通頻率與組織架構，並定期檢視小細節的優化。`;
-    }
-    document.getElementById('final-summary').innerHTML = summaryText;
+    let summaryText = `
+本次診斷總分為 <b>${total}</b>，整體屬於 <b style="color:${rank.c}">${rank.n}</b>。
+
+🧠【MMTF診斷模型】
+本組織屬於 <b>${model.zh}</b>（${model.name}）
+
+`;
+
+if(model.key === "disconnect"){
+  summaryText += `
+📉【核心問題】
+組織制度存在，但未有效落實至實際運作層，
+形成「決策層與現場脫節」現象。
+
+⚠️【風險】
+- 管理決策依據失真
+- 員工問題不上報
+- 跨部門協作困難
+
+🚀【建議】
+優先強化資訊流（Flow）與心理安全（Safety），
+使制度真正落地。
+`;
+}
+
+else if(model.key === "collapse"){
+  summaryText += `
+📉【核心問題】
+組織在結構與運作層皆已失效。
+
+🚀【建議】
+優先重建組織架構與基本管理制度。
+`;
+}
+
+else if(model.key === "bureaucratic"){
+  summaryText += `
+📉【核心問題】
+基層運作正常，但制度過於僵化。
+
+🚀【建議】
+簡化流程、提升決策效率。
+`;
+}
+
+else if(model.key === "high"){
+  summaryText += `
+📈【核心優勢】
+制度與行為高度一致，組織運作成熟。
+
+🚀【建議】
+建立最佳實務並擴散至整體組織。
+`;
+}
+
+else{
+  summaryText += `
+📊【狀態】
+組織處於轉型過程中，各構面發展不均。
+
+🚀【建議】
+優先改善低分構面以達平衡。
+`;
+}
+
+document.getElementById('final-summary').innerHTML = summaryText;
 
     // 雷達圖
     new Chart(document.getElementById('radarChart'), {
