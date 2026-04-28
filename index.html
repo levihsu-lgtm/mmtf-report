@@ -1,73 +1,167 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MMTF Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMTF 組織診斷結果</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --high: #ff4d4f; --mid: #faad14; --low: #52c41a; --primary: #4a90e2; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: #f0f2f5; margin: 0; padding: 15px; color: #333; }
+        .container { max-width: 850px; margin: auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* Header & Circle */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .score-circle { width: 80px; height: 80px; border: 6px solid #eee; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; }
+        
+        /* Risk Alert Box */
+        .risk-box { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; border-left: 6px solid #ccc; }
+        
+        /* Layout Grid */
+        .main-content { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 650px) { .main-content { grid-template-columns: 1fr; } }
 
-<style>
-body{
- font-family:"Microsoft JhengHei";
- background:#f5f7fa;
- margin:0;
- overflow:hidden;
-}
+        /* Bars */
+        .dim-info { font-size: 13px; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .bar-bg { background: #e9ecef; height: 10px; border-radius: 5px; margin-bottom: 15px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 5px; transition: width 1s; }
 
-.container{
- display:flex;
- flex-direction:column;
- height:100vh;
- padding:10px;
- box-sizing:border-box;
-}
+        /* AI Cards */
+        .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .ai-card { background: #f8f9fa; padding: 12px; border-radius: 8px; font-size: 12px; border-top: 3px solid var(--primary); border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee; }
+        
+        .summary-footer { background: #f0f7ff; padding: 15px; border-radius: 8px; font-size: 14px; margin-top: 20px; font-weight: bold; text-align: center; border: 1px solid #d0e3ff; }
+        canvas { max-height: 220px !important; }
+    </style>
+</head>
+<body>
 
-/* header */
-.header{
- display:flex;
- justify-content:space-between;
- align-items:center;
- flex:0 0 auto;
-}
+<div class="container">
+    <div class="header">
+        <h2 style="margin:0; color:#1a3a63;">MMTF 組織診斷報告</h2>
+        <div style="display:flex; align-items:center; gap:15px;">
+            <div id="rank-tag" style="font-weight:bold; font-size:18px;">讀取中</div>
+            <div class="score-circle" id="main-circle">
+                <span id="total-text" style="font-size:26px;">0</span>
+                <span style="font-size:10px; color:#999;">/100</span>
+            </div>
+        </div>
+    </div>
 
-.circle{
- width:60px;height:60px;
- border:5px solid red;
- border-radius:50%;
- display:flex;
- align-items:center;
- justify-content:center;
-}
+    <div class="risk-box" id="risk-box-ui">
+        <div id="risk-dot" style="font-size:28px;">●</div>
+        <div>
+            <div id="risk-title" style="font-weight:bold; font-size:16px;">診斷數據分析中</div>
+            <div id="risk-desc" style="font-size:12px; color:#666;">系統正在根據各面向分數產出顧問建議...</div>
+        </div>
+    </div>
 
-/* main */
-.main{
- flex:1;
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
- overflow:hidden;
-}
+    <div class="main-content">
+        <div>
+            <h4 style="margin-top:0;">📊 各維度百分比</h4>
+            <div id="bars-ui"></div>
+            <div class="summary-footer" id="summary-ui">正在統合建議...</div>
+        </div>
+        
+        <div>
+            <canvas id="radarChart"></canvas>
+            <div class="ai-grid" id="ai-ui"></div>
+        </div>
+    </div>
+</div>
 
-/* left */
-.left{
- display:flex;
- flex-direction:column;
- gap:8px;
- overflow:hidden;
-}
+<script>
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // 1. 強力參數抓取邏輯
+    function getVal(key) {
+        const v = urlParams.get(key);
+        return (v && !isNaN(v)) ? parseInt(v) : 0;
+    }
 
-.bar{background:#eee;height:6px;border-radius:4px;}
-.fill{height:100%;border-radius:4px;}
-.dim{font-size:12px}
+    const data = {
+        mirror: getVal('mirror'),
+        matrix: getVal('matrix'),
+        flow: getVal('flow'),
+        safe: getVal('safe')
+    };
 
-/* right */
-.right{
- display:flex;
- flex-direction:column;
- gap:8px;
- overflow:hidden;
-}
+    const total = data.mirror + data.matrix + data.flow + data.safe;
+    document.getElementById('total-text').innerText = total;
 
-/* radar */
-canvas{
- flex:0 0 180
+    // 2. 判斷風險等級與顏色
+    let rank = "低風險", color = "#52c41a", title = "穩定狀態", desc = "組織運作正常，建議維持現狀。";
+    if (total <= 50) {
+        rank = "高風險"; color = "#ff4d4f";
+        title = "高風險：全面崩壞型"; desc = "組織基礎管理功能失效，建議立即啟動重整。";
+    } else if (total <= 75) {
+        rank = "中風險"; color = "#faad14";
+        title = "中風險：預警狀態"; desc = "部分維度出現瓶頸，需針對特定構面優化。";
+    }
+
+    // UI 更新
+    document.getElementById('rank-tag').innerText = rank;
+    document.getElementById('rank-tag').style.color = color;
+    document.getElementById('main-circle').style.borderColor = color;
+    document.getElementById('risk-dot').style.color = color;
+    document.getElementById('risk-box-ui').style.borderLeftColor = color;
+    document.getElementById('risk-title').innerText = title;
+    document.getElementById('risk-desc').innerText = desc;
+
+    // 3. 維度 Bar 圖與 AI 建議卡片
+    const config = [
+        { lab: "Mirror", val: data.mirror, info: "回饋與認知" },
+        { lab: "Matrix", val: data.matrix, info: "結構與權責" },
+        { lab: "Flow", val: data.flow, info: "資訊流效率" },
+        { lab: "Safety", val: data.safe, info: "心理安全感" }
+    ];
+
+    let barsHtml = "";
+    let aiHtml = "";
+
+    config.forEach(item => {
+        let barColor = item.val <= 12 ? "#ff4d4f" : item.val <= 18 ? "#faad14" : "#52c41a";
+        let advice = item.val <= 12 ? "⚠️ 立即介入重組" : item.val <= 18 ? "🔧 啟動流程優化" : "✅ 表現優異維持";
+        
+        barsHtml += `
+            <div class="dim-info"><span>${item.lab} (${item.info})</span><span>${item.val}/25</span></div>
+            <div class="bar-bg"><div class="bar-fill" style="width:${(item.val/25)*100}%; background:${barColor}"></div></div>
+        `;
+        
+        aiHtml += `<div class="ai-card"><b>${item.lab}</b><br>${advice}</div>`;
+    });
+
+    document.getElementById('bars-ui').innerHTML = barsHtml;
+    document.getElementById('ai-ui').innerHTML = aiHtml;
+
+    // 4. 雷達圖初始化
+    new Chart(document.getElementById('radarChart'), {
+        type: 'radar',
+        data: {
+            labels: ['Mirror', 'Matrix', 'Flow', 'Safety'],
+            datasets: [{
+                data: [data.mirror, data.matrix, data.flow, data.safe],
+                backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                borderColor: '#4a90e2',
+                borderWidth: 2,
+                pointBackgroundColor: '#4a90e2'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { r: { min: 0, max: 25, ticks: { display: false }, grid: { color: '#eee' } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // 5. 顧問總結文字
+    let summary = "✅ 組織運作具備優勢，建議強化 KPI 監控。";
+    if (total <= 50) summary = "⚠️ 建議優先處理 Mirror 與 Matrix 構面，恢復基本管理職能。";
+    else if (total <= 75) summary = "🔧 建議優化 Flow 資訊傳遞機制，減少決策損耗。";
+    document.getElementById('summary-ui').innerText = summary;
+};
+</script>
+</body>
+</html>
