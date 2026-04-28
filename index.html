@@ -32,14 +32,19 @@
         .score-val { font-size: 36px; font-weight: bold; color: var(--high); }
         .risk-text h2 { font-size: 28px; margin: 0; color: var(--high); }
 
-        /* 2. AI 實證分析 1x4 卡片 (深度文獻版) */
+        /* 2. AI 實證分析 1x4 卡片 (包含詳細建議) */
         .section-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; border-left: 5px solid var(--primary); padding-left: 10px; }
         .ai-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 35px; }
         .ai-card { background: #fff; border: 1px solid #e2e8f0; border-top: 5px solid var(--primary); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; }
-        .ai-card h4 { margin: 0 0 8px 0; color: var(--primary); font-size: 15px; }
+        .ai-card h4 { margin: 0 0 8px 0; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 5px; }
+        .ai-card h4 span { font-size: 11px; font-weight: normal; color: var(--high); background: #fff1f0; padding: 2px 6px; border-radius: 4px; }
         .ai-theory { font-size: 11px; color: #888; font-style: italic; margin-bottom: 8px; line-height: 1.3; }
-        .ai-desc { font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 10px; flex-grow: 1; }
-        .ai-action { font-size: 12px; font-weight: bold; color: var(--high); background: #fff1f0; padding: 6px; border-radius: 4px; border-left: 3px solid var(--high); }
+        .ai-desc { font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 12px; }
+        
+        .action-list-title { font-size: 12px; font-weight: bold; color: #1e293b; margin-bottom: 6px; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+        .action-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+        .action-list li { font-size: 11.5px; color: #64748b; margin-bottom: 5px; display: flex; align-items: flex-start; gap: 5px; }
+        .action-list li::before { content: '•'; color: var(--high); font-weight: bold; }
 
         /* 3. 中段分析 (雷達圖極小化 + 文字結論) */
         .mid-row { display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 40px; margin-bottom: 35px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
@@ -88,31 +93,55 @@
         </div>
     </div>
 
-    <div class="section-title"><i class="fa-solid fa-microchip"></i> AI 實證構面分析與管理文獻</div>
+    <div class="section-title"><i class="fa-solid fa-brain"></i> AI 實證構面分析與建議</div>
     <div class="ai-grid">
+        <!-- Mirror -->
         <div class="ai-card">
-            <h4>Mirror (鏡像)</h4>
+            <h4>Mirror (鏡像) <span>偏低</span></h4>
             <div class="ai-theory">Johari Window (喬哈里窗)</div>
-            <div class="ai-desc">診斷發現高層盲目區巨大。管理者的自我評價與員工真實體感完全斷裂，導致所有改進計畫均被基層視為耳邊風。</div>
-            <div class="ai-action">建議：啟動雙向 360 度對齊機制。</div>
+            <div class="ai-desc">回饋機制薄弱，認知落差大。員工可能感受不到被理解與看見，導致參與度下降。</div>
+            <div class="action-list-title">建議行動</div>
+            <ul class="action-list">
+                <li>建立雙向回饋機制</li>
+                <li>定期進行意見收集</li>
+                <li>強化主管同理與傾聽能力</li>
+            </ul>
         </div>
+        <!-- Matrix -->
         <div class="ai-card">
-            <h4>Matrix (結構)</h4>
+            <h4>Matrix (結構) <span>偏低</span></h4>
             <div class="ai-theory">RACI 權責矩陣理論</div>
-            <div class="ai-desc">結構得分極低，顯示組織存在嚴重的「責任稀釋」。過多跨部門會議導致無人對最終結果負責，內耗嚴重。</div>
-            <div class="ai-action">建議：重新定義核心業務單一問責位。</div>
+            <div class="ai-desc">組織結構與職責劃分不清，容易造成權責不明與資源重疊或缺口。</div>
+            <div class="action-list-title">建議行動</div>
+            <ul class="action-list">
+                <li>釐清角色與職責</li>
+                <li>優化組織架構與流程</li>
+                <li>建立清晰的決策機制</li>
+            </ul>
         </div>
+        <!-- Flow -->
         <div class="ai-card">
-            <h4>Flow (資訊流)</h4>
-            <div class="ai-theory">Shannon-Weaver 通訊模型</div>
-            <div class="ai-desc">通訊管道噪音過大。關鍵資訊在層級傳遞中遺失率超過 50%，導致一線員工對戰略意圖產生錯誤理解。</div>
-            <div class="ai-action">建議：建立即時數據透明看板。</div>
+            <h4>Flow (資訊流) <span>偏低</span></h4>
+            <div class="ai-theory">Shannon-Weaver 模型</div>
+            <div class="ai-desc">資訊流通不順暢，部門間溝通阻礙可能導致效率低落與誤解增加。</div>
+            <div class="action-list-title">建議行動</div>
+            <ul class="action-list">
+                <li>建立有效的資訊共享平台</li>
+                <li>強化跨部門溝通管道</li>
+                <li>減少資訊傳遞層級</li>
+            </ul>
         </div>
+        <!-- Safety -->
         <div class="ai-card">
-            <h4>Safety (安全感)</h4>
+            <h4>Safety (安全感) <span>偏低</span></h4>
             <div class="ai-theory">Edmondson 心理安全感</div>
-            <div class="ai-desc">團隊缺乏心理安全，員工因恐懼犯錯而隱瞞真相。當組織失去糾錯能力時，災難性風險將無法被預見。</div>
-            <div class="ai-action">建議：推行「無責異常申報獎勵」。</div>
+            <div class="ai-desc">員工可能擔心犯錯或被批評，不敢表達想法，影響創新與團隊合作。</div>
+            <div class="action-list-title">建議行動</div>
+            <ul class="action-list">
+                <li>建立信任與包容的文化</li>
+                <li>鼓勵表達不同觀點</li>
+                <li>領導者以身作則示範支持</li>
+            </ul>
         </div>
     </div>
 
@@ -132,19 +161,19 @@
             <h4 style="margin:0 0 20px 0; color:var(--primary);">🚀 下一步行動指南 (階段性順序)</h4>
             <div class="step-item">
                 <div class="step-num">1</div>
-                <div class="step-txt"><b>高層校準：</b>召開核心數據對齊會議，承認體感落差事實。</div>
+                <div class="step-txt"><b>優先改善鏡像與結構：</b>建立回饋與明確架構，奠定改善基礎。</div>
             </div>
             <div class="step-item">
                 <div class="step-num">2</div>
-                <div class="step-content"><b>結構簡化：</b>以 RACI 矩陣清理冗餘職能，明確單一責任歸屬。</div>
+                <div class="step-txt"><b>強化溝通與資訊流通：</b>打通資訊流，促進跨部門理解與協作。</div>
             </div>
             <div class="step-item">
                 <div class="step-num">3</div>
-                <div class="step-content"><b>資訊直通：</b>導入數位透明化看板，減少人為彙報產生的失真。</div>
+                <div class="step-txt"><b>提升心理安全感：</b>營造開放環境，鼓勵表達與創新。</div>
             </div>
             <div class="step-item">
                 <div class="step-num">4</div>
-                <div class="step-content"><b>動態複測：</b>每 30 天進行 MMTF 掃描，觀察指標改善路徑。</div>
+                <div class="step-txt"><b>持續追蹤與檢視：</b>定期檢視改善成效，持續優化組織體質。</div>
             </div>
         </div>
         <div class="remind-box">
@@ -153,7 +182,7 @@
         </div>
     </div>
 
-    <div class="footer">MMTF 專業診斷模組 v3.0 | 產出日期：2026-04-28</div>
+    <div class="footer">MMTF 專業診斷模組 v3.0 | 診斷日期：2025-05-26</div>
 </div>
 
 <script>
