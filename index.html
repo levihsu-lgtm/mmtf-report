@@ -3,81 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMTF 組織診斷報告 - 專業顧問系統</title>
+    <title>MMTF 組織診斷報告</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --high: #ff4d4f; --mid: #faad14; --low: #52c41a;
-            --primary: #4a90e2; --bg: #f8fafc;
-        }
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1000px; margin: auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-        
-        /* 頂部總覽卡片 */
-        .header-card { display: flex; align-items: center; gap: 40px; background: #fff; border: 1px solid #f0f0f0; border-radius: 15px; padding: 30px; margin-bottom: 30px; }
-        .score-circle { width: 140px; height: 140px; border: 10px solid #eee; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        
-        /* 進度條與雷達圖佈局 */
-        .main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-        .bar-container { margin-bottom: 15px; }
-        .bar-bg { background: #e9ecef; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 8px; }
-        .bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease-in-out; }
-
-        /* AI分析卡片 */
-        .analysis-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .analysis-card { padding: 20px; border-radius: 12px; border: 1px solid #f0f0f0; border-left: 6px solid #ccc; background: #fff; }
-        .analysis-card h4 { margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px; }
-        
-        .footer-box { margin-top: 30px; padding: 25px; background: #f0f7ff; border-radius: 12px; border-left: 6px solid var(--primary); }
-        ul { margin: 10px 0 0 0; padding-left: 20px; font-size: 14px; color: #666; line-height: 1.6; }
+        :root { --high: #ff4d4f; --mid: #faad14; --low: #52c41a; --primary: #4a90e2; }
+        body { font-family: "Microsoft JhengHei", sans-serif; background: #f8fafc; padding: 20px; color: #333; line-height: 1.6; }
+        .container { max-width: 900px; margin: auto; background: #fff; padding: 35px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .header-box { display: flex; align-items: center; gap: 30px; padding: 25px; border: 1px solid #f0f0f0; border-radius: 15px; margin-bottom: 30px; }
+        .score-circle { width: 120px; height: 120px; border: 10px solid #eee; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; margin-bottom: 30px; }
+        .bar-bg { background: #eee; height: 12px; border-radius: 6px; margin: 8px 0 15px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 6px; transition: width 1s; }
+        .analysis-card { background: #fff; border: 1px solid #eee; border-left: 6px solid #ccc; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .footer-box { background: #f0f7ff; padding: 20px; border-radius: 12px; border-left: 6px solid var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div style="text-align:center; margin-bottom:40px;">
-        <h1 style="margin:0; letter-spacing: 2px;">MMTF 組織診斷結果報告</h1>
-        <p style="color:#888;">根據 Mirror Matrix Theory Feedback 所產出之即時分析</p>
-    </div>
-
-    <div class="header-card">
+    <h1 style="text-align:center;">MMTF 組織診斷報告</h1>
+    
+    <div class="header-box">
         <div class="score-circle" id="circle">
-            <span id="t-score" style="font-size:42px; font-weight:bold;">0</span>
-            <span style="font-size:12px; color:#999;">/ 100</span>
+            <span id="t-score" style="font-size:36px; font-weight:bold;">0</span>
+            <span style="font-size:12px; color:#999;">/100</span>
         </div>
         <div>
-            <h3 style="margin:0; color:#888;">整體風險等級</h3>
-            <h2 id="rank-name" style="margin:5px 0; font-size:36px;">計算中...</h2>
-            <div id="model-text" style="font-size:18px; color:var(--primary); font-weight:bold;"></div>
+            <h2 id="rank-name" style="margin:0;">載入中...</h2>
+            <div id="model-tag" style="color:var(--primary); font-weight:bold; margin-top:5px;"></div>
         </div>
     </div>
 
-    <div class="main-layout">
+    <div class="grid">
         <div>
-            <h3>📊 四大維度得分</h3>
-            <div id="bars-area"></div>
+            <h3>📊 維度得分</h3>
+            <div id="bars"></div>
         </div>
-        <div style="text-align:center; border: 1px solid #f0f0f0; border-radius: 15px; padding: 20px;">
-            <h3 style="margin-top:0;">MMTF 四維度雷達圖</h3>
+        <div style="text-align:center;">
+            <h3>雷達分布圖</h3>
             <canvas id="radarChart"></canvas>
         </div>
     </div>
 
-    <h3>🧠 診斷分析結果與建議</h3>
-    <div class="analysis-section" id="analysis-area"></div>
+    <h3>🧠 診斷分析與建議</h3>
+    <div id="analysis-area"></div>
 
     <div class="footer-box">
-        <h3 style="margin-top:0;">💡 顧問統合建議</h3>
-        <p id="final-summary" style="font-size:15px; line-height:1.8; color:#444;"></p>
+        <h3>📌 顧問統合建議</h3>
+        <p id="summary-text"></p>
     </div>
 </div>
 
 <script>
-// 使用 DOMContentLoaded 確保 HTML 載入後才執行 JavaScript
-document.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
     const p = new URLSearchParams(window.location.search);
     
-    // 強化參數讀取：支援 mirror, matrix, flow, safe 等名稱
+    // 關鍵修正：確保能抓到所有可能的參數名稱
     const s = {
         mirror: parseInt(p.get('mirror')) || 0,
         matrix: parseInt(p.get('matrix')) || 0,
@@ -97,89 +78,49 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('rank-name').style.color = rank.c;
     document.getElementById('circle').style.borderColor = rank.c;
 
-    // 模型判定邏輯
-    function getModel(s) {
-        let top = (s.mirror + s.matrix) / 2;
-        let bottom = (s.flow + s.safe) / 2;
-        if(top < 12 && bottom < 12) return "全面崩壞型 (Collapse Model)";
-        if(top >= 15 && bottom < 12) return "制度失真型 (Disconnect Model)";
-        if(top < 12 && bottom >= 15) return "官僚失衡型 (Bureaucratic Model)";
-        if(top >= 18 && bottom >= 18) return "高效能型 (High Performance Model)";
-        return "過渡期模型 (Transitional Model)";
-    }
-    document.getElementById('model-text').innerText = `診斷模型：${getModel(s)}`;
+    // 模型判斷
+    const top = (s.mirror + s.matrix) / 2;
+    const bot = (s.flow + s.safe) / 2;
+    let model = "過渡型 (Transitional)";
+    if(top < 12 && bot < 12) model = "全面崩壞型 (Collapse Model)";
+    else if(top >= 15 && bot < 12) model = "制度失真型 (Disconnect Model)";
+    else if(top < 12 && bot >= 15) model = "官僚失衡型 (Bureaucratic Model)";
+    else if(top >= 18 && bot >= 18) model = "高效能型 (High Performance Model)";
+    document.getElementById('model-tag').innerText = `診斷模型：${model}`;
 
-    // 定義維度內容
-    const dims = [
-        {k:'mirror', l:'Mirror (鏡像)', d:'回饋與認知存在落差。', a:['建立雙向回饋機制','定期進行意見收集','強化主管同理心']},
-        {k:'matrix', l:'Matrix (結構)', d:'組織結構不清或職責重疊。', a:['釐清角色與職責','優化組織架構','建立清晰決策機制']},
-        {k:'flow', l:'Info Flow (資訊流)', d:'資訊傳遞不順或溝通斷層。', a:['建立資訊共享平台','強化跨部門溝通','減少傳遞層級']},
-        {k:'safe', l:'Psych Safety (心理安全)', d:'團隊信任感不足，不敢表達。', a:['建立信任文化','鼓勵表達不同觀點','領導者示範支持']}
+    const config = [
+        {k:'mirror', l:'Mirror (鏡像)', d:'回饋與認知存在落差。', a:['建立雙向回饋機制','定期收集意見']},
+        {k:'matrix', l:'Matrix (結構)', d:'職責定義不清或架構重疊。', a:['釐清崗位職責','優化決策流程']},
+        {k:'flow', l:'Info Flow (資訊流)', d:'資訊傳遞斷層。', a:['建立共用平台','減少溝通層級']},
+        {k:'safe', l:'Psych Safety (心理安全)', d:'信任感不足，不敢表達。', a:['鼓勵多元觀點','建立信任文化']}
     ];
 
-    let barsHtml = "";
-    let analysisHtml = "";
-    let weakPoints = [];
-
-    dims.forEach(item => {
-        let val = s[item.k];
-        let color = "var(--low)"; let label = "低風險";
-        if(val <= 12) { color = "var(--high)"; label = "高風險"; weakPoints.push(item.l); }
-        else if(val <= 18) { color = "var(--mid)"; label = "中風險"; }
-
-        // 生成進度條
-        barsHtml += `
-            <div class="bar-container">
-                <div style="display:flex; justify-content:space-between; font-size:13px;">
-                    <span>${item.l}</span>
-                    <span><b>${val}</b> / 25 <small style="color:${color}; padding-left:5px;">${label}</small></span>
-                </div>
-                <div class="bar-bg"><div class="bar-fill" style="width:${(val/25)*100}%; background:${color};"></div></div>
-            </div>`;
-
-        // 只要未達低標 (<=18) 就顯示建議
-        if(val <= 18) {
-            analysisHtml += `
-                <div class="analysis-card" style="border-left-color:${color}">
-                    <h4><span style="color:${color}">●</span> ${item.l} 偏低</h4>
-                    <p style="font-size:13px; color:#666; margin:0;">${item.d}</p>
-                    <ul>${item.a.map(act => `<li>${act}</li>`).join('')}</ul>
-                </div>`;
+    let barsH = ""; let anaH = "";
+    config.forEach(dim => {
+        let v = s[dim.k];
+        let color = v <= 12 ? "var(--high)" : v <= 18 ? "var(--mid)" : "var(--low)";
+        
+        barsH += `<div>${dim.l} <b>${v}/25</b><div class="bar-bg"><div class="bar-fill" style="width:${v/25*100}%; background:${color}"></div></div></div>`;
+        
+        if(v <= 18) { // 未達標則產出建議
+            anaH += `<div class="analysis-card" style="border-left-color:${color}">
+                <h4>${dim.l} 偏低</h4><p>${dim.d}</p><ul>${dim.a.map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
         }
     });
 
-    document.getElementById('bars-area').innerHTML = barsHtml;
-    document.getElementById('analysis-area').innerHTML = analysisHtml || "<p style='grid-column:span 2; text-align:center; color:#999;'>各面向表現良好，請持續維持現狀。</p>";
+    document.getElementById('bars').innerHTML = barsH;
+    document.getElementById('analysis-area').innerHTML = anaH || "<p>狀態良好</p>";
+    document.getElementById('summary-text').innerText = `組織目前處於 ${rank.n}。特別是當前呈現 ${model}，建議優先針對最低分維度進行結構化改善。`;
 
-    // 統合建議
-    let summary = `目前組織整體處於 <b>${rank.n}</b>。`;
-    if(weakPoints.length > 0) {
-        summary += `偵測到 <b>${weakPoints.join(' 與 ')}</b> 存在明顯瓶頸。建議優先針對這些弱項投入資源，建立標準化作業程序並強化內部溝通透明度。`;
-    } else {
-        summary += `各項指標均在水準之上，建議定期進行健康檢查以維持長期效能。`;
-    }
-    document.getElementById('final-summary').innerHTML = summary;
-
-    // 初始化雷達圖
     new Chart(document.getElementById('radarChart'), {
         type: 'radar',
         data: {
             labels: ['Mirror', 'Matrix', 'Flow', 'Safety'],
-            datasets: [{
-                label: '組織得分',
-                data: [s.mirror, s.matrix, s.flow, s.safe],
-                backgroundColor: 'rgba(74, 144, 226, 0.2)',
-                borderColor: '#4a90e2',
-                borderWidth: 2,
-                pointBackgroundColor: '#4a90e2'
-            }]
+            datasets: [{ data: [s.mirror, s.matrix, s.flow, s.safe], backgroundColor: 'rgba(74,144,226,0.2)', borderColor: '#4a90e2' }]
         },
-        options: {
-            scales: { r: { min: 0, max: 25, ticks: { display: false } } },
-            plugins: { legend: { display: false } }
-        }
+        options: { scales: { r: { min: 0, max: 25, ticks: { display: false } } }, plugins: { legend: { display: false } } }
     });
-});
+};
 </script>
 </body>
 </html>
