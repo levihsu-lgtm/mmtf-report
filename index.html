@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>MMTF 組織診斷專業報告</title>
+    <title>MMTF 組織氣候與管理效能診斷專業報告</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -93,7 +93,7 @@
         </div>
         <div class="risk-main" style="display:block; background:#fff;">
             <div style="font-weight:bold; font-size:14px; margin-bottom:10px;">📊 MMTF 指標定義</div>
-            <p style="font-size:12px; color:#666; line-height:1.6; margin:0;">本診斷透過對稱性理論評估管理能量。分數越高代表組織熵值越低，能量傳導越精準；低分則警示組織存在嚴重的內耗與認知斷層。</p>
+            <p style="font-size:12px; color:#666; line-height:1.6; margin:0;">本診斷透過對稱性理論評估管理能量。分數越高代表組織風險越低，能量傳導越精準；低分則警示組織存在嚴重的內耗與認知斷層。</p>
         </div>
     </div>
 
@@ -143,7 +143,7 @@
             </div>
             <div class="lit-item">
                 <div class="lit-tag">Flow 實證</div>
-                <b>Shannon & Weaver (1949)：</b><br>通訊噪訊（溝通障礙）會導致戰略意圖在傳遞中失真。
+                <b>Shannon & Weaver (1949)：</b><br>溝通傳達斷層（溝通障礙）會導致戰略意圖在傳遞中失真。
             </div>
             <div class="lit-item">
                 <div class="lit-tag">Safety 實證</div>
@@ -183,7 +183,7 @@ window.onload = function() {
         },
         flow: {
             title: "Flow (資訊流)", theory: "Communication Theory",
-            high: { status: "優異", color: "#52c41a", desc: "資訊透明即時，溝通噪訊極低，數據看板驅動團隊決策。", actions: ["導入 AI 輔助資訊摘要","強化非正式溝通節點","提升資訊獲取主動權"] },
+            high: { status: "優異", color: "#52c41a", desc: "資訊透明即時，溝通傳達斷層極低，數據看板驅動團隊決策。", actions: ["導入 AI 輔助資訊摘要","強化非正式溝通節點","提升資訊獲取主動權"] },
             mid:  { status: "良好", color: "#faad14", desc: "主幹道通暢，但支流資訊偶有滯後，數據連動性需強化。", actions: ["優化周報與同步機制","建立跨組資訊分享群","強化內部專案看板"] },
             low:  { status: "待加強", color: "#ff4d4f", desc: "資訊傳遞層級過多且失真，部門間存在嚴重的資訊孤島。", actions: ["打通數位化透明看板","減少不必要的傳遞層級","建立即時異常通報流"] }
         },
@@ -201,7 +201,7 @@ window.onload = function() {
     // 更新頂部卡片
     const riskUI = totalScore >= 70 ? { title: "卓越成長型", desc: "組織能量充沛，對稱性極佳，具備強大擴張基礎。", color: "#52c41a", bg: "#f6ffed", remind: "防範自滿情結，刻意引入外部挑戰者觀點。", rTitle: "💡 高能組織提醒" } :
                    totalScore >= 45 ? { title: "穩定運作型", desc: "組織具備基本效能，但局部能量損耗，需精準優化。", color: "#faad14", bg: "#fffbe6", remind: "關注各構面間的落差，避免優勢維度被劣勢維度拖累。", rTitle: "💡 優化組織提醒" } :
-                                    { title: "全面崩壞型", desc: "核心鏈條失效，組織熵值極高，需立即介入停損。", color: "#ff4d4f", bg: "#fff1f0", remind: "首要任務是修復心理安全感與真實回饋，暫緩新 KPI 導入。", rTitle: "💡 危機組織提醒" };
+                                    { title: "全面崩壞型", desc: "核心鏈條失效，組織風險極高，需立即介入停損。", color: "#ff4d4f", bg: "#fff1f0", remind: "首要任務是修復心理安全感與真實回饋，暫緩新 KPI 導入。", rTitle: "💡 危機組織提醒" };
 
     document.getElementById('totalScoreVal').innerText = totalScore;
     document.getElementById('totalScoreVal').style.color = riskUI.color;
