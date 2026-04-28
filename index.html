@@ -22,11 +22,12 @@ body{
  box-sizing:border-box;
 }
 
-/* Header */
+/* header */
 .header{
  display:flex;
  justify-content:space-between;
  align-items:center;
+ flex:0 0 auto;
 }
 
 .circle{
@@ -36,24 +37,9 @@ body{
  display:flex;
  align-items:center;
  justify-content:center;
- font-weight:bold;
 }
 
-/* 風險區 */
-.riskBox{
- display:flex;
- gap:10px;
- align-items:center;
- background:#fff;
- padding:8px 12px;
- border-radius:10px;
- margin:8px 0;
- box-shadow:0 2px 6px rgba(0,0,0,0.05);
-}
-
-.riskDot{font-size:20px}
-
-/* 主體 */
+/* main */
 .main{
  flex:1;
  display:grid;
@@ -62,198 +48,26 @@ body{
  overflow:hidden;
 }
 
-/* 左 */
+/* left */
 .left{
  display:flex;
  flex-direction:column;
  gap:8px;
+ overflow:hidden;
 }
 
-.dim{font-size:12px}
 .bar{background:#eee;height:6px;border-radius:4px;}
 .fill{height:100%;border-radius:4px;}
+.dim{font-size:12px}
 
-.summary{
- background:#eef5ff;
- padding:8px;
- border-radius:8px;
- font-size:12px;
-}
-
-/* 右 */
+/* right */
 .right{
  display:flex;
  flex-direction:column;
  gap:8px;
+ overflow:hidden;
 }
 
+/* radar */
 canvas{
- height:180px !important;
-}
-
-/* AI */
-.grid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:6px;
-}
-
-.card{
- background:#fff;
- padding:6px;
- border-radius:6px;
- font-size:11px;
- border-left:4px solid #4a90e2;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<!-- Header -->
-<div class="header">
-<h3>MMTF 組織診斷</h3>
-<div style="display:flex;gap:10px;align-items:center;">
-<div id="rank"></div>
-<div class="circle" id="circle"><span id="total">0</span></div>
-</div>
-</div>
-
-<!-- 風險 -->
-<div class="riskBox">
-<div class="riskDot" id="riskDot">●</div>
-<div>
-<div id="riskTitle" style="font-weight:bold;"></div>
-<div id="riskDesc" style="font-size:11px;color:#666;"></div>
-</div>
-</div>
-
-<!-- 主體 -->
-<div class="main">
-
-<!-- 左 -->
-<div class="left">
-
-<div id="bars"></div>
-
-<div class="summary" id="summary"></div>
-
-</div>
-
-<!-- 右 -->
-<div class="right">
-
-<canvas id="chart"></canvas>
-
-<div class="grid" id="analysis"></div>
-
-</div>
-
-</div>
-
-</div>
-
-<script>
-
-// 讀參數
-const p=new URLSearchParams(location.search);
-const s={
-mirror:+p.get('mirror')||0,
-matrix:+p.get('matrix')||0,
-flow:+p.get('flow')||0,
-safe:+p.get('safe')||0
-};
-
-// 總分
-const total=s.mirror+s.matrix+s.flow+s.safe;
-document.getElementById('total').innerText=total;
-
-// 風險判定
-let rank="低風險",color="green";
-let riskTitle="",riskDesc="",riskColor="green";
-
-if(total<=50){
-rank="高風險";color="red";
-riskTitle="高風險（需立即介入）";
-riskDesc="組織結構與運作已出現失效";
-riskColor="red";
-}
-else if(total<=75){
-rank="中風險";color="orange";
-riskTitle="中風險（建議優化）";
-riskDesc="部分構面影響決策與效率";
-riskColor="orange";
-}
-else{
-rank="低風險";color="green";
-riskTitle="低風險（穩定）";
-riskDesc="組織運作良好";
-riskColor="green";
-}
-
-document.getElementById('rank').innerText=rank;
-document.getElementById('rank').style.color=color;
-document.getElementById('circle').style.borderColor=color;
-
-document.getElementById('riskTitle').innerText=riskTitle;
-document.getElementById('riskDesc').innerText=riskDesc;
-document.getElementById('riskDot').style.color=riskColor;
-
-// 維度
-const dims=[
-["Mirror",s.mirror],
-["Matrix",s.matrix],
-["Flow",s.flow],
-["Safety",s.safe]
-];
-
-// bars
-document.getElementById('bars').innerHTML=dims.map(d=>{
-let c=d[1]<=12?"red":d[1]<=18?"orange":"green";
-return `
-<div class="dim">${d[0]} ${d[1]}/25</div>
-<div class="bar"><div class="fill" style="width:${d[1]*4}%;background:${c}"></div></div>`;
-}).join('');
-
-// 雷達圖
-new Chart(document.getElementById('chart'),{
-type:'radar',
-data:{
-labels:["Mirror","Matrix","Flow","Safety"],
-datasets:[{
-data:[s.mirror,s.matrix,s.flow,s.safe],
-borderColor:"#4a90e2",
-backgroundColor:"rgba(74,144,226,.2)"
-}]
-},
-options:{
-responsive:true,
-maintainAspectRatio:false,
-scales:{r:{min:0,max:25,ticks:{display:false}}}
-}
-});
-
-// AI分析
-document.getElementById('analysis').innerHTML=dims.map(d=>{
-let txt=d[1]<=12?"高風險":d[1]<=18?"需優化":"良好";
-return `<div class="card">${d[0]}：${txt}</div>`;
-}).join('');
-
-// Summary
-let summary="";
-if(total<=50){
-summary="⚠️ 建議啟動90天組織重整計畫";
-}else if(total<=75){
-summary="🔧 建議優化流程與溝通（60天）";
-}else{
-summary="✅ 建議持續優化與KPI監控";
-}
-
-document.getElementById('summary').innerText=summary;
-
-</script>
-
-</body>
-</html>
+ flex:0 0 180
