@@ -2,236 +2,192 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MMTF 組織診斷專業報告</title>
-
+<title>MMTF 顧問診斷報告</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* ===== 基礎設計（顧問級風格）===== */
 body{
-    margin:0;
-    font-family: "Noto Sans TC", Arial;
-    background:#f4f6f9;
-    color:#333;
+ font-family:"Microsoft JhengHei";
+ background:#f4f6f9;
+ margin:0;
+ padding:20px;
 }
 
-/* 一頁容器（關鍵） */
-.page{
-    width: 1100px;
-    height: 100vh;
-    margin: 0 auto;
-    padding: 18px;
-    box-sizing: border-box;
-    display: grid;
-    grid-template-rows: 60px 1fr 1fr;
-    gap: 12px;
+.container{
+ max-width:1100px;
+ margin:auto;
+ background:#fff;
+ padding:25px;
+ border-radius:12px;
+ box-shadow:0 4px 20px rgba(0,0,0,0.05);
 }
 
-/* ===== Header ===== */
+/* Header */
 .header{
-    background:#1f2a44;
-    color:white;
-    padding:12px 18px;
-    border-radius:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-.header h1{
-    font-size:18px;
-    margin:0;
-}
-.header .meta{
-    font-size:12px;
-    opacity:0.8;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:20px;
 }
 
-/* ===== KPI 區 ===== */
-.kpi{
-    display:grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap:10px;
+.score{
+ font-size:36px;
+ font-weight:bold;
 }
 
-.card{
-    background:white;
-    border-radius:12px;
-    padding:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.06);
-    text-align:center;
-}
-.card h2{
-    font-size:13px;
-    margin:0;
-    color:#666;
-}
-.card .value{
-    font-size:22px;
-    font-weight:bold;
-    margin-top:6px;
-}
-
-/* ===== 主內容區 ===== */
-.main{
-    display:grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap:12px;
-}
-
-/* 雷達圖區 */
-.chartBox{
-    background:white;
-    border-radius:12px;
-    padding:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.06);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-}
-
-/* 風險燈號 */
-.riskBox{
-    background:white;
-    border-radius:12px;
-    padding:14px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.06);
-}
-
+/* 風險 */
 .risk{
-    display:flex;
-    justify-content:space-between;
-    margin:10px 0;
-    font-size:13px;
+ padding:15px;
+ border-radius:10px;
+ margin-bottom:20px;
 }
 
-.light{
-    width:14px;
-    height:14px;
-    border-radius:50%;
-}
-.red{ background:#ff4d4f;}
-.yellow{ background:#faad14;}
-.green{ background:#52c41a;}
+.high{background:#fff1f0;border-left:6px solid #ff4d4f;}
+.mid{background:#fff7e6;border-left:6px solid #faad14;}
+.low{background:#f6ffed;border-left:6px solid #52c41a;}
 
-/* ===== footer ===== */
-.footer{
-    font-size:11px;
-    text-align:center;
-    color:#888;
+/* 區塊 */
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:20px;
 }
 
-/* ===== 列印優化 ===== */
-@media print{
-    body{ background:white;}
-    .page{ width:100%; height:auto;}
+/* 卡片 */
+.card{
+ background:#fafafa;
+ padding:15px;
+ border-radius:10px;
 }
+
+h3{margin-top:0}
+
+/* 條 */
+.bar{background:#eee;height:10px;border-radius:6px;}
+.fill{height:100%;border-radius:6px;}
+
 </style>
 </head>
 
 <body>
 
-<div class="page">
+<div class="container">
 
-    <!-- HEADER -->
-    <div class="header">
-        <h1>MMTF 組織氣候與管理效能診斷報告</h1>
-        <div class="meta">Mirror Matrix Theory Feedback v2 | Consultant Report</div>
-    </div>
+<div class="header">
+<h2>MMTF 組織診斷報告</h2>
+<div class="score" id="total"></div>
+</div>
 
-    <!-- KPI -->
-    <div class="kpi">
-        <div class="card">
-            <h2>Mirror 指數</h2>
-            <div class="value">20</div>
-        </div>
-        <div class="card">
-            <h2>Matrix 結構</h2>
-            <div class="value">12</div>
-        </div>
-        <div class="card">
-            <h2>Flow 流動</h2>
-            <div class="value">8</div>
-        </div>
-        <div class="card">
-            <h2>Safe 安全</h2>
-            <div class="value">8</div>
-        </div>
-    </div>
+<div id="riskBox" class="risk"></div>
 
-    <!-- MAIN -->
-    <div class="main">
+<div class="grid">
 
-        <!-- Radar -->
-        <div class="chartBox">
-            <canvas id="radar" width="380" height="380"></canvas>
-        </div>
+<!-- 左 -->
+<div class="card">
+<h3>📊 四大維度</h3>
+<div id="bars"></div>
+</div>
 
-        <!-- Risk -->
-        <div class="riskBox">
-            <h3 style="margin-top:0;">風險診斷燈號</h3>
+<!-- 右 -->
+<div class="card">
+<h3>📈 結構圖</h3>
+<canvas id="chart"></canvas>
+</div>
 
-            <div class="risk">
-                <span>組織透明度</span>
-                <div class="light red"></div>
-            </div>
+</div>
 
-            <div class="risk">
-                <span>溝通流動性</span>
-                <div class="light yellow"></div>
-            </div>
+<div class="card" style="margin-top:20px;">
+<h3>🧠 顧問分析</h3>
+<div id="analysis"></div>
+</div>
 
-            <div class="risk">
-                <span>制度穩定性</span>
-                <div class="light green"></div>
-            </div>
-
-            <div class="risk">
-                <span>心理安全感</span>
-                <div class="light yellow"></div>
-            </div>
-
-            <hr>
-
-            <p style="font-size:12px; color:#666;">
-            ※ 本報告依 MMTF（Mirror Matrix Theory Feedback）模型生成，用於組織氣候與管理效能診斷。
-            </p>
-        </div>
-
-    </div>
-
-    <div class="footer">
-        © MMTF Diagnostic System | Professional Consulting Dashboard
-    </div>
+<div class="card" style="margin-top:20px;">
+<h3>🚀 改善策略</h3>
+<div id="strategy"></div>
+</div>
 
 </div>
 
 <script>
-const ctx = document.getElementById('radar');
 
-new Chart(ctx, {
-    type: 'radar',
-    data: {
-        labels: ['Mirror','Matrix','Flow','Safe','Stability','Trust'],
-        datasets: [{
-            label: '組織狀態',
-            data: [20,12,8,8,10,9],
-            backgroundColor: 'rgba(31,42,68,0.2)',
-            borderColor: '#1f2a44',
-            borderWidth: 2
-        }]
-    },
-    options: {
-        responsive: false,
-        scales: {
-            r: {
-                suggestedMin: 0,
-                suggestedMax: 25
-            }
-        }
-    }
+// 讀參數
+const p=new URLSearchParams(location.search);
+const s={
+mirror:+p.get('mirror')||0,
+matrix:+p.get('matrix')||0,
+flow:+p.get('flow')||0,
+safe:+p.get('safe')||0
+};
+
+const total=s.mirror+s.matrix+s.flow+s.safe;
+document.getElementById("total").innerText=total;
+
+// 風險
+let riskClass="low",text="",desc="";
+if(total<=50){
+riskClass="high";
+text="高風險";
+desc="組織運作已出現系統性失效";
+}
+else if(total<=75){
+riskClass="mid";
+text="中風險";
+desc="部分構面影響效率與決策";
+}
+else{
+riskClass="low";
+text="低風險";
+desc="組織運作穩定";
+}
+
+document.getElementById("riskBox").classList.add(riskClass);
+document.getElementById("riskBox").innerHTML=
+`<b>${text}</b><br>${desc}`;
+
+// bars
+const dims=[["Mirror",s.mirror],["Matrix",s.matrix],["Flow",s.flow],["Safety",s.safe]];
+
+document.getElementById("bars").innerHTML=dims.map(d=>{
+let c=d[1]<=12?"#ff4d4f":d[1]<=18?"#faad14":"#52c41a";
+return `
+<div>${d[0]} ${d[1]}/25</div>
+<div class="bar"><div class="fill" style="width:${d[1]*4}%;background:${c}"></div></div>
+`;
+}).join('');
+
+// 雷達圖
+new Chart(document.getElementById('chart'),{
+type:'radar',
+data:{
+labels:["Mirror","Matrix","Flow","Safety"],
+datasets:[{
+data:[s.mirror,s.matrix,s.flow,s.safe],
+backgroundColor:"rgba(74,144,226,.2)",
+borderColor:"#4a90e2"
+}]
+},
+options:{scales:{r:{min:0,max:25}}}
 });
+
+// 分析
+document.getElementById("analysis").innerHTML=dims.map(d=>{
+let txt=d[1]<=12?"關鍵風險":"需優化";
+return `<p><b>${d[0]}</b>：${txt}</p>`;
+}).join('');
+
+// 策略
+let strategy="";
+if(total<=50){
+strategy="建議啟動組織重整（90天）";
+}
+else if(total<=75){
+strategy="建議導入流程與溝通優化（60天）";
+}
+else{
+strategy="建議持續優化並建立標準化";
+}
+document.getElementById("strategy").innerText=strategy;
+
 </script>
 
 </body>
