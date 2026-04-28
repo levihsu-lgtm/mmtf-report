@@ -8,166 +8,208 @@
     <style>
         :root {
             --high: #ff4d4f; --mid: #faad14; --low: #52c41a;
-            --primary: #1a3a63; --bg: #f8f9fb; --blue-bg: #f4f8ff;
+            --primary: #1a3a63; --bg: #f8f9fb; --blue-light: #f4f8ff;
         }
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-        .report-container { max-width: 950px; margin: auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; line-height: 1.6; }
+        .report-container { max-width: 1000px; margin: auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         
-        /* 標題 */
-        .main-header { text-align: center; margin-bottom: 30px; }
-        .main-header h1 { font-size: 34px; color: var(--primary); margin: 0; }
+        /* 標題區 */
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 32px; color: var(--primary); margin: 0; font-weight: 700; }
+        .header p { color: #888; font-size: 14px; margin-top: 10px; }
 
-        /* 1. 風險等級區 */
-        .top-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 35px; }
-        .risk-card { border: 1px solid #f0f0f0; border-radius: 10px; padding: 25px; display: flex; align-items: center; }
-        .circle-ui { width: 110px; height: 110px; border: 10px solid var(--mid); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 25px; }
-        .score-val { font-size: 36px; font-weight: bold; color: var(--mid); }
-        .risk-info h2 { margin: 0; font-size: 30px; color: var(--mid); }
-        
-        .legend-list { list-style: none; padding: 0; font-size: 13px; line-height: 2.2; }
-        .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+        /* 1. 整體風險區 - 加入正確邏輯判定 */
+        .risk-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+        .card { border: 1px solid #f0f0f0; border-radius: 12px; padding: 25px; display: flex; align-items: center; }
+        .score-circle { width: 120px; height: 120px; border: 12px solid var(--mid); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 30px; transition: all 0.5s; }
+        .score-num { font-size: 38px; font-weight: bold; }
+        .score-total { font-size: 12px; color: #999; }
+        .risk-text h2 { margin: 0; font-size: 28px; transition: color 0.5s; }
+        .risk-text p { margin: 5px 0 0; color: #666; font-size: 14px; }
 
-        /* 2. 數據與雷達圖 */
-        .data-row { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 40px; margin-bottom: 40px; }
-        .section-h { font-size: 16px; font-weight: bold; color: var(--primary); margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px; }
-        .bar-item { margin-bottom: 18px; position: relative; }
-        .bar-label { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: bold; margin-bottom: 6px; }
-        .bar-track { background: #eee; height: 10px; border-radius: 5px; overflow: hidden; }
-        .bar-fill { height: 100%; transition: width 1s ease-in-out; }
+        .legend { list-style: none; padding: 0; margin: 0; font-size: 13.5px; }
+        .legend li { margin-bottom: 12px; display: flex; align-items: center; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 10px; }
 
-        .radar-box { text-align: center; border-left: 1px solid #f0f0f0; padding-left: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        #radarChart { max-width: 180px !important; max-height: 180px !important; }
+        /* 2. 四大維度與雷達圖 */
+        .data-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 40px; margin-bottom: 40px; }
+        .section-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .section-title::before { content: ""; width: 4px; height: 18px; background: var(--primary); border-radius: 2px; }
 
-        /* 3. AI 分析 (具邏輯性的分析內容) */
-        .ai-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 40px; }
-        .ai-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 10px; padding: 18px; border-top: 5px solid var(--primary); display: flex; flex-direction: column; }
-        .ai-card-h { font-weight: bold; font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        .ai-card p { font-size: 11.5px; color: #666; line-height: 1.6; margin-bottom: 12px; text-align: justify; flex-grow: 1; }
-        .ai-card b { font-size: 11.5px; display: block; margin-bottom: 8px; border-top: 1px solid #f9f9f9; padding-top: 10px; color: #333; }
-        .ai-card ul { padding-left: 15px; margin: 0; font-size: 10.5px; color: #777; }
+        .bar-container { margin-bottom: 22px; }
+        .bar-label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .bar-bg { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; position: relative; }
+        .bar-fill { height: 100%; transition: width 1.2s cubic-bezier(0.1, 0, 0.2, 1); }
+        .bar-tag { position: absolute; right: 0; top: 15px; font-size: 11px; font-weight: bold; }
 
-        /* 4. 總結、下一步、提醒 */
-        .summary-box { background: var(--blue-bg); padding: 30px; border-radius: 12px; border-top: 5px solid var(--primary); }
-        .summary-text { font-size: 14px; color: var(--primary); line-height: 1.8; margin-bottom: 25px; text-align: justify; }
+        .radar-box { background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid #f0f0f0; }
 
-        .steps-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
-        .step-card { background: #fff; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .step-num { width: 28px; height: 28px; background: #e6efff; color: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
-        .step-title { font-size: 12px; font-weight: bold; color: var(--primary); }
+        /* 3. AI 分析 (1x4 橫向佈局) */
+        .ai-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 40px; }
+        .ai-item { background: #fff; border: 1px solid #f0f0f0; border-top: 5px solid var(--primary); border-radius: 10px; padding: 20px; transition: transform 0.3s; }
+        .ai-item:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .ai-h { font-size: 14px; font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .ai-p { font-size: 12px; color: #666; height: 60px; overflow: hidden; margin-bottom: 15px; text-align: justify; }
+        .ai-action { font-size: 12px; font-weight: bold; border-top: 1px solid #f5f5f5; padding-top: 10px; }
+        .ai-ul { padding-left: 18px; margin: 8px 0 0; font-size: 11px; color: #777; }
 
-        .notice-card { background: rgba(255,255,255,0.7); border: 1px dashed #cbdcf7; padding: 20px; border-radius: 8px; }
-        .notice-h { font-size: 14px; font-weight: bold; color: #d46b08; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-        .notice-ul { margin: 0; padding-left: 20px; font-size: 12px; color: #555; line-height: 1.8; }
+        /* 4. 總結與下一步行動 */
+        .summary-box { background: var(--blue-light); padding: 35px; border-radius: 16px; border-top: 6px solid var(--primary); }
+        .summary-p { font-size: 15px; color: var(--primary); margin-bottom: 30px; font-weight: 500; }
+
+        .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        .step-card { background: #fff; padding: 20px 10px; border-radius: 12px; text-align: center; box-shadow: 0 4px 10px rgba(26, 58, 99, 0.05); }
+        .step-icon { width: 32px; height: 32px; background: #eef4ff; color: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin-bottom: 10px; }
+        .step-title { font-size: 13px; font-weight: bold; color: var(--primary); }
+
+        .notice-card { background: #fffdf6; border: 1px dashed #ffe58f; padding: 20px; border-radius: 10px; display: flex; gap: 15px; }
+        .notice-bulb { font-size: 24px; }
+        .notice-content h4 { margin: 0 0 8px; color: #d46b08; font-size: 14px; }
+        .notice-content ul { margin: 0; padding-left: 20px; font-size: 12.5px; color: #614700; line-height: 1.8; }
     </style>
 </head>
 <body>
 
 <div class="report-container">
-    <div class="main-header">
-        <h1>MMTF 組織診斷報告</h1>
+    <div class="header">
+        <h1>MMTF 組織診斷結果報告</h1>
+        <p>透過四大維度深度剖析組織管理現況，對齊管理者與員工認知</p>
     </div>
 
-    <div class="top-section">
-        <div class="risk-card">
-            <div class="circle-ui">
-                <span class="score-val">72</span>
-                <span style="font-size:10px; color:#999;">/ 100</span>
+    <div class="risk-section">
+        <div class="card">
+            <div class="score-circle" id="riskCircle">
+                <span class="score-num" id="totalScore">--</span>
+                <span class="score-total">/ 100</span>
             </div>
-            <div class="risk-info">
-                <h2 style="color:var(--mid)">中風險</h2>
-                <p>組織狀態尚穩，但存在關鍵認知落差。</p>
+            <div class="risk-text">
+                <h2 id="riskLevel">分析中...</h2>
+                <p id="riskDesc">綜合評估組織當前運作風險</p>
             </div>
         </div>
-        <div class="risk-card" style="display:block;">
-            <div style="font-weight:bold; font-size:14px; margin-bottom:10px;">💡 風險等級說明</div>
-            <ul class="legend-list">
-                <li><span class="dot" style="background:var(--high)"></span> <b>高風險 (0-50分)</b> —— 需立即介入改善</li>
-                <li><span class="dot" style="background:var(--mid)"></span> <b>中風險 (51-75分)</b> —— 建議積極強化優化</li>
-                <li><span class="dot" style="background:var(--low)"></span> <b>低風險 (76-100分)</b> —— 狀態良好持續維持</li>
+        <div class="card" style="display: block;">
+            <div style="font-weight:bold; font-size:14px; margin-bottom:15px;">📊 風險等級說明</div>
+            <ul class="legend">
+                <li><span class="dot" style="background:var(--high)"></span> <b>高風險 (0-50分)</b> — 需立即介入並全面改善</li>
+                <li><span class="dot" style="background:var(--mid)"></span> <b>中風險 (51-75分)</b> — 建議針對薄弱維度積極強化</li>
+                <li><span class="dot" style="background:var(--low)"></span> <b>低風險 (76-100分)</b> — 狀態良好，建議持續維持並微調</li>
             </ul>
         </div>
     </div>
 
-    <div class="data-row">
+    <div class="data-grid">
         <div>
-            <div class="section-h">📊 四大維度量化得分</div>
+            <div class="section-title">四大維度得分明細</div>
             <div id="barBox"></div>
         </div>
         <div class="radar-box">
-            <div class="section-h" style="border:none; padding:0; width:100%; text-align:left;">🕸️ 診斷雷達圖</div>
-            <canvas id="radarChart"></canvas>
+            <div class="section-title" style="width:100%; border:none; padding:0;">診斷雷達圖</div>
+            <canvas id="radarChart" width="200" height="200"></canvas>
         </div>
     </div>
 
-    <div class="section-h">🧠 AI 實證分析建議</div>
-    <div class="ai-grid" id="aiBox">
-        </div>
+    <div class="section-title">🧠 AI 實證分析建議</div>
+    <div class="ai-container" id="aiBox"></div>
 
     <div class="summary-box">
-        <div class="section-h" style="border:none; padding:0; margin-bottom:15px;">💡 總結與建議</div>
-        <p class="summary-text">
-            當前總分為 <b>72 分 (中風險)</b>。數據顯示組織在 <b>Matrix、Flow 與 Safe</b> 構面已有良好基礎，但 <b>Mirror (鏡像)</b> 的極低得分顯示管理者對現況的認知與基層嚴重脫節。若不處理此認知斷層，現有的結構與流程優勢將逐漸瓦解。
-        </p>
+        <div class="section-title" style="border:none; padding:0; margin-bottom:15px;">💡 總結與建議</div>
+        <p class="summary-p" id="summaryTxt"></p>
 
-        <div class="steps-container">
-            <div class="step-card"><div class="step-num">1</div><div class="step-title">管理層認知校準</div></div>
-            <div class="step-card"><div class="step-num">2</div><div class="step-title">建立多維度回饋</div></div>
-            <div class="step-card"><div class="step-num">3</div><div class="step-title">資訊流透明強化</div></div>
-            <div class="step-card"><div class="step-num">4</div><div class="step-title">定期追蹤複測</div></div>
+        <div class="steps-grid">
+            <div class="step-card"><div class="step-icon">1</div><div class="step-title">管理認知校準</div></div>
+            <div class="step-card"><div class="step-icon">2</div><div class="step-title">建立多維回饋</div></div>
+            <div class="step-card"><div class="step-num" style="display:none"></div><div class="step-icon">3</div><div class="step-title">流程權責優化</div></div>
+            <div class="step-card"><div class="step-icon">4</div><div class="step-title">每季追蹤複測</div></div>
         </div>
 
         <div class="notice-card">
-            <div class="notice-h">⚠️ 執行關鍵提醒</div>
-            <ul class="notice-ul">
-                <li><b>正視斷層：</b> 管理層需承認體感落差，這是重建「鏡像」維度的第一步。</li>
-                <li><b>利用結構優勢：</b> 運用 Matrix 20 分的穩定架構，將回饋機制標準化嵌入流程中。</li>
-                <li><b>心理安全轉化：</b> 將現有的安全感轉化為真實意見的表達，而非維持表面和諧。</li>
-            </ul>
+            <div class="notice-bulb">💡</div>
+            <div class="notice-content">
+                <h4>執行關鍵提醒</h4>
+                <ul>
+                    <li><b>認知為先：</b> 優先處理 Mirror 維度的落差，若管理者不認同落差，後續工具導入將失效。</li>
+                    <li><b>結構支撐：</b> 運用 Matrix 良好的基礎，將反饋流程標準化、制度化。</li>
+                    <li><b>安全轉化：</b> 心理安全感應從「和諧」轉向「建設性衝突」，鼓勵真實揭露問題。</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
 window.onload = function() {
-    // 依據用戶網址參數設定數據
-    const data = { mirror: 12, matrix: 20, flow: 20, safe: 20 };
+    // 獲取數據 (對齊您的網址參數)
+    const params = new URLSearchParams(window.location.search);
+    const scores = {
+        mirror: parseInt(params.get('mirror')) || 12,
+        matrix: parseInt(params.get('matrix')) || 20,
+        flow: parseInt(params.get('flow')) || 20,
+        safe: parseInt(params.get('safe')) || 20
+    };
+    const total = scores.mirror + scores.matrix + scores.flow + scores.safe;
+    
+    // --- 正確風險判定邏輯 ---
+    let color = "var(--low)";
+    let level = "低風險";
+    if (total <= 50) { color = "var(--high)"; level = "高風險"; }
+    else if (total <= 75) { color = "var(--mid)"; level = "中風險"; }
+
+    // 更新頂部 UI
+    document.getElementById('totalScore').innerText = total;
+    document.getElementById('totalScore').style.color = color;
+    document.getElementById('riskLevel').innerText = level;
+    document.getElementById('riskLevel').style.color = color;
+    document.getElementById('riskCircle').style.borderColor = color;
+    document.getElementById('summaryTxt').innerHTML = `當前診斷總分為 <b>${total} 分 (${level})</b>。${total <= 75 ? '組織存在明顯的維度失衡，特別是 <b>Mirror (鏡像)</b> 維度低於臨界值，顯示存在嚴重的認知斷層。建議優先對齊管理層體感，避免流程與實際執行脫節。' : '組織狀態穩定，建議維持現有机制。'}`;
 
     const config = [
-        { k:'mirror', l:'Mirror (鏡像)', v:12, d:'管理認知斷層。管理者與基層對問題的嚴重性缺乏共識，導致改善行動無法對準真實痛點。', a:['實施360度主管反饋','增加非正式溝通頻次'] },
-        { k:'matrix', l:'Matrix (結構)', v:20, d:'結構效能穩健。組織權責劃分尚稱明確，具備支撐管理行動的硬體架構。', a:['精煉關鍵流程節點','強化跨部門協作邊界'] },
-        { k:'flow', l:'Flow (資訊流)', v:20, d:'資訊傳遞通暢。現有溝通平台運作良好，能支援大部分的日常業務數據傳遞。', a:['推動數據視覺化看板','規範會議產出追蹤'] },
-        { k:'safe', l:'Safe (心理安全)', v:20, d:'團隊氛圍穩定。員工具備基本的信任感，有助於推行後續的認知校準行動。', a:['建立對事不對人文化','鼓勵透明揭露異常'] }
+        { k:'mirror', l:'Mirror (鏡像)', d:'認知斷層顯著。管理者自覺管理良好，但員工感受不到支持，回饋機制形同虛設。', a:['啟動360度匿名回饋','主管傾聽工作坊'] },
+        { k:'matrix', l:'Matrix (結構)', d:'結構相對穩定。權責劃分尚明確，具備支撐管理行動的硬體架構，但需防範僵化。', a:['精煉決策權責RACI','流程自動化評估'] },
+        { k:'flow', l:'Flow (資訊流)', d:'資訊傳遞通暢。跨部門溝通具備基礎管道，資訊能有效覆蓋至各執行節點。', a:['建立數位化績效看板','規範會議產出追蹤'] },
+        { k:'safe', l:'Safe (心理安全)', d:'團隊環境安全。員工具備基本信任感，具備推行認知校準行動的良好文化基礎。', a:['推行無責異常申報','強化支持型領導風格'] }
     ];
 
     let bH = "", aH = "";
     config.forEach(i => {
-        let c = i.v <= 12 ? "var(--high)" : i.v <= 18 ? "var(--mid)" : "var(--low)";
-        bH += `<div class="bar-item">
-            <div class="bar-label"><span>${i.l}</span><span>${i.v}/25</span></div>
-            <div class="bar-track"><div class="bar-fill" style="width:${i.v*4}%; background:${c}"></div></div>
-        </div>`;
-        aH += `<div class="ai-card">
-            <div class="ai-card-h" style="color:${c}">● ${i.l}</div>
-            <p>${i.d}</p>
-            <b>建議行動</b>
-            <ul class="ai-ul">${i.a.map(x=>`<li>${x}</li>`).join('')}</ul>
-        </div>`;
+        let v = scores[i.k];
+        let c = v <= 12 ? "var(--high)" : v <= 18 ? "var(--mid)" : "var(--low)";
+        
+        bH += `
+            <div class="bar-container">
+                <div class="bar-label"><span>${i.l}</span><span>${v}/25</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width:${v*4}%; background:${c}"></div></div>
+                <span class="bar-tag" style="color:${c}">${v<=12?'高風險':'相對穩健'}</span>
+            </div>`;
+            
+        aH += `
+            <div class="ai-item">
+                <div class="ai-h" style="color:${c}">● ${i.l} 構面</div>
+                <p class="ai-p">${i.d}</p>
+                <div class="ai-action">建議行動</div>
+                <ul class="ai-ul">${i.a.map(x=>`<li>${x}</li>`).join('')}</ul>
+            </div>`;
     });
     document.getElementById('barBox').innerHTML = bH;
     document.getElementById('aiBox').innerHTML = aH;
 
+    // 雷達圖
     new Chart(document.getElementById('radarChart'), {
         type: 'radar',
         data: {
             labels: ['Mirror', 'Matrix', 'Flow', 'Safe'],
-            datasets: [{ 
-                data: [data.mirror, data.matrix, data.flow, data.safe], 
-                backgroundColor: 'rgba(26, 58, 99, 0.1)', 
-                borderColor: 'var(--primary)', 
-                borderWidth: 2, pointRadius: 3 
+            datasets: [{
+                data: [scores.mirror, scores.matrix, scores.flow, scores.safe],
+                backgroundColor: 'rgba(26, 58, 99, 0.1)',
+                borderColor: '#1a3a63',
+                borderWidth: 2,
+                pointRadius: 4,
+                pointBackgroundColor: '#1a3a63'
             }]
         },
-        options: { scales: { r: { min: 0, max: 25, ticks: { display: false } } }, plugins: { legend: { display: false } } }
+        options: {
+            scales: { r: { min: 0, max: 25, ticks: { display: false }, grid: { color: '#f0f0f0' } } },
+            plugins: { legend: { display: false } }
+        }
     });
 };
 </script>
