@@ -3,17 +3,97 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MMTF 報告</title>
+<title>MMTF Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body{font-family:"Microsoft JhengHei";background:#f5f7fa;margin:0;padding:20px;}
-.container{max-width:900px;margin:auto;background:#fff;padding:30px;border-radius:10px;}
-.circle{width:120px;height:120px;border:10px solid red;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;}
-.bar{background:#eee;height:10px;border-radius:5px;margin:5px 0;}
+body{
+ font-family:"Microsoft JhengHei";
+ background:#f5f7fa;
+ margin:0;
+ height:100vh;
+ overflow:hidden;
+}
+
+.container{
+ height:100vh;
+ display:grid;
+ grid-template-rows:80px 1fr;
+ padding:15px;
+}
+
+/* 上方 */
+.header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.circle{
+ width:70px;height:70px;
+ border:6px solid red;
+ border-radius:50%;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ font-size:20px;
+}
+
+/* 主體 */
+.main{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:15px;
+ height:100%;
+}
+
+/* 左 */
+.left{
+ display:grid;
+ grid-template-rows:auto 1fr;
+ gap:10px;
+}
+
+/* bars */
+.bar{background:#eee;height:8px;border-radius:5px;}
 .fill{height:100%;border-radius:5px;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
-.card{background:#fafafa;padding:15px;border-radius:10px;}
+
+.dim{font-size:13px;margin-bottom:8px;}
+
+/* 右 */
+.right{
+ display:grid;
+ grid-template-rows:220px 1fr;
+ gap:10px;
+}
+
+/* radar */
+canvas{
+ max-height:200px!important;
+}
+
+/* AI */
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+}
+
+.card{
+ background:#fff;
+ padding:8px;
+ border-radius:8px;
+ font-size:12px;
+ border-left:4px solid #4a90e2;
+}
+
+/* summary */
+.summary{
+ font-size:13px;
+ background:#eef5ff;
+ padding:10px;
+ border-radius:8px;
+}
 </style>
 </head>
 
@@ -21,27 +101,37 @@ body{font-family:"Microsoft JhengHei";background:#f5f7fa;margin:0;padding:20px;}
 
 <div class="container">
 
-<h1>MMTF 組織診斷報告</h1>
-
-<div style="display:flex;gap:20px;align-items:center;">
+<!-- header -->
+<div class="header">
+<h2>MMTF 組織診斷</h2>
+<div style="display:flex;gap:15px;align-items:center;">
+<div id="rank"></div>
 <div class="circle" id="circle"><span id="total">0</span></div>
-<div>
-<h2 id="rank"></h2>
-<div id="model"></div>
 </div>
 </div>
 
-<h3>四大維度</h3>
+<!-- main -->
+<div class="main">
+
+<!-- 左 -->
+<div class="left">
+
 <div id="bars"></div>
+
+<div class="summary" id="summary"></div>
+
+</div>
+
+<!-- 右 -->
+<div class="right">
 
 <canvas id="chart"></canvas>
 
-<h3>AI分析</h3>
 <div class="grid" id="analysis"></div>
 
-<h3>結論</h3>
-<div id="summary"></div>
+</div>
 
+</div>
 </div>
 
 <script>
@@ -65,12 +155,8 @@ if(total<=50){rank="高風險";color="red"}
 else if(total<=75){rank="中風險";color="orange"}
 
 document.getElementById('rank').innerText=rank;
+document.getElementById('rank').style.color=color;
 document.getElementById('circle').style.borderColor=color;
-
-// 模型
-let model="過渡型";
-if(s.mirror<12&&s.matrix<12&&s.flow<12&&s.safe<12) model="全面崩壞型";
-document.getElementById('model').innerText=model;
 
 // 維度
 const dims=[["Mirror",s.mirror],["Matrix",s.matrix],["Flow",s.flow],["Safety",s.safe]];
@@ -78,24 +164,37 @@ const dims=[["Mirror",s.mirror],["Matrix",s.matrix],["Flow",s.flow],["Safety",s.
 // bars
 document.getElementById('bars').innerHTML=dims.map(d=>{
 let c=d[1]<=12?"red":d[1]<=18?"orange":"green";
-return `${d[0]} ${d[1]}
+return `
+<div class="dim">${d[0]} ${d[1]}/25</div>
 <div class="bar"><div class="fill" style="width:${d[1]*4}%;background:${c}"></div></div>`;
 }).join('');
 
-// chart
+// radar
 new Chart(document.getElementById('chart'),{
 type:'radar',
-data:{labels:["Mirror","Matrix","Flow","Safety"],datasets:[{data:[s.mirror,s.matrix,s.flow,s.safe]}]},
-options:{scales:{r:{min:0,max:25}}}
+data:{labels:["Mirror","Matrix","Flow","Safety"],
+datasets:[{data:[s.mirror,s.matrix,s.flow,s.safe],
+borderColor:"#4a90e2",
+backgroundColor:"rgba(74,144,226,.2)"}]},
+options:{scales:{r:{min:0,max:25,ticks:{display:false}}}}
 });
 
-// AI
+// AI分析
 document.getElementById('analysis').innerHTML=dims.map(d=>{
-return `<div class="card">${d[0]}：${d[1]}</div>`;
+let txt=d[1]<=12?"高風險":d[1]<=18?"需優化":"良好";
+return `<div class="card">${d[0]}：${txt}</div>`;
 }).join('');
 
 // summary
-document.getElementById('summary').innerText="建議進行組織改善";
+let summary="";
+if(total<=50){
+summary="⚠️ 組織已失效，需重建制度與回饋機制";
+}else if(total<=75){
+summary="🔧 組織運作不穩，建議優化流程與溝通";
+}else{
+summary="✅ 組織健康，建議持續優化";
+}
+document.getElementById('summary').innerText=summary;
 
 </script>
 
