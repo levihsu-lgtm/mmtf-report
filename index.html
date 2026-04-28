@@ -3,183 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMTF 顧問實證診斷報告</title>
+    <title>MMTF 組織診斷報告 - 專業復刻版</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --high: #ff4d4f; --mid: #faad14; --low: #52c41a;
-            --primary: #1a3a63; --accent: #eef5ff; --bg: #f8fafc;
+            --primary: #1a3a63; --bg: #f5f7fa; --card-bg: #ffffff;
         }
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #334155; }
-        .container { max-width: 1000px; margin: auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
+        .report-container { max-width: 1000px; margin: auto; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         
-        /* 標題與核心風險圖 */
-        .report-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent); padding-bottom: 25px; margin-bottom: 30px; }
-        .risk-overview { display: flex; align-items: center; gap: 20px; }
-        .risk-circle { width: 110px; height: 110px; border: 10px solid #eee; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; }
-        
-        /* 數據圖表佈局 */
-        .visual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
-        .chart-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; }
-        .chart-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        /* 標題與風險總覽 */
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .header-section h1 { font-size: 32px; color: var(--primary); margin: 0; }
+        .header-section p { color: #666; margin-top: 10px; }
 
-        .bar-row { margin-bottom: 15px; }
-        .bar-info { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-        .bar-bg { background: #f1f5f9; height: 12px; border-radius: 6px; overflow: hidden; }
-        .bar-fill { height: 100%; transition: width 1.2s ease-out; }
+        .risk-summary-card { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 25px; margin-bottom: 30px; }
+        .risk-circle-box { display: flex; align-items: center; gap: 20px; }
+        .circle-main { width: 100px; height: 100px; border: 10px solid #eee; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; }
+        .risk-info h2 { margin: 0; font-size: 28px; }
+        .risk-legend { font-size: 13px; line-height: 1.8; border-left: 1px solid #eee; padding-left: 25px; }
 
-        /* AI 顧問分析結果欄位 (核心) */
-        .advisor-section { background: #f8faff; border-radius: 16px; padding: 35px; border-top: 6px solid var(--primary); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-        .advisor-title { text-align: center; font-size: 24px; color: var(--primary); margin-bottom: 30px; font-weight: 800; }
-        
-        .analysis-block { margin-bottom: 30px; }
-        .block-tag { display: inline-block; padding: 5px 15px; background: var(--primary); color: #fff; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 15px; }
-        
-        /* 理論卡片佈局 */
-        .theory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .theory-item { background: #fff; padding: 18px; border-radius: 10px; border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .theory-name { font-weight: bold; color: var(--primary); margin-bottom: 8px; display: block; font-size: 15px; }
-        .theory-content { font-size: 13.5px; line-height: 1.6; color: #555; }
+        /* 數據與雷達圖 */
+        .data-visual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; border: 1px solid #f0f0f0; padding: 25px; border-radius: 15px; }
+        .dim-bar-item { margin-bottom: 20px; }
+        .dim-label-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+        .progress-track { background: #f0f0f0; height: 12px; border-radius: 6px; overflow: hidden; }
+        .progress-bar { height: 100%; transition: width 1s ease; }
 
-        /* 行動方案步驟 */
-        .step-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 15px; }
-        .step-card { background: #fff; border: 1px solid #d0e3ff; padding: 18px; border-radius: 12px; text-align: center; position: relative; }
-        .step-idx { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; line-height: 22px; font-weight: bold; }
-        .step-txt { font-size: 14px; font-weight: bold; color: var(--primary); margin-top: 5px; }
+        /* AI 分析卡片 (1x4 佈局) */
+        .ai-cards-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 40px; }
+        .ai-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; padding: 18px; border-top: 5px solid var(--primary); }
+        .ai-card-h { display: flex; align-items: center; gap: 8px; font-weight: bold; margin-bottom: 10px; font-size: 15px; }
+        .ai-card p { font-size: 12.5px; color: #555; line-height: 1.6; margin: 10px 0; text-align: justify; }
+        .ai-card ul { padding-left: 18px; margin: 0; font-size: 12px; color: #444; }
 
-        /* 有效性評估 */
-        .effectiveness-box { background: #ecfdf5; border: 1px solid #a7f3d0; padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
-        .eff-icon { font-size: 24px; }
-        .eff-text { color: #065f46; font-size: 14.5px; line-height: 1.6; }
+        /* 底部行動方案 */
+        .action-plan-box { background: #f0f7ff; padding: 25px; border-radius: 15px; border-top: 5px solid var(--primary); }
+        .action-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        .step-item { background: #fff; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .step-num { width: 24px; height: 24px; background: var(--primary); color: #fff; border-radius: 50%; display: inline-block; margin-bottom: 10px; font-size: 12px; line-height: 24px; font-weight: bold; }
+        .step-txt { font-size: 13px; font-weight: bold; color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="report-header">
+<div class="report-container">
+    <div class="header-section">
+        <h1>MMTF 組織診斷報告</h1>
+        <p>透過四大維度評估組織當前運作狀態，提供改善建議與行動方向</p>
+    </div>
+
+    <div class="risk-summary-card">
+        <div class="risk-circle-box">
+            <div class="circle-main" id="circle-ui">
+                <span id="total-val" style="font-size:36px;">0</span>
+                <span style="font-size:10px; color:#999;">/ 100</span>
+            </div>
+            <div class="risk-info">
+                <span style="font-size: 14px; color: #666;">整體風險等級：</span>
+                <h2 id="risk-level-name">計算中...</h2>
+            </div>
+        </div>
+        <div class="risk-legend">
+            <b style="color:var(--high)">● 高風險 (0-50分)</b>：需立即關注與改善<br>
+            <b style="color:var(--mid)">● 中風險 (51-75分)</b>：建議積極改善強化<br>
+            <b style="color:var(--low)">● 低風險 (76-100分)</b>：組織狀態良好，持續維持
+        </div>
+    </div>
+
+    <div class="data-visual-grid">
         <div>
-            <h1 style="margin:0; font-size:28px;">MMTF 組織診斷分析報告</h1>
-            <p style="margin:5px 0 0 0; color:#64748b;">Mirror Matrix Theory Feedback - 專家實證版</p>
+            <h4 style="margin-top:0; border-left: 4px solid var(--primary); padding-left: 10px;">四大維度得分</h4>
+            <div id="bar-list"></div>
         </div>
-        <div class="risk-overview">
-            <div id="risk-label" style="font-size:22px; font-weight:900;">評估中...</div>
-            <div class="risk-circle" id="circle-ui">
-                <span id="score-val" style="font-size:36px;">0</span>
-                <span style="font-size:12px; color:#94a3b8;">/100</span>
-            </div>
+        <div style="text-align:center;">
+            <h4 style="margin-top:0; border-left: 4px solid var(--primary); padding-left: 10px; text-align: left;">MMTF 四維度雷達圖</h4>
+            <canvas id="radarChart" style="max-height: 250px;"></canvas>
         </div>
     </div>
 
-    <div class="visual-grid">
-        <div class="chart-card">
-            <div class="chart-title">📊 維度數據量化</div>
-            <div id="bars-container"></div>
-        </div>
-        <div class="chart-card" style="text-align:center;">
-            <div class="chart-title">🕸️ 診斷雷達分布</div>
-            <canvas id="radarChart" style="max-height:240px;"></canvas>
-        </div>
+    <h4 style="border-left: 4px solid var(--primary); padding-left: 10px;">AI 分析與理論對照結果</h4>
+    <div class="ai-cards-row" id="ai-analysis-row"></div>
+
+    <div class="action-plan-box">
+        <h4 style="margin:0;">💡 總結與行動有效性評估</h4>
+        <p id="eval-text" style="font-size:14px; color:#1a3a63; margin-top:10px; line-height:1.6;"></p>
+        <div class="action-steps" id="action-steps"></div>
     </div>
-
-    <div class="advisor-section">
-        <div class="advisor-title">🔍 AI 顧問診斷分析結果</div>
-
-        <div class="analysis-block">
-            <div class="block-tag">理論與實證文獻分析結果</div>
-            <div class="theory-grid" id="theory-logic-container"></div>
-        </div>
-
-        <div class="analysis-block">
-            <div class="block-tag">階段性行動建議方案</div>
-            <div class="step-grid" id="steps-container"></div>
-        </div>
-
-        <div class="analysis-block">
-            <div class="block-tag">有效性評估結果</div>
-            <div class="effectiveness-box">
-                <div class="eff-icon">📈</div>
-                <div class="eff-text" id="effectiveness-eval">分析中...</div>
-            </div>
-        </div>
-    </div>
-
-    <p style="text-align:center; color:#cbd5e1; font-size:12px; margin-top:40px;">MMTF 組織診斷模型 © 2026 版權所有</p>
 </div>
 
 <script>
 window.onload = function() {
-    const params = new URLSearchParams(window.location.search);
-    const scores = {
-        mirror: parseInt(params.get('mirror')) || 0,
-        matrix: parseInt(params.get('matrix')) || 0,
-        flow: parseInt(params.get('flow')) || 0,
-        safe: parseInt(params.get('safe')) || 0
+    const url = new URLSearchParams(window.location.search);
+    const data = {
+        mirror: parseInt(url.get('mirror')) || 0,
+        matrix: parseInt(url.get('matrix')) || 0,
+        flow: parseInt(url.get('flow')) || 0,
+        safe: parseInt(url.get('safe')) || 0
     };
-    const totalScore = scores.mirror + scores.matrix + scores.flow + scores.safe;
-    document.getElementById('score-val').innerText = totalScore;
+    const total = data.mirror + data.matrix + data.flow + data.safe;
+    document.getElementById('total-val').innerText = total;
 
-    // 風險圓圈判定
-    let risk = { n: "低風險", c: "#52c41a" };
-    if(totalScore <= 50) risk = { n: "高風險", c: "#ff4d4f" };
-    else if(totalScore <= 75) risk = { n: "中風險", c: "#faad14" };
-    
-    document.getElementById('risk-label').innerText = risk.n;
-    document.getElementById('risk-label').style.color = risk.c;
-    document.getElementById('circle-ui').style.borderColor = risk.c;
+    // 風險色判定
+    let rank = { n: "低風險", c: "#52c41a" };
+    if(total <= 50) rank = { n: "高風險", c: "#ff4d4f" };
+    else if(total <= 75) rank = { n: "中風險", c: "#faad14" };
+    document.getElementById('risk-level-name').innerText = rank.n;
+    document.getElementById('risk-level-name').style.color = rank.c;
+    document.getElementById('circle-ui').style.borderColor = rank.c;
 
-    // 理論對照資料庫
+    // 理論庫與分析 (對照文獻)
     const lib = [
-        { key: 'mirror', label: 'Mirror (鏡像)', theory: '回饋環路理論', low: '研究顯示，當管理層認知落差 > 30% 時，組織會進入回饋失靈狀態，導致基層向心力流失。' },
-        { key: 'matrix', label: 'Matrix (結構)', theory: 'RACI 權責模型', low: '依據權變理論，結構模糊會增加溝通成本 25% 以上。此得分反映出崗位重疊或缺口。' },
-        { key: 'flow', label: 'Flow (資訊流)', theory: '香農通訊效能', low: '實證數據指出，資訊不透明會導致決策錯誤率提升。目前組織存在嚴重的資訊孤島。' },
-        { key: 'safe', label: 'Safety (心理安全)', theory: 'Edmondson 框架', low: '低安全感會阻礙員工提出真實問題。在精密工業中，這是導致品質事故隱匿的關鍵誘因。' }
+        { key:'mirror', l:'Mirror (鏡像)', theory:'回饋環路理論', low:'認知落差大，管理層與基層對目標理解不一，導致執行力空轉。', high:'認知對齊程度高，組織具備優秀的自我修正基因。', act:['雙向匿名回饋','認知校準會議'] },
+        { key:'matrix', l:'Matrix (結構)', theory:'RACI 權責模型', low:'權責劃分不清，存在職責重疊或三不管地帶，決策速度緩慢。', high:'結構精煉，每位成員清楚自身在價值鏈中的位置。', act:['重新釐清 JD','簡化核決流程'] },
+        { key:'flow', l:'Info Flow (資訊流)', theory:'資訊效能模型', low:'資訊孤島嚴重，部門間溝通阻礙大，導致重工與資源浪費。', high:'數據透明化程度高，跨部門協作極具效率。', act:['數位資訊看板','跨單位同步工具'] },
+        { key:'safe', l:'Psych Safety (心理安全)', theory:'Edmondson 框架', low:'員工擔心犯錯被處罰，導致隱匿異常，這是組織進步的最大障礙。', high:'具備高度容錯力，團隊願意嘗試創新並誠實回報。', act:['無責申報制度','心理安全工作坊'] }
     ];
 
-    let barsHtml = ""; let theoryHtml = "";
-    lib.forEach(d => {
-        let v = scores[d.key];
+    let barsH = ""; let aiH = "";
+    lib.forEach(item => {
+        let v = data[item.key];
         let color = v <= 12 ? "var(--high)" : v <= 18 ? "var(--mid)" : "var(--low)";
         
-        barsHtml += `
-            <div class="bar-row">
-                <div class="bar-info"><span>${d.label}</span><span>${v}/25</span></div>
-                <div class="bar-bg"><div class="bar-fill" style="width:${v*4}%; background:${color}"></div></div>
+        barsH += `
+            <div class="dim-bar-item">
+                <div class="dim-label-row"><span>${item.l}</span><span style="color:${color}">${v}/25</span></div>
+                <div class="progress-track"><div class="progress-bar" style="width:${v*4}%; background:${color}"></div></div>
             </div>`;
         
-        if(v <= 15) { // 針對低分維度觸發理論對照
-            theoryHtml += `
-                <div class="theory-item">
-                    <span class="theory-name">${d.label} × ${d.theory}</span>
-                    <div class="theory-content">${d.low}</div>
-                </div>`;
-        }
+        aiH += `
+            <div class="ai-card">
+                <div class="ai-card-h"><span style="color:${color}">●</span> ${item.l}</div>
+                <div style="font-size:10px; color:#999; margin-bottom:5px;">[${item.theory}]</div>
+                <p>${v <= 15 ? item.low : item.high}</p>
+                <ul>${item.act.map(a => `<li>${a}</li>`).join('')}</ul>
+            </div>`;
     });
-    document.getElementById('bars-container').innerHTML = barsHtml;
-    document.getElementById('theory-logic-container').innerHTML = theoryHtml || "<div style='grid-column: 1 / -1; text-align:center; color:#94a3b8;'>所有指標均在穩定範圍內，無需進行結構性理論介入。</div>";
 
-    // 行動方案步驟
-    const actions = ["優先校準認知落差", "重新釐清權責邊界", "打通資訊數位通道", "建立持續回饋制度"];
-    document.getElementById('steps-container').innerHTML = actions.map((a, i) => `
-        <div class="step-card"><div class="step-idx">${i+1}</div><div class="step-txt">${a}</div></div>
+    document.getElementById('bar-list').innerHTML = barsH;
+    document.getElementById('ai-analysis-row').innerHTML = aiH;
+
+    // 有效性評估文字
+    document.getElementById('eval-text').innerText = total <= 50 ? 
+        "評估：目前組織處於高風險期。建議優先從 Mirror 與 Matrix 著手，預計能降低 30% 內部損耗，重建管理信任感。" : 
+        "評估：組織表現穩健。建議強化心理安全感以驅動創新，預計可提升團隊主動提案率 15%。";
+
+    const steps = ["建立診斷共識", "推動核心改善方案", "定期監測數據回饋", "文化制度化落地"];
+    document.getElementById('action-steps').innerHTML = steps.map((s, i) => `
+        <div class="step-item"><div class="step-num">${i+1}</div><div class="step-txt">${s}</div></div>
     `).join('');
 
-    // 有效性評估
-    const evalText = totalScore <= 50 ? 
-        "評估結果：當前改善方案具有「即時止血」之必要性。預期在實施後 60 天內，可減少 40% 之跨部門衝突，並顯著提升決策透明度。" : 
-        "評估結果：當前方案側重於「效能優化」。預期可進一步精簡管理層級流程，使組織敏捷度提升 15-20%。";
-    document.getElementById('effectiveness-eval').innerText = evalText;
-
-    // 圖表繪製
+    // 雷達圖
     new Chart(document.getElementById('radarChart'), {
         type: 'radar',
         data: {
             labels: ['Mirror', 'Matrix', 'Flow', 'Safety'],
             datasets: [{
-                data: [scores.mirror, scores.matrix, scores.flow, scores.safe],
+                data: [data.mirror, data.matrix, data.flow, data.safe],
                 backgroundColor: 'rgba(26, 58, 99, 0.15)',
                 borderColor: '#1a3a63',
-                borderWidth: 2,
-                pointBackgroundColor: '#1a3a63'
+                pointBackgroundColor: '#1a3a63',
+                borderWidth: 2
             }]
         },
         options: {
