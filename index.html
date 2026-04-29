@@ -152,7 +152,7 @@
         </div>
     </div>
 
-    <div class="footer">MMTF 專業診斷模組 v4.0 (邏輯引擎版) | 診斷日期：2026-04-28</div>
+    <div class="footer" id="reportDate"></div>
 </div>
 <script>
 window.onload = function() {
@@ -281,7 +281,15 @@ window.onload = function() {
         }
     });
 };
-    </script>
+const today = new Date();
+
+const formattedDate = today.getFullYear() + '-' +
+    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+    String(today.getDate()).padStart(2, '0');
+
+document.getElementById('reportDate').innerText =
+    `MMTF 專業診斷模組 v4.0 (邏輯引擎版) | 診斷日期：${formattedDate}`;   
+</script>
 </body>
 </html>
 
