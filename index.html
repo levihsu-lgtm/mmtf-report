@@ -156,8 +156,7 @@
 </div>
 <script>
 window.onload = function() {
-
-    // 1. 參數
+    // 1. 參數解析與基礎得分
     const params = new URLSearchParams(window.location.search);
     const scores = {
         mirror: parseInt(params.get('mirror')) || 15,
@@ -165,98 +164,135 @@ window.onload = function() {
         flow: parseInt(params.get('flow')) || 15,
         safe: parseInt(params.get('safe')) || 15
     };
+    const totalScore = Math.round(((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100);
 
-    const totalScore = Math.round(
-        ((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100
-    );
+    // 2. 顧問級內容資料庫 (McKinsey Style)
+    const insightDB = {
+        mirror: {
+            title: "Mirror (鏡像對稱)", theory: "Johari Window",
+            high: { status: "認知共振", color: "#52c41a", insight: "團隊目標認知高度對齊，具備極強的自我修正基因。", implication: "決策傳達無須重複確認，執行速度快。", action: "建立跨部門知識共享機制，防止局部最優化。" },
+            mid:  { status: "認知雜訊", color: "#faad14", insight: "中基層對戰略理解存在細微落差，盲區隱現。", implication: "執行過程中可能出現偏差，需頻繁微調。", action: "啟動雙向回饋機制（Feedback Loop），對齊關鍵指標。" },
+            low:  { status: "認知斷層", color: "#ff4d4f", insight: "管理層與基層認知嚴重不對稱，存在「黑箱」效應。", implication: "指令在傳遞中失真，基層產生強烈無力感。", action: "立即召開「真相對齊會議」，打破資訊壁壘。" }
+        },
+        matrix: {
+            title: "Matrix (結構效能)", theory: "RACI Theory",
+            high: { status: "靈活治理", color: "#52c41a", insight: "權責邊界清晰且具備彈性，資源分配高度對齊。", implication: "無效溝通成本極低，團隊自主性強。", action: "導入去中心化決策權，提升應對市場的敏捷度。" },
+            mid:  { status: "功能重疊", color: "#faad14", insight: "權責基本定義明確，但跨部門灰色地帶仍多。", implication: "遇到複雜問題時推諉現象偶發，效率耗損。", action: "重新梳理核心流程的 RACI 矩陣，釐清灰色區域。" },
+            low:  { status: "結構失序", color: "#ff4d4f", insight: "權責模糊，職能空缺與重疊並存，問責機制失效。", implication: "組織內部嚴重內耗，重要專案常因無人負責而停滯。", action: "啟動組織架構診斷，重建指揮鏈條與問責體系。" }
+        },
+        flow: {
+            title: "Flow (資訊能流)", theory: "Communication Theory",
+            high: { status: "透明流動", color: "#52c41a", insight: "資訊傳遞幾無損耗，數據驅動決策已成為文化。", implication: "組織對市場變化的反應時間低於同行平均。", action: "導入 AI 輔助資訊摘要，進一步優化決策品質。" },
+            mid:  { status: "節點阻滯", color: "#faad14", insight: "資訊在特定管理層級發生阻滯，透明度不均。", implication: "基層反應問題到決策層存在延遲（Latency）。", action: "建立看板管理與即時異常回報系統，縮短傳遞路徑。" },
+            low:  { status: "資訊孤島", color: "#ff4d4f", insight: "資訊高度碎片化，各單位僅掌握局部事實。", implication: "策略意圖在落地過程中被嚴重扭曲，決策依賴直覺而非數據。", action: "建立企業數位大屏，實現核心經營數據的激進透明化。" }
+        },
+        safe: {
+            title: "Safety (心理安全)", theory: "Psychological Safety",
+            high: { status: "無畏創新", color: "#52c41a", insight: "團隊容錯率高，具備強大的失敗學習能力。", implication: "員工敢於挑戰現狀，是創新的沃土。", action: "建立無責異常回報機制（Blame-free Reporting System）。" },
+            mid:  { status: "條件信任", color: "#faad14", insight: "信任基礎建立在既有利益上，面對危機時仍有保留。", implication: "負面消息傳遞緩慢，潛在風險易被掩蓋。", action: "強化領導者的脆弱領導力（Vulnerability），展現承擔責任的姿態。" },
+            low:  { status: "恐懼氛圍", color: "#ff4d4f", insight: "防衛性行為主導，員工傾向於隱瞞錯誤以自保。", implication: "組織失去糾錯能力，重大系統性風險正在積聚。", action: "停止對錯誤的懲罰性措施，重建安全的心理邊界。" }
+        }
+    };
 
-    // 2. Level 判斷
-    function getLevel(s) {
-        return s >= 18 ? 'high' : (s >= 12 ? 'mid' : 'low');
-    }
+    // 3. 邏輯引擎函數
+    function getLevel(s) { return s >= 18 ? 'high' : (s >= 12 ? 'mid' : 'low'); }
+    
+    const worstKey = Object.keys(scores).reduce((a, b) => scores[a] < scores[b] ? a : b);
+    const bestKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
 
-    const keys = Object.keys(scores);
-    const values = Object.values(scores);
+    // 4. 渲染頂部總分 UI
+    const riskUI = totalScore >= 70 ? { title: "高能卓越型 (Optimized)", desc: "組織具備強大的對稱性能量，是擴張的最佳時機。", color: "#52c41a", bg: "#f6ffed", rTitle: "💡 卓越領航提醒", remind: "預防「優勢陷阱」，應刻意引入異見者以維持認知多樣性。" } :
+                   totalScore >= 45 ? { title: "亞健康運作型 (Vulnerable)", desc: "組織效能在特定維度存在「跑冒滴漏」，潛力被內耗稀釋。", color: "#faad14", bg: "#fffbe6", rTitle: "💡 管理優化提醒", remind: `建議優先解決「${insightDB[worstKey].title}」問題，避免其拖累全局表現。` } :
+                                    { title: "高風險失能型 (Fragile)", desc: "系統架構與信任鏈條出現嚴重毀損，需立即啟動管理干預。", color: "#ff4d4f", bg: "#fff1f0", rTitle: "💡 危機管理提醒", remind: "當前任務不是追逐新目標，而是修復基礎的心理安全感與認知共識。" };
 
-    const allEqual = values.every(v => v === values[0]);
-    const allHigh = values.every(v => v >= 18);
-    const allLow = values.every(v => v < 12);
+    document.getElementById('totalScoreVal').innerText = totalScore;
+    document.getElementById('totalScoreVal').style.color = riskUI.color;
+    document.getElementById('riskTitle').innerText = riskUI.title;
+    document.getElementById('riskTitle').style.color = riskUI.color;
+    document.getElementById('riskDesc').innerText = riskUI.desc;
+    document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
+    document.getElementById('remindText').innerText = riskUI.remind;
+    document.getElementById('remindTitle').innerText = riskUI.rTitle;
+    document.getElementById('remindBox').style.background = riskUI.bg;
+    document.getElementById('remindBox').style.borderColor = riskUI.color;
 
-    let bestKey = null;
-    let worstKey = null;
-
-    if (!allEqual) {
-        bestKey = keys.reduce((a, b) => scores[a] > scores[b] ? a : b);
-        worstKey = keys.reduce((a, b) => scores[a] < scores[b] ? a : b);
-    }
-
-    // 3. Insight DB（保留你原本）
-    const insightDB = { ...window.insightDB || {
-        mirror: { title: "Mirror (鏡像對稱)", high:{status:"認知共振"},mid:{status:"認知雜訊"},low:{status:"認知斷層"} },
-        matrix: { title: "Matrix (結構效能)", high:{status:"靈活治理"},mid:{status:"功能重疊"},low:{status:"結構失序"} },
-        flow:   { title: "Flow (資訊能流)", high:{status:"透明流動"},mid:{status:"節點阻滯"},low:{status:"資訊孤島"} },
-        safe:   { title: "Safety (心理安全)", high:{status:"無畏創新"},mid:{status:"條件信任"},low:{status:"恐懼氛圍"} }
-    }};
-
-    // 4. 結論邏輯（核心修正）
-    let conclusionHTML = "";
-
-    if (allHigh) {
-        conclusionHTML = `
-        <strong>Executive Summary:</strong><br><br>
-        本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。<br><br>
-        四大構面皆處於高水準，顯示組織在認知、結構、資訊與心理安全上高度一致，
-        屬於「高成熟度運作體系」。<br><br>
-        <strong>顧問觀點：</strong> 此階段關鍵不在修補弱點，而在防止「隱性退化」與維持動態競爭力。
+    // 5. 渲染四維度卡片
+    const aiGrid = document.getElementById('aiGrid');
+    ['mirror', 'matrix', 'flow', 'safe'].forEach(key => {
+        const data = insightDB[key][getLevel(scores[key])];
+        aiGrid.innerHTML += `
+            <div class="ai-card" style="border-top-color: ${data.color}">
+                <h4>${insightDB[key].title} <span class="status-tag" style="background:${data.color}22; color:${data.color}">${data.status}</span></h4>
+                <div class="ai-theory">${insightDB[key].theory}</div>
+                <div class="ai-desc">
+                    <strong>洞察:</strong> ${data.insight}<br>
+                    <strong>影響:</strong> ${data.implication}
+                </div>
+                <div class="action-list-title">顧問行動建議</div>
+                <ul class="action-list">
+                    <li>${data.action}</li>
+                    <li>建立長期追蹤指標 (KPI)</li>
+                </ul>
+            </div>
         `;
-    }
-    else if (allLow) {
-        conclusionHTML = `
+    });
+
+    // 6. 渲染綜合結論 (顧問診斷視角)
+    document.getElementById('conclusionText').innerHTML = `
         <strong>Executive Summary:</strong><br><br>
-        本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。<br><br>
-        四大構面皆落入低分區間，顯示組織存在系統性失衡，
-        包含認知斷層、結構失序、資訊阻斷與信任缺失。<br><br>
-        <strong>顧問觀點：</strong> 當前不建議優化單一構面，
-        應採取「整體重建策略」，優先修復心理安全與基本溝通機制。
-        `;
-    }
-    else if (allEqual) {
-        conclusionHTML = `
-        <strong>Executive Summary:</strong><br><br>
-        本次診斷顯示，四大構面得分一致（${values[0]}分），
-        整體對稱性為 <b>${totalScore}%</b>。<br><br>
-        此狀況顯示組織運作高度平均，但缺乏明顯優勢槓桿點。<br><br>
-        <strong>顧問觀點：</strong> 建議刻意打造單一戰略強項，
-        避免「平均即平庸」的結構風險。
-        `;
-    }
-    else {
-        conclusionHTML = `
-        <strong>Executive Summary:</strong><br><br>
-        本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。<br><br>
+        本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。
         最顯著的優勢在於 <b>${insightDB[bestKey].title}</b> (${scores[bestKey]}分)，
-        而最脆弱的節點位於 <b>${insightDB[worstKey].title}</b> (${scores[worstKey]}分)。<br><br>
-        <strong>顧問觀點：</strong> 組織效能正被最低維度限制，
-        建議優先修補弱點構面，再放大優勢槓桿。
-        `;
-    }
+        而系統最脆弱的節點則位於 <b>${insightDB[worstKey].title}</b> (${scores[worstKey]}分)。<br><br>
+        這意味著組織雖然在「${insightDB[bestKey].status}」上有不錯表現，但其效能正被「${insightDB[worstKey].status}」所抵消。
+        <strong>戰略建議：</strong> 應暫緩大規模戰略擴張，轉而強化基礎架構的對齊，特別是修復最低維度的影響力。
+    `;
 
-    document.getElementById('conclusionText').innerHTML = conclusionHTML;
+    // 7. 渲染步驟
+    const steps = [
+        `針對 ${insightDB[worstKey].title} 進行專案復盤`,
+        `優化 ${insightDB[bestKey].title} 的槓桿作用`,
+        "導入 MMTF 雙向診斷機制",
+        "監測管理能量的動態變化"
+    ];
+    document.getElementById('stepsContainer').innerHTML = steps.map((s, i) => `
+        <div class="step-item">
+            <div class="step-num">${i+1}</div>
+            <div class="step-txt">${s}</div>
+        </div>
+    `).join('');
 
-    // 5. 日期（修正位置）
-    const today = new Date();
-    const formattedDate =
-        today.getFullYear() + '-' +
-        String(today.getMonth() + 1).padStart(2, '0') + '-' +
-        String(today.getDate()).padStart(2, '0');
-
-    document.getElementById('reportDate').innerText =
-        `MMTF 專業診斷模組 v1.0 (顧問邏輯引擎) | 診斷日期：${formattedDate}`;
-
+    // 8. 繪製雷達圖
+    new Chart(document.getElementById('radarChart'), {
+        type: 'radar',
+        data: {
+            labels: ["Mirror", "Matrix", "Flow", "Safety"],
+            datasets: [{
+                data: [scores.mirror, scores.matrix, scores.flow, scores.safe],
+                backgroundColor: `${riskUI.color}22`,
+                borderColor: riskUI.color,
+                borderWidth: 2,
+                pointRadius: 4,
+                pointBackgroundColor: riskUI.color
+            }]
+        },
+        options: {
+            scales: { r: { min: 0, max: 25, ticks: { display: false, stepSize: 5 } } },
+            plugins: { legend: { display: false } }
+        }
+    });
 };
+const today = new Date();
+
+const formattedDate = today.getFullYear() + '-' +
+    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+    String(today.getDate()).padStart(2, '0');
+
+document.getElementById('reportDate').innerText =
+    `MMTF 專業診斷模組 v1.0 (邏輯引擎版) | 診斷日期：${formattedDate}`;   
 </script>
 </body>
 </html>
+
 
 
 
