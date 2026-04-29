@@ -240,13 +240,47 @@ window.onload = function() {
     // 6. 渲染綜合結論 (顧問診斷視角)
     document.getElementById('conclusionText').innerHTML = `
         <strong>Executive Summary:</strong><br><br>
-        本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。
-        最顯著的優勢在於 <b>${insightDB[bestKey].title}</b> (${scores[bestKey]}分)，
-        而系統最脆弱的節點則位於 <b>${insightDB[worstKey].title}</b> (${scores[worstKey]}分)。<br><br>
-        這意味著組織雖然在「${insightDB[bestKey].status}」上有不錯表現，但其效能正被「${insightDB[worstKey].status}」所抵消。
-        <strong>戰略建議：</strong> 應暫緩大規模戰略擴張，轉而強化基礎架構的對齊，特別是修復最低維度的影響力。
+  let text="";
+
+if(allHigh){
+
+    text=`
+    本次診斷顯示，組織核心對稱性指標為 <b>${total}%</b>。<br><br>
+    四大構面皆達滿分（25分），顯示組織處於<strong>完全對稱狀態</strong>。<br>
+    組織不存在明顯弱點，屬於高成熟度與高穩定性系統。<br><br>
+    <b>建議：</b>應進入「策略放大階段」，避免過度優化導致創新停滯。
     `;
 
+}else if(allLow){
+
+    text=`
+    本次診斷顯示，組織核心對稱性指標為 <b>${total}%</b>。<br><br>
+    四大構面皆處於低分狀態，顯示組織存在<strong>系統性失能</strong>。<br>
+    目前不存在明確優勢構面，整體運作高度脆弱。<br><br>
+    <b>建議：</b>應優先重建心理安全與基本管理結構，而非推動績效提升。
+    `;
+
+}else if(allSame){
+
+    text=`
+    本次診斷顯示，組織核心對稱性指標為 <b>${total}%</b>。<br><br>
+    四大構面分數一致，顯示組織處於<strong>均衡但未分化狀態</strong>。<br>
+    無顯著優勢或弱點，但缺乏結構性槓桿。<br><br>
+    <b>建議：</b>應刻意強化一個核心構面作為突破點。
+    `;
+
+}else{
+
+    text=`
+    本次診斷顯示，組織核心對稱性指標為 <b>${total}%</b>。<br><br>
+    最顯著優勢為 <b>${nameMap[bestKey]}</b> (${scores[bestKey]}分)，<br>
+    最脆弱節點為 <b>${nameMap[worstKey]}</b> (${scores[worstKey]}分)。<br><br>
+    <b>建議：</b>優先修復最低構面，以避免拖累整體效能。
+    `;
+
+}
+
+document.getElementById("conclusion").innerHTML=text;
     // 7. 渲染步驟
     const steps = [
         `針對 ${insightDB[worstKey].title} 進行專案復盤`,
