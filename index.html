@@ -279,4 +279,171 @@ window.onload = function() {
 </script>
 </body>
 </html>
+<script>
+window.onload = function() {
 
+    // ===== 1. 取得分數 =====
+    const params = new URLSearchParams(window.location.search);
+    const scores = {
+        mirror: parseInt(params.get('mirror')) || 10,
+        matrix: parseInt(params.get('matrix')) || 10,
+        flow: parseInt(params.get('flow')) || 10,
+        safe: parseInt(params.get('safe')) || 10
+    };
+
+    const totalScore = Math.round(
+        ((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100
+    );
+
+    // ===== 2. 顧問語言引擎 =====
+    function getConsultingNarrative(score) {
+        if (score >= 90) {
+            return {
+                title: "卓越進化型組織",
+                color: "#52c41a",
+                bg: "#f6ffed",
+                desc: "組織運作已達高度成熟與對稱狀態，具備穩定輸出與策略執行能力。",
+                remindTitle: "🏆 高績效策略提醒",
+                remind: "目前展現高度對稱性與成熟運作能力。建議持續引入外部標竿與挑戰機制，避免成功慣性造成創新停滯，確保組織持續進化。",
+            };
+        } 
+        else if (score >= 75) {
+            return {
+                title: "高效成長型組織",
+                color: "#73d13d",
+                bg: "#fcffe6",
+                desc: "組織具備良好運作基礎，關鍵能力已建立。",
+                remindTitle: "📈 成長優化建議",
+                remind: "建議放大優勢構面並進行標準化複製，提升整體組織效率。",
+            };
+        } 
+        else if (score >= 60) {
+            return {
+                title: "穩定運作型組織",
+                color: "#faad14",
+                bg: "#fffbe6",
+                desc: "整體運作穩定，但存在局部效能損耗。",
+                remindTitle: "⚙️ 結構優化建議",
+                remind: "需聚焦關鍵瓶頸進行優化，以提升整體一致性。",
+            };
+        } 
+        else if (score >= 45) {
+            return {
+                title: "結構失衡型組織",
+                color: "#ff7a45",
+                bg: "#fff7e6",
+                desc: "組織存在明顯斷層，影響決策品質。",
+                remindTitle: "⚠️ 結構調整建議",
+                remind: "建議重建跨部門對齊機制與資訊流動。",
+            };
+        } 
+        else {
+            return {
+                title: "高風險失序型組織",
+                color: "#ff4d4f",
+                bg: "#fff1f0",
+                desc: "核心運作機制失效，風險極高。",
+                remindTitle: "🚨 緊急管理建議",
+                remind: "需立即進行組織重整與信任修復。",
+            };
+        }
+    }
+
+    const riskUI = getConsultingNarrative(totalScore);
+
+    // ===== 3. 更新頂部 =====
+    document.getElementById('totalScoreVal').innerText = totalScore;
+    document.getElementById('totalScoreVal').style.color = riskUI.color;
+    document.getElementById('totalScoreCircle').style.borderColor = riskUI.color;
+    document.getElementById('riskTitle').innerText = riskUI.title;
+    document.getElementById('riskTitle').style.color = riskUI.color;
+    document.getElementById('riskDesc').innerText = riskUI.desc;
+    document.getElementById('riskMainCard').style.background =
+        `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
+
+    document.getElementById('remindTitle').innerText = riskUI.remindTitle;
+    document.getElementById('remindText').innerText = riskUI.remind;
+
+    // ===== 4. 四構面內容 =====
+    function getLevel(score) {
+        return score >= 18 ? '高' : (score >= 12 ? '中' : '低');
+    }
+
+    const aiGrid = document.getElementById('aiGrid');
+
+    Object.keys(scores).forEach(key => {
+        const level = getLevel(scores[key]);
+
+        aiGrid.innerHTML += `
+            <div class="ai-card">
+                <h4>${key.toUpperCase()}（${level}）</h4>
+                <div class="ai-desc">
+                    此構面分數為 ${scores[key]}，顯示組織在此維度的運作狀態為「${level}」。
+                </div>
+            </div>
+        `;
+    });
+
+    // ===== 5. 結論 =====
+    function getConclusion(score) {
+        if (score >= 90) {
+            return "組織已達高成熟度，建議轉向創新與持續進化策略。";
+        } else if (score >= 75) {
+            return "組織具備良好成長潛力，建議強化優勢構面。";
+        } else if (score >= 60) {
+            return "運作穩定但存在瓶頸，需針對關鍵問題優化。";
+        } else if (score >= 45) {
+            return "組織已出現結構性問題，需進行調整。";
+        } else {
+            return "組織處於高風險狀態，建議立即介入改善。";
+        }
+    }
+
+    document.getElementById('conclusionText').innerText = getConclusion(totalScore);
+
+    // ===== 6. 行動建議 =====
+    const steps = [
+        "檢視組織關鍵流程",
+        "強化跨部門溝通",
+        "建立回饋機制",
+        "持續監測組織狀態"
+    ];
+
+    const stepsContainer = document.getElementById('stepsContainer');
+
+    steps.forEach((s, i) => {
+        stepsContainer.innerHTML += `
+            <div class="step-item">
+                <div class="step-num">${i+1}</div>
+                <div class="step-txt">${s}</div>
+            </div>
+        `;
+    });
+
+    // ===== 7. 雷達圖 =====
+    new Chart(document.getElementById('radarChart'), {
+        type: 'radar',
+        data: {
+            labels: ["Mirror", "Matrix", "Flow", "Safety"],
+            datasets: [{
+                data: [scores.mirror, scores.matrix, scores.flow, scores.safe],
+                backgroundColor: `${riskUI.color}22`,
+                borderColor: riskUI.color,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    min: 0,
+                    max: 25
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+};
+</script>
