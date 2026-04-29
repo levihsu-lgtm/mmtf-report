@@ -2,36 +2,44 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>MMTF 組織診斷報告 v5</title>
+<title>MMTF 組織診斷 v6</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body { font-family: "Microsoft JhengHei"; background:#e2e8f0; padding:20px;}
+body { font-family:"Microsoft JhengHei"; background:#e2e8f0; padding:20px;}
 .container { max-width:1100px; margin:auto; background:#fff; padding:40px; border-radius:12px;}
-h1 { text-align:center; }
-
-.card { border:1px solid #ddd; border-radius:10px; padding:15px; margin:10px;}
-.grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+h1 { text-align:center; margin-bottom:30px;}
+.grid { display:grid; grid-template-columns:repeat(4,1fr); gap:15px;}
+.card { border:1px solid #ddd; border-radius:10px; padding:15px;}
+.section { margin-top:30px;}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<h1>MMTF 組織診斷報告 v5</h1>
+<h1>MMTF 組織診斷報告 v6</h1>
 
-<h2 id="totalScore"></h2>
-<p id="summary"></p>
+<h2 id="score"></h2>
+<div id="type"></div>
 
+<div class="section">
 <div class="grid" id="cards"></div>
+</div>
 
-<h3>🔍 綜合結論</h3>
+<div class="section">
+<h3>🔍 顧問結論</h3>
 <div id="conclusion"></div>
+</div>
 
-<h3>📊 雷達圖</h3>
+<div class="section">
+<h3>📊 組織雷達</h3>
 <canvas id="chart"></canvas>
+</div>
 
+<div class="section">
 <p id="date"></p>
+</div>
 
 </div>
 
@@ -39,140 +47,147 @@ h1 { text-align:center; }
 window.onload = function(){
 
 // ===== 1. 讀取分數 =====
-const params = new URLSearchParams(window.location.search);
+const p = new URLSearchParams(location.search);
 
 const scores = {
-    mirror: parseInt(params.get('mirror')) || 10,
-    matrix: parseInt(params.get('matrix')) || 10,
-    flow: parseInt(params.get('flow')) || 10,
-    safe: parseInt(params.get('safe')) || 10
+mirror: +p.get("mirror") || 10,
+matrix: +p.get("matrix") || 10,
+flow: +p.get("flow") || 10,
+safe: +p.get("safe") || 10
 };
 
-const totalScore = Math.round(
-    (scores.mirror + scores.matrix + scores.flow + scores.safe)
-);
+const total = scores.mirror + scores.matrix + scores.flow + scores.safe;
 
-// ===== 2. 顧問資料庫 =====
-const DB = {
-mirror:{
-title:"Mirror",
-high:{s:"認知共振", i:"高度對齊", im:"決策快速", a:"建立跨部門共享"},
-mid:{s:"認知雜訊", i:"部分偏差", im:"需校正", a:"強化回饋"},
-low:{s:"認知斷層", i:"嚴重錯位", im:"執行失效", a:"對齊會議"}
-},
-matrix:{
-title:"Matrix",
-high:{s:"靈活治理", i:"權責清晰", im:"效率高", a:"去中心化"},
-mid:{s:"重疊模糊", i:"灰區存在", im:"推諉", a:"RACI重整"},
-low:{s:"結構崩壞", i:"無責任", im:"內耗", a:"重建架構"}
-},
-flow:{
-title:"Flow",
-high:{s:"透明流動", i:"資訊即時", im:"反應快", a:"AI摘要"},
-mid:{s:"局部阻塞", i:"傳遞延遲", im:"決策慢", a:"看板化"},
-low:{s:"資訊孤島", i:"斷裂", im:"決策失真", a:"打通系統"}
-},
-safe:{
-title:"Safety",
-high:{s:"無畏文化", i:"敢說", im:"創新強", a:"無責回報"},
-mid:{s:"條件信任", i:"保留", im:"風險隱藏", a:"領導示範"},
-low:{s:"恐懼文化", i:"不敢說", im:"崩壞", a:"停止懲罰"}
-}
-};
-
-// ===== 3. 等級判斷 =====
-function level(s){
-return s>=18?"high":s>=12?"mid":"low";
-}
-
-// ===== 4. 核心邏輯（修正BUG）=====
+// ===== 2. 基礎工具 =====
 const keys = Object.keys(scores);
 const values = Object.values(scores);
 
-const isAllEqual = values.every(v=>v===values[0]);
+const isAllEqual = values.every(v => v === values[0]);
 
-let bestKey=null;
-let worstKey=null;
-
-if(!isAllEqual){
-bestKey = keys.reduce((a,b)=>scores[a]>scores[b]?a:b);
-worstKey = keys.reduce((a,b)=>scores[a]<scores[b]?a:b);
+function level(v){
+return v>=18?"high":v>=12?"mid":"low";
 }
 
-// ===== 5. UI =====
-document.getElementById("totalScore").innerText = "總分："+totalScore+" / 100";
+// ===== 3. 找最大最小（只有非全等才做）=====
+let best=null, worst=null;
 
-// ===== 6. 卡片 =====
-const cards = document.getElementById("cards");
+if(!isAllEqual){
+best = keys.reduce((a,b)=>scores[a]>scores[b]?a:b);
+worst = keys.reduce((a,b)=>scores[a]<scores[b]?a:b);
+}
 
+// ===== 4. 顧問資料庫 =====
+const DB = {
+mirror:{
+name:"Mirror",
+high:{s:"認知共振", i:"高度對齊", im:"執行快速", a:"知識共享"},
+mid:{s:"認知偏差", i:"理解落差", im:"需校正", a:"強化回饋"},
+low:{s:"認知斷裂", i:"嚴重錯位", im:"執行失效", a:"對齊會議"}
+},
+matrix:{
+name:"Matrix",
+high:{s:"結構清晰", i:"權責明確", im:"效率高", a:"去中心化"},
+mid:{s:"灰區存在", i:"責任模糊", im:"推諉", a:"RACI重整"},
+low:{s:"結構崩壞", i:"無人負責", im:"內耗", a:"重建架構"}
+},
+flow:{
+name:"Flow",
+high:{s:"資訊透明", i:"流動順暢", im:"反應快", a:"數據化"},
+mid:{s:"部分阻塞", i:"傳遞延遲", im:"效率下降", a:"看板管理"},
+low:{s:"資訊孤島", i:"斷裂嚴重", im:"決策錯誤", a:"系統整合"}
+},
+safe:{
+name:"Safety",
+high:{s:"心理安全", i:"敢講真話", im:"創新強", a:"無責文化"},
+mid:{s:"有限信任", i:"有保留", im:"風險隱藏", a:"領導示範"},
+low:{s:"恐懼文化", i:"不敢發聲", im:"崩壞風險", a:"停止懲罰"}
+}
+};
+
+// ===== 5. 顯示總分 =====
+document.getElementById("score").innerText = `核心對稱性：${total}%`;
+
+// ===== 6. 組織型態判斷 =====
+let orgType = "";
+
+if(isAllEqual){
+if(values[0]>=18){
+orgType = "🟢 Fully Symmetric（全面高對稱組織）";
+}else{
+orgType = "🔴 System Failure（系統性崩壞）";
+}
+}else{
+orgType = "🟡 Structural Imbalance（結構不對稱）";
+}
+
+document.getElementById("type").innerText = orgType;
+
+
+// ===== 7. 卡片 =====
 keys.forEach(k=>{
 let d = DB[k][level(scores[k])];
 
-cards.innerHTML += `
+document.getElementById("cards").innerHTML += `
 <div class="card">
-<b>${DB[k].title}</b><br>
+<b>${DB[k].name}</b><br>
 狀態：${d.s}<br>
 洞察：${d.i}<br>
 影響：${d.im}<br>
 👉 行動：${d.a}
-</div>`;
+</div>
+`;
 });
 
-// ===== 7. 結論（完整版邏輯）=====
-let text = "";
 
-// 全相同
+// ===== 8. 結論（完全顧問邏輯）=====
+let txt = "";
+
+// 🔴 全相同
 if(isAllEqual){
 
-if(values[0] >= 18){
-text = `
-組織呈現「全面高對稱」狀態，
-無明顯短板，屬於高成熟度運作系統。<br><br>
-👉 建議：導入外部挑戰避免自滿
+if(values[0]>=18){
+txt = `
+組織四大構面均達高分，顯示為「全面對稱型組織」。<br><br>
+此類型組織具備高度穩定性與擴張能力，但潛在風險為「集體盲點」。<br><br>
+👉 建議：引入外部挑戰與壓力測試。
 `;
 }else{
-text = `
-四構面同步低分，
-屬於「系統性崩壞」而非單點問題。<br><br>
-👉 建議：優先重建信任與安全感
+txt = `
+組織四構面同步低分，屬於「系統性崩壞」。<br><br>
+問題並非單點，而是整體信任與結構失效。<br><br>
+👉 建議：優先重建心理安全與基本管理機制。
 `;
 }
 
 }else{
 
-text = `
-核心對稱性：${totalScore}%<br><br>
+txt = `
+最強維度：${DB[best].name} (${scores[best]})<br>
+最弱維度：${DB[worst].name} (${scores[worst]})<br><br>
 
-優勢：${DB[bestKey].title} (${scores[bestKey]})<br>
-弱點：${DB[worstKey].title} (${scores[worstKey]})<br><br>
+組織呈現「不對稱結構」，高維度優勢被低維度抵消。<br><br>
 
-組織存在「不對稱結構」，
-高表現正在被低維度拖累。<br><br>
-
-👉 建議：先補強最低維度，再放大優勢
+👉 策略：先補短板，再放大優勢。
 `;
-
 }
 
-document.getElementById("conclusion").innerHTML = text;
+document.getElementById("conclusion").innerHTML = txt;
 
 
-// ===== 8. 雷達圖 =====
+// ===== 9. 雷達圖 =====
 new Chart(document.getElementById("chart"),{
-type:'radar',
+type:"radar",
 data:{
 labels:["Mirror","Matrix","Flow","Safety"],
-datasets:[{
-data:[scores.mirror,scores.matrix,scores.flow,scores.safe]
-}]
+datasets:[{data:values}]
 }
 });
 
 
-// ===== 9. 日期 =====
-const today = new Date();
+// ===== 10. 日期 =====
+const d = new Date();
 document.getElementById("date").innerText =
-"報告日期："+today.toISOString().split('T')[0];
+"報告日期："+d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
 
 };
 </script>
