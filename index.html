@@ -129,6 +129,40 @@
         </div>
     </div>
 
+<div class="bottom-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; border-top: 1px solid #f1f5f9; padding-top: 30px;">
+    
+    <div class="steps-box" style="background: var(--card-blue); padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0;">
+        <h4 style="margin:0 0 20px 0; color:var(--primary); font-size:16px;">🚀 下一步行動指南</h4>
+        <div id="stepsContainer">
+            </div>
+    </div>
+
+    <div class="crisis-box" style="padding: 25px; border-radius: 16px; border: 2px solid #ffccc7; background: #fff1f0;">
+        <h4 style="margin:0 0 15px 0; color:#cf1322; font-size:16px;">
+            <i class="fa-solid fa-lightbulb"></i> 危機管理提醒
+        </h4>
+        <p style="font-size:14px; line-height:1.8; color:#334155; margin:0;">
+            當前組織的核心任務<b>不是追逐新目標</b>，而是專注於<b>修復基礎的心理安全感與認知共識</b>。任何未經修復的系統漏洞，都會在執行過程中被放大，進而消耗組織的有限能量。
+        </p>
+    </div>
+</div>
+
+<script>
+// 在您的 JS 渲染邏輯中，保持行動指南的動態生成
+const steps = [
+    `針對 <b>${insightDB[worstKey].title}</b> 進行專案復盤`,
+    `優化 <b>${insightDB[worstKey].title}</b> 的槓桿作用`,
+    "導入 MMTF 雙向診斷機制",
+    "監測管理能量的動態變化"
+];
+document.getElementById('stepsContainer').innerHTML = steps.map((s, i) => `
+    <div class="step-item" style="display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px;">
+        <div class="step-num" style="width: 30px; height: 30px; background: #1a3a63; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; flex-shrink: 0;">${i+1}</div>
+        <div class="step-txt" style="font-size: 13px; font-weight: 500; padding-top: 5px;">${s}</div>
+    </div>
+`).join('');
+</script>
+    
     <!-- 5. 文獻參考 -->
     <div class="section-title"><i class="fa-solid fa-book"></i> 文獻實證背景</div>
     <div class="literature-section">
