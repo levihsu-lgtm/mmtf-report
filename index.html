@@ -237,6 +237,76 @@ window.onload = function() {
         `;
     });
 
+// ===== 6-1 衝突診斷引擎（MMTF Conflict Engine） =====
+
+function detectConflict(scores) {
+
+    const m = scores.mirror;
+    const x = scores.matrix;
+    const f = scores.flow;
+    const s = scores.safe;
+
+    // 門檻
+    const HIGH = 18;
+    const LOW = 10;
+
+    let conflicts = [];
+
+    // 1. 高 Flow + 低 Safety
+    if (f >= HIGH && s <= LOW) {
+        conflicts.push({
+            type: "假透明組織",
+            desc: "資訊高度流動，但心理安全不足，員工不敢回報真實問題。",
+            impact: "數據看似正常，但風險被系統性隱藏。",
+            advice: "優先修復心理安全，否則資訊透明將淪為表象。"
+        });
+    }
+
+    // 2. 高 Matrix + 低 Mirror
+    if (x >= HIGH && m <= LOW) {
+        conflicts.push({
+            type: "結構僵化組織",
+            desc: "權責清楚，但上下認知不一致。",
+            impact: "命令被形式執行，但結果偏離戰略。",
+            advice: "建立認知對齊機制，而非強化控制。"
+        });
+    }
+
+    // 3. 高 Mirror + 低 Flow
+    if (m >= HIGH && f <= LOW) {
+        conflicts.push({
+            type: "共識卡死組織",
+            desc: "團隊理解一致，但資訊傳遞效率低。",
+            impact: "決策正確但執行延遲。",
+            advice: "優化資訊管道與決策節點。"
+        });
+    }
+
+    // 4. 高 Safety + 低 Matrix
+    if (s >= HIGH && x <= LOW) {
+        conflicts.push({
+            type: "過度民主組織",
+            desc: "氛圍安全，但缺乏結構與決策權威。",
+            impact: "討論很多但落地困難。",
+            advice: "建立清晰決策權責（RACI）。"
+        });
+    }
+
+    // 5. 全面失衡（高低差過大）
+    if (Math.max(m,x,f,s) - Math.min(m,x,f,s) >= 12) {
+        conflicts.push({
+            type: "結構性失衡組織",
+            desc: "四大構面差異過大，系統協同失效。",
+            impact: "局部優化但整體失能。",
+            advice: "優先修復最低構面，建立系統平衡。"
+        });
+    }
+
+    return conflicts;
+}
+
+const conflictList = detectConflict(scores);
+    
  // 6. 渲染綜合結論（最終穩定版）
 
 const values = Object.values(scores);
