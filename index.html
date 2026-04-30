@@ -358,17 +358,20 @@ if (allHigh) {
 
 } else {
 
-    conclusionHTML = `
-    <strong>Executive Summary:</strong><br><br>
-    本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。<br>
-    最顯著的優勢在於 <b>${insightDB[bestKey].title}</b> (${scores[bestKey]}分)，
-    而系統最脆弱的節點則位於 <b>${insightDB[worstKey].title}</b> (${scores[worstKey]}分)。<br><br>
-    
-    這意味著組織雖然在「${bestStatus}」上具備優勢，
-    但整體效能正被「${worstStatus}」所限制。<br><br>
-    
-    <strong>戰略建議：</strong>應優先修復最低構面，避免其成為系統瓶頸。
-    `;
+   conclusionHTML = `
+<strong>Executive Summary:</strong><br><br>
+本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。<br>
+最顯著的優勢在於 <b>${insightDB[bestKey].title}</b> (${scores[bestKey]}分)，
+而系統最脆弱的節點則位於 <b>${insightDB[worstKey].title}</b> (${scores[worstKey]}分)。<br><br>
+
+這意味著組織雖然在「${bestStatus}」上具備優勢，
+但整體效能正被「${worstStatus}」所限制。<br>
+
+${conflictHTML}
+
+<br><br>
+<strong>戰略建議：</strong>應優先修復最低構面，避免其成為系統瓶頸。
+`;
 }
 
 document.getElementById('conclusionText').innerHTML = conclusionHTML;
