@@ -28,10 +28,7 @@
         /* 1. 指標區 */
         .top-risk-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; margin-bottom: 30px; }
         .risk-main { border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; display: flex; align-items: center; background: #fff; transition: background 0.3s; }
-        .score-circle { width: 110px; height: 110px; border: 10px solid #eee; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 25px; background: #fff; }
-        .score-val { font-size: 36px; font-weight: bold; }
-        .risk-text h2 { font-size: 28px; margin: 0; }
-.score-circle {
+        .score-circle {
     width: 110px;
     height: 110px;
     border-radius: 50%;
@@ -40,11 +37,21 @@
     align-items: center;
     justify-content: center;
     margin-right: 25px;
+
+    /* ❗關鍵：移除舊的 border */
+    border: none;
+
+    /* ✅ 動態圓環 */
     background:
-        conic-gradient(var(--progress-color, #52c41a) calc(var(--progress, 0) * 1%), #eee 0);
+        conic-gradient(
+            var(--progress-color, #52c41a) calc(var(--progress, 0) * 1%),
+            #eee 0
+        );
+
     position: relative;
 }
 
+/* 中間白圈 */
 .score-circle::before {
     content: "";
     position: absolute;
@@ -53,9 +60,12 @@
     background: #fff;
     border-radius: 50%;
 }
-<div id="scoreHint" style="font-size:12px; color:#64748b; margin-top:8px;">
-    管理能量指數（MMTF Score）
-</div>
+
+/* 讓數字浮在最上面 */
+.score-circle span {
+    position: relative;
+    z-index: 1;
+}
         
         /* 2. AI 實證分析 1x4 卡片 */
         .section-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; border-left: 5px solid var(--primary); padding-left: 10px; margin-top: 25px; }
