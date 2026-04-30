@@ -7,13 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            /* 修正色彩邏輯：高分綠色(Low Risk)，低分紅色(High Risk) */
-            --high-score: #52c41a; 
-            --mid-score: #faad14; 
-            --low-score: #ff4d4f;
-            --primary: #1a3a63; 
-            --bg: #f0f2f5; 
-            --card-blue: #f8fafc;
+            --high-score: #52c41a; --mid-score: #faad14; --low-score: #ff4d4f;
+            --primary: #1a3a63; --bg: #f0f2f5; --card-blue: #f8fafc;
         }
         * { box-sizing: border-box; }
         body { margin: 0; padding: 20px; background-color: #cbd5e1; display: flex; flex-direction: column; align-items: center; font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; }
@@ -28,23 +23,26 @@
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { font-size: 32px; color: var(--primary); margin: 0; font-weight: 700; border-bottom: 3px solid var(--primary); display: inline-block; padding-bottom: 10px; }
         
-        /* 指標區 */
+        /* 1. 指標區與動態圓環 */
         .top-risk-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; margin-bottom: 30px; }
-        .risk-main { border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; display: flex; align-items: center; background: #fff; transition: background 0.3s; border-left: 8px solid #eee; }
-        .score-circle { width: 110px; height: 110px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 25px; background: #fff; position: relative; }
-        .score-val { font-size: 36px; font-weight: bold; }
+        .risk-main { border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; display: flex; align-items: center; background: #fff; transition: background 0.3s; }
+        
+        .score-circle-wrap { position: relative; width: 110px; height: 110px; margin-right: 25px; flex-shrink: 0; }
+        .score-circle-svg { transform: rotate(-90deg); width: 110px; height: 110px; }
+        .score-circle-bg { fill: none; stroke: #eee; stroke-width: 10; }
+        .score-circle-bar { fill: none; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 1s ease-out; }
+        .score-text-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; }
+        .score-val { font-size: 32px; font-weight: bold; }
+
         .risk-text h2 { font-size: 28px; margin: 0; }
         
-        /* AI 實證分析卡片 */
+        /* 2. AI 實證分析卡片 */
         .section-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; border-left: 5px solid var(--primary); padding-left: 10px; margin-top: 25px; }
         .ai-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 35px; }
-        .ai-card { background: #fff; border: 1px solid #e2e8f0; border-top: 5px solid var(--primary); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; transition: transform 0.2s; }
-        .ai-card:hover { transform: translateY(-5px); }
+        .ai-card { background: #fff; border: 1px solid #e2e8f0; border-top: 5px solid var(--primary); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; }
         .ai-card h4 { margin: 0 0 8px 0; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 5px; justify-content: space-between; }
         .status-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-        
         .ai-theory { font-size: 11px; color: #888; font-style: italic; margin-bottom: 8px; line-height: 1.3; }
-        /* 修正高度：改為 min-height 避免文字較多時被截斷 */
         .ai-desc { font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 12px; min-height: 80px; }
         
         .action-list-title { font-size: 12px; font-weight: bold; color: #1e293b; margin-bottom: 6px; border-top: 1px solid #f1f5f9; padding-top: 10px; }
@@ -52,14 +50,19 @@
         .action-list li { font-size: 11px; color: #64748b; margin-bottom: 4px; display: flex; align-items: flex-start; gap: 5px; }
         .action-list li::before { content: '•'; font-weight: bold; }
 
-        /* 中段分析與衝突警告 */
+        /* 3. 衝突工具包樣式 */
+        .toolkit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
+        .toolkit-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; background: #fff; border-left: 5px solid #ff4d4f; }
+        .toolkit-card h5 { margin: 0 0 10px 0; color: #ff4d4f; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .toolkit-tool { background: #f8fafc; padding: 10px; border-radius: 6px; font-size: 12px; color: #334155; line-height: 1.5; }
+
+        /* 雷達圖與結論 */
         .mid-row { display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 40px; margin-bottom: 35px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
         .radar-box { text-align: center; border-right: 1px solid #f1f5f9; padding-right: 20px; }
         #radarChart { max-width: 170px !important; max-height: 170px !important; margin: 0 auto; }
         .conclusion-box { font-size: 14px; line-height: 1.8; color: #334155; }
-        .conflict-alert { margin-top: 15px; border: 1px solid #ff4d4f; padding: 12px; border-radius: 8px; background: #fff1f0; }
 
-        /* 下一步行動 */
+        /* 行動指南 */
         .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
         .steps-box { background: var(--card-blue); padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; }
         .step-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; position: relative; }
@@ -83,18 +86,24 @@
     
     <div class="top-risk-row">
         <div class="risk-main" id="riskMainCard">
-            <div class="score-circle" id="totalScoreCircle">
-                <span class="score-val" id="totalScoreVal">--</span>
-                <span style="font-size:11px; color:#999;">/100</span>
+            <div class="score-circle-wrap">
+                <svg class="score-circle-svg" viewBox="0 0 100 100">
+                    <circle class="score-circle-bg" cx="50" cy="50" r="45"></circle>
+                    <circle id="scoreBar" class="score-circle-bar" cx="50" cy="50" r="45"></circle>
+                </svg>
+                <div class="score-text-overlay">
+                    <span class="score-val" id="totalScoreVal">--</span>
+                    <span style="font-size:10px; color:#999;">TOTAL</span>
+                </div>
             </div>
             <div class="risk-text">
                 <h2 id="riskTitle">計算中...</h2>
                 <p id="riskDesc" style="font-size:14px; color:#64748b; margin:5px 0 0 0;">正在分析數據請稍候。</p>
             </div>
         </div>
-        <div class="risk-main" style="display:block; background:#fff; border-left: none;">
+        <div class="risk-main" style="display:block; background:#fff;">
             <div style="font-weight:bold; font-size:14px; margin-bottom:10px;">📊 MMTF 指標定義</div>
-            <p style="font-size:12px; color:#666; line-height:1.6; margin:0;">本診斷透過「對稱性理論」評估管理能量。高分代表組織健康、傳導精準[cite: 1]；低分則警示存在嚴重的認知斷層與內耗風險。</p>
+            <p style="font-size:12px; color:#666; line-height:1.6; margin:0;">本診斷透過對稱性理論評估管理能量。高分代表組織健康、傳導精準[cite: 2]；低分則警示組織存在嚴重的內耗與認知斷層。</p>
         </div>
     </div>
 
@@ -110,6 +119,12 @@
             <h3 style="margin-top:0; color:var(--primary);">🔍 診斷綜合結論</h3>
             <div id="conclusionText">載入中...</div>
         </div>
+    </div>
+
+    <!-- 新增衝突處理工具包區塊 -->
+    <div id="toolkitSection" style="display:none;">
+        <div class="section-title"><i class="fa-solid fa-toolbox"></i> 衝突應變處理工具包</div>
+        <div class="toolkit-grid" id="toolkitGrid"></div>
     </div>
 
     <div class="bottom-row">
@@ -128,19 +143,19 @@
         <div class="literature-grid">
             <div class="lit-item">
                 <div class="lit-tag">Mirror 實證</div>
-                <b>Luft & Ingham (1955) - Johari Window：</b>盲目區大小決定團隊信任基礎[cite: 1]。
+                <b>Luft & Ingham (1955) - Johari Window：</b>盲目區大小直接決定團隊信任基礎[cite: 2]。
             </div>
             <div class="lit-item">
                 <div class="lit-tag">Matrix 實證</div>
-                <b>Jacka & Pauley (2014)：</b>權責清晰度與執行力成強正相關[cite: 1]。
+                <b>Jacka & Pauley (2014)：</b>權責清晰度與執行力成強正相關[cite: 2]。
             </div>
             <div class="lit-item">
                 <div class="lit-tag">Flow 實證</div>
-                <b>Shannon & Weaver (1949)：</b>溝通斷層導致戰略意圖失真[cite: 1]。
+                <b>Shannon & Weaver (1949)：</b>溝通傳達斷層會導致戰略意圖失真[cite: 2]。
             </div>
             <div class="lit-item">
                 <div class="lit-tag">Safety 實證</div>
-                <b>Edmondson (1999)：</b>心理安全感是學習型組織與異常回報的先決條件[cite: 1]。
+                <b>Edmondson (1999)：</b>心理安全感是學習型組織的先決條件[cite: 2]。
             </div>
         </div>
     </div>
@@ -159,29 +174,25 @@ window.onload = function() {
     const totalScore = Math.round(((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100);
 
     const insightDB = {
-        mirror: {
-            title: "Mirror (鏡像對稱)", theory: "Johari Window",
-            high: { status: "認知共振", color: "#52c41a", insight: "團隊目標認知高度對齊，具備極強的自我修正基因[cite: 1]。", implication: "決策傳達無須重複確認。", action: "建立跨部門知識共享機制。" },
-            mid:  { status: "認知雜訊", color: "#faad14", insight: "中基層理解存在細微落差[cite: 1]。", implication: "執行過程中需頻繁微調。", action: "啟動雙向回饋機制。" },
-            low:  { status: "認知斷層", color: "#ff4d4f", insight: "管理層與基層認知嚴重不對稱[cite: 1]。", implication: "指令傳遞失真，基層有無力感。", action: "立即召開「真相對齊會議」。" }
+        mirror: { title: "Mirror (鏡像對稱)", theory: "Johari Window",
+            high: { status: "認知共振", color: "#52c41a", insight: "團隊目標認知高度對齊[cite: 2]。", implication: "決策傳達無須重複確認。", action: "建立跨部門知識共享機制。" },
+            mid:  { status: "認知雜訊", color: "#faad14", insight: "對戰略理解存在細微落差[cite: 2]。", implication: "執行過程可能出現偏差。", action: "啟動雙向回饋機制對齊指標。" },
+            low:  { status: "認知斷層", color: "#ff4d4f", insight: "管理層與基層認知嚴重不對稱[cite: 2]。", implication: "指令傳遞失真，基層產生無力感。", action: "立即召開「真相對齊會議」。" }
         },
-        matrix: {
-            title: "Matrix (結構效能)", theory: "RACI Theory",
-            high: { status: "靈活治理", color: "#52c41a", insight: "權責邊界清晰且具備彈性[cite: 1]。", implication: "無效溝通成本極低。", action: "導入去中心化決策權。" },
-            mid:  { status: "功能重疊", color: "#faad14", insight: "跨部門灰色地帶仍多[cite: 1]。", implication: "遇到複雜問題時推諉現象偶發。", action: "重新梳理核心流程 RACI。" },
-            low:  { status: "結構失序", color: "#ff4d4f", insight: "職能空缺與重疊並存，問責機制失效[cite: 1]。", implication: "組織嚴重內耗，專案停滯。", action: "重建指揮鏈條與問責體系。" }
+        matrix: { title: "Matrix (結構效能)", theory: "RACI Theory",
+            high: { status: "靈活治理", color: "#52c41a", insight: "權責邊界清晰且具備彈性[cite: 2]。", implication: "無效溝通成本極低。", action: "導入去中心化決策權。" },
+            mid:  { status: "功能重疊", color: "#faad14", insight: "跨部門灰色地帶仍多[cite: 2]。", implication: "遇到複雜問題時推諉現象偶發。", action: "重新梳理核心流程 RACI 矩陣。" },
+            low:  { status: "結構失序", color: "#ff4d4f", insight: "職能空缺與重疊並存[cite: 2]。", implication: "組織內部嚴重內耗，問責失效。", action: "重建指揮鏈條與問責體系。" }
         },
-        flow: {
-            title: "Flow (資訊能流)", theory: "Communication Theory",
-            high: { status: "透明流動", color: "#52c41a", insight: "資訊傳遞幾無損耗，數據驅動決策[cite: 1]。", implication: "對市場反應速度低於同行平均。", action: "導入 AI 輔助資訊摘要。" },
-            mid:  { status: "節點阻滯", color: "#faad14", insight: "資訊在特定管理層級發生阻滯[cite: 1]。", implication: "反應問題到決策層存在延遲。", action: "建立看板管理與異常回報系統。" },
-            low:  { status: "資訊孤島", color: "#ff4d4f", insight: "資訊高度碎片化，僅掌握局部事實[cite: 1]。", implication: "決策依賴直覺而非數據。", action: "實現核心數據的激進透明化。" }
+        flow: { title: "Flow (資訊能流)", theory: "Communication Theory",
+            high: { status: "透明流動", color: "#52c41a", insight: "資訊傳遞幾無損耗[cite: 2]。", implication: "組織對市場反應極快。", action: "導入 AI 輔助優化決策。" },
+            mid:  { status: "節點阻滯", color: "#faad14", insight: "資訊在特定層級發生阻滯[cite: 2]。", implication: "基層反應問題到決策層有延遲。", action: "建立看板管理與異常回報系統。" },
+            low:  { status: "資訊孤島", color: "#ff4d4f", insight: "資訊碎片化，僅掌握局部事實[cite: 2]。", implication: "決策依賴直覺而非數據。", action: "實現核心數據的激進透明化。" }
         },
-        safe: {
-            title: "Safety (心理安全)", theory: "Psychological Safety",
-            high: { status: "無畏創新", color: "#52c41a", insight: "團隊容錯率高，具備強大學習能力[cite: 1]。", implication: "員工敢於挑戰現狀。", action: "建立無責異常回報機制。" },
-            mid:  { status: "條件信任", color: "#faad14", insight: "信任建立在利益上，危機時有保留[cite: 1]。", implication: "負面消息傳遞緩慢。", action: "強化領導者的脆弱領導力。" },
-            low:  { status: "恐懼氛圍", color: "#ff4d4f", insight: "防衛性行為主導，傾向隱瞞錯誤[cite: 1]。", implication: "失去糾錯能力，風險正在積聚。", action: "停止懲罰性措施，重建安全邊界。" }
+        safe: { title: "Safety (心理安全)", theory: "Psychological Safety",
+            high: { status: "無畏創新", color: "#52c41a", insight: "團隊容錯率高，具備學習基因[cite: 2]。", implication: "員工敢於挑戰現狀。", action: "建立無責異常回報機制。" },
+            mid:  { status: "條件信任", color: "#faad14", insight: "信任建立在既有利益上[cite: 2]。", implication: "負面消息傳遞緩慢，風險易掩蓋。", action: "強化領導者的脆弱領導力。" },
+            low:  { status: "恐懼氛圍", color: "#ff4d4f", insight: "員工隱瞞錯誤以自保[cite: 2]。", implication: "組織失去糾錯能力，風險積聚。", action: "停止懲罰措施，重建心理邊界。" }
         }
     };
 
@@ -189,24 +200,28 @@ window.onload = function() {
     const worstKey = Object.keys(scores).reduce((a, b) => scores[a] < scores[b] ? a : b);
     const bestKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
 
-    // 頂部 UI
-    const riskUI = totalScore >= 70 ? { title: "高能卓越型", color: "#52c41a", bg: "#f6ffed", rTitle: "💡 卓越領航提醒", remind: "預防「優勢陷阱」，應刻意引入異見以維持多樣性[cite: 1]。" } :
-                   totalScore >= 45 ? { title: "亞健康運作型", color: "#faad14", bg: "#fffbe6", rTitle: "💡 管理優化提醒", remind: `優先解決「${insightDB[worstKey].title}」問題，避免拖累全局[cite: 1]。` } :
-                                    { title: "高風險失能型", color: "#ff4d4f", bg: "#fff1f0", rTitle: "💡 危機管理提醒", remind: "當前任務是修復基礎的心理安全感與共識[cite: 1]。" };
-    
+    // 渲染總分圓環
+    const riskColor = totalScore >= 70 ? "#52c41a" : (totalScore >= 45 ? "#faad14" : "#ff4d4f");
+    const bar = document.getElementById('scoreBar');
+    const offset = 283 - (283 * totalScore) / 100;
+    bar.style.strokeDashoffset = offset;
+    bar.style.stroke = riskColor;
     document.getElementById('totalScoreVal').innerText = totalScore;
-    document.getElementById('totalScoreVal').style.color = riskUI.color;
+    document.getElementById('totalScoreVal').style.color = riskColor;
+
+    const riskUI = totalScore >= 70 ? { title: "高能卓越型 (Optimized)", bg: "#f6ffed", remind: "預防「優勢陷阱」，應刻意引入異見者[cite: 2]。" } :
+                   totalScore >= 45 ? { title: "亞健康運作型 (Vulnerable)", bg: "#fffbe6", remind: `建議優先解決「${insightDB[worstKey].title}」問題[cite: 2]。` } :
+                                    { title: "高風險失能型 (Fragile)", bg: "#fff1f0", remind: "當前任務是修復基礎的心理安全感[cite: 2]。" };
+    
     document.getElementById('riskTitle').innerText = riskUI.title;
-    document.getElementById('riskTitle').style.color = riskUI.color;
-    document.getElementById('riskDesc').innerText = riskUI.title === "高能卓越型" ? "組織具備強大對稱性能量[cite: 1]。" : "組織效能存在內耗，需關注風險[cite: 1]。";
-    document.getElementById('riskMainCard').style.borderLeftColor = riskUI.color;
+    document.getElementById('riskTitle').style.color = riskColor;
+    document.getElementById('riskDesc').innerText = "組織效能評估報告[cite: 2]。";
     document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
     document.getElementById('remindText').innerText = riskUI.remind;
-    document.getElementById('remindTitle').innerText = riskUI.rTitle;
     document.getElementById('remindBox').style.background = riskUI.bg;
-    document.getElementById('remindBox').style.borderColor = riskUI.color;
+    document.getElementById('remindBox').style.borderColor = riskColor;
 
-    // 四維度卡片
+    // 渲染四維度卡片
     const aiGrid = document.getElementById('aiGrid');
     ['mirror', 'matrix', 'flow', 'safe'].forEach(key => {
         const data = insightDB[key][getLevel(scores[key])];
@@ -216,42 +231,40 @@ window.onload = function() {
                 <div class="ai-theory">${insightDB[key].theory}</div>
                 <div class="ai-desc"><strong>洞察:</strong> ${data.insight}<br><strong>影響:</strong> ${data.implication}</div>
                 <div class="action-list-title">顧問建議</div>
-                <ul class="action-list"><li>${data.action}</li><li>建立長期追蹤指標</li></ul>
+                <ul class="action-list"><li>${data.action}</li><li>長期追蹤指標</li></ul>
             </div>`;
     });
 
-    // 衝突診斷邏輯
-    const conflictList = [];
-    if (scores.flow >= 18 && scores.safe <= 10) conflictList.push({ type: "假透明組織", desc: "資訊流動快但心理安全不足，數據看似正常但風險被隱藏[cite: 1]。" });
-    if (scores.matrix >= 18 && scores.mirror <= 10) conflictList.push({ type: "結構僵化組織", desc: "權責清楚但上下認知不一，命令被形式執行[cite: 1]。" });
-    if (Math.max(...Object.values(scores)) - Math.min(...Object.values(scores)) >= 12) conflictList.push({ type: "結構性失衡", desc: "構面差異過大，系統協同失效[cite: 1]。" });
+    // 衝突工具包與渲染結論
+    const conflicts = [];
+    if (scores.flow >= 18 && scores.safe <= 10) conflicts.push({ type: "假透明現象", tool: "導入【心理安全保障協議】：承諾不對誠實報告者追責，建立匿名第三方反映渠道[cite: 2]。" });
+    if (scores.matrix >= 18 && scores.mirror <= 10) conflicts.push({ type: "結構僵化症", tool: "啟動【戰略對稱工作坊】：讓基層反饋對職責邊界的理解，手動消除認知斷層[cite: 2]。" });
+    if (scores.safe >= 18 && scores.matrix <= 10) conflicts.push({ type: "效率黑洞", tool: "建立【RACI 決策白皮書】：在和諧氛圍中強制確立責任歸屬，終結討論而不決的現狀[cite: 2]。" });
 
-    // 渲染綜合結論
-    let conclusionHTML = `<strong>Executive Summary:</strong><br>優勢：<b>${insightDB[bestKey].title}</b> (${scores[bestKey]}分)，弱點：<b>${insightDB[worstKey].title}</b> (${scores[worstKey]}分)[cite: 1]。<br>`;
-    if (conflictList.length > 0) {
-        conclusionHTML += `<div class="conflict-alert"><strong style="color:#ff4d4f;">⚠️ 組織衝突預警：</strong><br>` + 
-        conflictList.map(c => `<b>${c.type}:</b> ${c.desc}`).join('<br>') + `</div>`;
+    if (conflicts.length > 0) {
+        document.getElementById('toolkitSection').style.display = 'block';
+        const tGrid = document.getElementById('toolkitGrid');
+        conflicts.forEach(c => {
+            tGrid.innerHTML += `<div class="toolkit-card"><h5><i class="fa-solid fa-triangle-exclamation"></i> ${c.type}</h5><div class="toolkit-tool">${c.tool}</div></div>`;
+        });
     }
-    document.getElementById('conclusionText').innerHTML = conclusionHTML;
 
-    // 步驟渲染與雷達圖
-    document.getElementById('stepsContainer').innerHTML = [
-        `針對 ${insightDB[worstKey].title} 進行專案復盤`,
-        `優化 ${insightDB[bestKey].title} 的槓桿作用`,
-        "導入 MMTF 雙向診斷機制"
-    ].map((s, i) => `<div class="step-item"><div class="step-num">${i+1}</div><div class="step-txt">${s}</div></div>`).join('');
+    document.getElementById('conclusionText').innerHTML = `<strong>診斷摘要：</strong><br>系統優勢在於 <b>${insightDB[bestKey].title}</b>，而 <b>${insightDB[worstKey].title}</b> 為核心瓶頸[cite: 2]。`;
+
+    // 渲染步驟與雷達圖
+    document.getElementById('stepsContainer').innerHTML = [`針對 ${insightDB[worstKey].title} 復盤`, `強化 ${insightDB[bestKey].title} 槓桿`, "監測管理能量動態"]
+        .map((s, i) => `<div class="step-item"><div class="step-num">${i+1}</div><div class="step-txt">${s}</div></div>`).join('');
 
     new Chart(document.getElementById('radarChart'), {
         type: 'radar',
         data: {
             labels: ["Mirror", "Matrix", "Flow", "Safety"],
-            datasets: [{ data: [scores.mirror, scores.matrix, scores.flow, scores.safe], backgroundColor: `${riskUI.color}22`, borderColor: riskUI.color, borderWidth: 2 }]
+            datasets: [{ data: [scores.mirror, scores.matrix, scores.flow, scores.safe], backgroundColor: `${riskColor}22`, borderColor: riskColor, borderWidth: 2 }]
         },
         options: { scales: { r: { min: 0, max: 25, ticks: { display: false } } }, plugins: { legend: { display: false } } }
     });
 
-    const now = new Date();
-    document.getElementById('reportDate').innerText = `MMTF 專業診斷模組 v1.0 | 診斷日期：${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
+    document.getElementById('reportDate').innerText = `MMTF 診斷模組 v1.2 | 診斷日期：${new Date().toLocaleDateString()}`;
 };
 </script>
 </body>
