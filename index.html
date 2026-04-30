@@ -116,51 +116,59 @@
     </div>
 
     <!-- 4. 行動與建議 -->
-    <div class="bottom-row">
-        <div class="steps-box">
-            <h4 style="margin:0 0 20px 0; color:var(--primary);">🚀 下一步行動指南</h4>
-            <div id="stepsContainer">
-                <!-- JS 動態生成 -->
-            </div>
-        </div>
-        <div class="remind-box" id="remindBox">
-            <h4 id="remindTitle">💡 顧問關鍵提醒</h4>
-            <p id="remindText">載入中...</p>
-        </div>
-    </div>
-
-<div class="bottom-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; border-top: 1px solid #f1f5f9; padding-top: 30px;">
+    <div class="bottom-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; border-top: 1px solid #f1f5f9; padding-top: 30px; align-items: start;">
     
-    <div class="steps-box" style="background: var(--card-blue); padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0;">
-        <h4 style="margin:0 0 20px 0; color:var(--primary); font-size:16px;">🚀 下一步行動指南</h4>
+    <div class="steps-box" style="background: #f8fafc; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0;">
+        <h4 style="margin:0 0 20px 0; color:#1a3a63; font-size:16px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-rocket"></i> 下一步行動指南
+        </h4>
         <div id="stepsContainer">
             </div>
     </div>
 
-    <div class="crisis-box" style="padding: 25px; border-radius: 16px; border: 2px solid #ffccc7; background: #fff1f0;">
-        <h4 style="margin:0 0 15px 0; color:#cf1322; font-size:16px;">
-            <i class="fa-solid fa-lightbulb"></i> 危機管理提醒
-        </h4>
-        <p style="font-size:14px; line-height:1.8; color:#334155; margin:0;">
-            當前組織的核心任務<b>不是追逐新目標</b>，而是專注於<b>修復基礎的心理安全感與認知共識</b>。任何未經修復的系統漏洞，都會在執行過程中被放大，進而消耗組織的有限能量。
-        </p>
+    <div class="solution-package" style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <div style="padding: 25px; border-radius: 16px; border: 1px solid #ffccc7; background: #fff1f0; position: relative;">
+            <h4 style="margin:0 0 12px 0; color:#cf1322; font-size:16px; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-circle-exclamation"></i> 危機管理提醒
+            </h4>
+            <p style="font-size: 14px; line-height: 1.8; color: #1e293b; margin: 0;">
+                當前組織的核心任務<b>不是追逐新目標</b>，而是專注於<b>修復基礎的心理安全感與認知共識</b>。任何未經修復的系統漏洞，都會在執行過程中被放大，進而消耗組織的有限能量。
+            </p>
+        </div>
+
+        <div style="padding: 25px; border-radius: 16px; border: 1px solid #bae7ff; background: #e6f7ff;">
+            <h4 style="margin:0 0 12px 0; color:#0050b3; font-size:16px;">
+                <i class="fa-solid fa-lightbulb"></i> 顧問建議方案
+            </h4>
+            <p id="consultantAdvice" style="font-size: 14px; line-height: 1.8; color: #1e293b; margin: 0;">
+                </p>
+        </div>
     </div>
 </div>
 
 <script>
-// 在您的 JS 渲染邏輯中，保持行動指南的動態生成
+// 在您的 window.onload 邏輯中加入以下渲染代碼
+const worstTitle = insightDB[worstKey].title; // 取得最差構面名稱
+
+// 1. 動態生成行動步驟
 const steps = [
-    `針對 <b>${insightDB[worstKey].title}</b> 進行專案復盤`,
-    `優化 <b>${insightDB[worstKey].title}</b> 的槓桿作用`,
-    "導入 MMTF 雙向診斷機制",
-    "監測管理能量的動態變化"
+    `針對 <b>${worstTitle}</b> 進行專案復盤，找出能量流失的關鍵節點。`,
+    `優化 <b>${worstTitle}</b> 的槓桿作用，以最小動力帶動最大改變。`,
+    "導入 MMTF 雙向診斷機制，建立透明的反饋閉環系統。",
+    "持續監測管理能量的動態變化，預防對稱性破缺再次發生。"
 ];
+
 document.getElementById('stepsContainer').innerHTML = steps.map((s, i) => `
-    <div class="step-item" style="display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px;">
-        <div class="step-num" style="width: 30px; height: 30px; background: #1a3a63; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; flex-shrink: 0;">${i+1}</div>
-        <div class="step-txt" style="font-size: 13px; font-weight: 500; padding-top: 5px;">${s}</div>
+    <div style="display: flex; align-items: flex-start; gap: 15px; margin-bottom: 18px;">
+        <div style="width: 28px; height: 28px; background: #1a3a63; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0;">${i+1}</div>
+        <div style="font-size: 14px; font-weight: 500; color: #334155; padding-top: 4px;">${s}</div>
     </div>
 `).join('');
+
+// 2. 動態生成顧問方案文字
+const adviceText = `建議啟動為期 90 天的「能量修復計畫」，重點修補 <b>${worstTitle}</b> 維度。這包含建立一組針對該維度的關鍵對話（MMTF Feedback Loop），並由管理處直接督導改善成效，而非僅由用人單位自行處理。`;
+document.getElementById('consultantAdvice').innerHTML = adviceText;
 </script>
     
     <!-- 5. 文獻參考 -->
