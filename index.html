@@ -405,6 +405,44 @@ document.getElementById('conclusionText').innerHTML = conclusionHTML;
             scales: { r: { min: 0, max: 25, ticks: { display: false, stepSize: 5 } } },
             plugins: { legend: { display: false } }
         }
+        const reportFooter = document.createElement('div');
+    reportFooter.style.cssText = `
+        margin-top: 50px;
+        padding-top: 20px;
+        border-top: 1px dashed #cbd5e1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    `;
+    
+    reportFooter.innerHTML = `
+        <div style="color: #64748b; font-size: 12px;">
+            <i class="fa-solid fa-shield-halved"></i> <strong>Confidential:</strong> 僅供組織內部高階決策參考
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <button onclick="window.print()" style="cursor:pointer; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 12px;">
+                <i class="fa-solid fa-file-pdf"></i> 匯出 PDF 報告
+            </button>
+        </div>
+    `;
+    document.querySelector('.report-container').appendChild(reportFooter);
+
+    // 更新日期與版權
+    const now = new Date();
+    document.getElementById('reportDate').innerHTML = `
+        <div style="margin-bottom: 5px;">MMTF 旗艦顧問模組 v3.5 | 數位診斷編號：${Math.random().toString(36).substr(2, 9).toUpperCase()}</div>
+        <div>© ${now.getFullYear()} MMTF Strategic Consulting. All rights reserved. 診斷日期：${now.toLocaleDateString()} ${now.toLocaleTimeString()}</div>
+    `;
+
+    // 增加一個平滑進入的動畫效果
+    document.querySelector('.report-container').style.opacity = '0';
+    document.querySelector('.report-container').style.transition = 'opacity 1s ease-in';
+    setTimeout(() => {
+        document.querySelector('.report-container').style.opacity = '1';
+    }, 100);
+};
+</script>
     });
 };
 const today = new Date();
