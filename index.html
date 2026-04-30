@@ -427,21 +427,7 @@ document.getElementById('conclusionText').innerHTML = conclusionHTML;
         </div>
     `;
     document.querySelector('.report-container').appendChild(reportFooter);
- // 增加一個平滑進入的動畫效果
-    document.querySelector('.report-container').style.opacity = '0';
-    document.querySelector('.report-container').style.transition = 'opacity 1s ease-in';
-    setTimeout(() => {
-        document.querySelector('.report-container').style.opacity = '1';
-    }, 100);
-};
-</script>
-    });
-};
-const today = new Date();
 
-const formattedDate = today.getFullYear() + '-' +
-    String(today.getMonth() + 1).padStart(2, '0') + '-' +
-    String(today.getDate()).padStart(2, '0');
     // 更新日期與版權
     const now = new Date();
     document.getElementById('reportDate').innerHTML = `
@@ -451,6 +437,7 @@ const formattedDate = today.getFullYear() + '-' +
    
 document.getElementById('reportDate').innerText =
 `MMTF 專業診斷模組 v1.0 (邏輯引擎版) | 診斷日期：${formattedDate}`;   
+    
 </script>
 </body>
 </html>
