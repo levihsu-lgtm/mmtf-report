@@ -237,8 +237,7 @@ window.onload = function() {
         `;
     });
 
-    // 6. 渲染綜合結論 (顧問診斷視角)
-   // 6. 渲染綜合結論（修正版：避免滿分/同分錯誤）
+ // 6. 渲染綜合結論（最終穩定版）
 
 const values = Object.values(scores);
 const maxScore = Math.max(...values);
@@ -247,6 +246,13 @@ const minScore = Math.min(...values);
 const allSame = maxScore === minScore;
 const allHigh = values.every(v => v === 25);
 const allLow  = values.every(v => v <= 5);
+
+// ✅ 關鍵修正：抓 level + status
+const bestLevel = getLevel(scores[bestKey]);
+const worstLevel = getLevel(scores[worstKey]);
+
+const bestStatus = insightDB[bestKey][bestLevel].status;
+const worstStatus = insightDB[worstKey][worstLevel].status;
 
 let conclusionHTML = "";
 
@@ -287,8 +293,10 @@ if (allHigh) {
     本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。<br>
     最顯著的優勢在於 <b>${insightDB[bestKey].title}</b> (${scores[bestKey]}分)，
     而系統最脆弱的節點則位於 <b>${insightDB[worstKey].title}</b> (${scores[worstKey]}分)。<br><br>
-    這意味著組織雖然在「${insightDB[bestKey].status}」上具備優勢，
-    但整體效能正被「${insightDB[worstKey].status}」所限制。<br><br>
+    
+    這意味著組織雖然在「${bestStatus}」上具備優勢，
+    但整體效能正被「${worstStatus}」所限制。<br><br>
+    
     <strong>戰略建議：</strong>應優先修復最低構面，避免其成為系統瓶頸。
     `;
 }
