@@ -46,15 +46,19 @@
         .action-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
         .action-list li { font-size: 11px; color: #64748b; margin-bottom: 4px; display: flex; align-items: flex-start; gap: 5px; }
 
-        /* 3. 中段分析（雷達圖與結論） */
+        /* 3. 中段分析（雷達圖與強化結論） */
         .mid-row { display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 40px; margin-bottom: 35px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
         .radar-box { text-align: center; border-right: 1px solid #f1f5f9; padding-right: 20px; }
-        #radarChart { max-width: 200px !important; max-height: 200px !important; margin: 0 auto; }
-        .conclusion-box { font-size: 14px; line-height: 1.8; color: #334155; }
-
-        /* 4. 衝突診斷警示 */
-        .conflict-box { background: #fff1f0; border: 1px solid #ffa39e; border-radius: 8px; padding: 15px; margin-top: 15px; }
-        .conflict-header { color: #cf1322; font-weight: bold; font-size: 15px; margin-bottom: 5px; }
+        #radarChart { max-width: 220px !important; max-height: 220px !important; margin: 0 auto; }
+        
+        .conclusion-box { padding: 5px; }
+        .summary-card { background: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; }
+        .summary-title { font-weight: bold; color: var(--primary); font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .summary-content { font-size: 14px; line-height: 1.8; color: #334155; }
+        
+        /* 4. 衝突與警示 */
+        .alert-area { margin-top: 15px; }
+        .conflict-tag { display: inline-block; background: #fff1f0; border: 1px solid #ffccc7; color: #cf1322; padding: 10px 15px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
 
         /* 5. 行動與提醒 */
         .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
@@ -64,12 +68,6 @@
         .step-num { width: 30px; height: 30px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; flex-shrink: 0; }
         .step-txt { font-size: 13px; font-weight: 500; padding-top: 5px; }
         .remind-box { padding: 25px; border-radius: 16px; height: fit-content; border: 1px dashed #ccc; }
-
-        /* 6. 文獻實證 */
-        .literature-section { margin-top: 35px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px; }
-        .literature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .lit-item { font-size: 11px; color: #64748b; line-height: 1.5; }
-        .lit-tag { display: inline-block; background: #e2e8f0; color: #475569; font-size: 9px; padding: 1px 5px; border-radius: 3px; margin-bottom: 3px; font-weight: bold; }
 
         .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 40px; }
     </style>
@@ -88,13 +86,13 @@
                  <span style="font-size:11px; color:#999;">/100</span>
             </div>
             <div class="risk-text">
-                 <h2 id="riskTitle">計算中...</h2>
-                 <p id="riskDesc" style="font-size:14px; color:#64748b; margin:5px 0 0 0;">正在分析組織能量...</p>
+                 <h2 id="riskTitle">分析中...</h2>
+                 <p id="riskDesc" style="font-size:14px; color:#64748b; margin:5px 0 0 0;">正在解析 MMTF 管理能量矩陣。</p>
             </div>
         </div>
         <div class="risk-main" style="display:block; background:#fff;">
             <div style="font-weight:bold; font-size:14px; margin-bottom:10px;">📊 MMTF 指標定義</div>
-            <p style="font-size:12px; color:#666; line-height:1.6; margin:0;">本系統透過對稱性理論(Mirror Matrix Theory)評估。分數越高代表風險越低；低分則警示組織存在嚴重的能量內耗與認知斷層。</p>
+            <p style="font-size:12px; color:#666; line-height:1.6; margin:0;">本診斷基於對稱性管理理論，評估組織在「認知對齊(Mirror)」、「權責結構(Matrix)」、「資訊流動(Flow)」與「心理安全(Safety)」四大維度的協同效應。</p>
         </div>
     </div>
 
@@ -107,29 +105,22 @@
             <p style="font-size:11px; color:#94a3b8; margin-top:10px;">MMTF 四維雷達圖</p>
         </div>
         <div class="conclusion-box">
-            <h3 style="margin-top:0; color:var(--primary);">🔍 診斷綜合結論</h3>
-            <div id="conclusionText"></div>
-            <div id="conflictArea"></div> </div>
+            <div class="summary-card">
+                <div class="summary-title"><i class="fa-solid fa-file-contract"></i> Executive Summary (診斷核心結論)</div>
+                <div id="conclusionContent" class="summary-content">載入中...</div>
+                <div id="alertArea" class="alert-area"></div>
+            </div>
+        </div>
     </div>
 
     <div class="bottom-row">
         <div class="steps-box">
-            <h4 style="margin:0 0 20px 0; color:var(--primary);">🚀 下一步行動指南</h4>
+            <h4 style="margin:0 0 20px 0; color:var(--primary);">🚀 戰略行動指南 (Strategic Actions)</h4>
             <div id="stepsContainer"></div>
         </div>
         <div class="remind-box" id="remindBox">
-            <h4 id="remindTitle">💡 顧問關鍵提醒</h4>
-            <p id="remindText"></p>
-        </div>
-    </div>
-
-    <div class="section-title"><i class="fa-solid fa-book"></i> 文獻實證背景</div>
-    <div class="literature-section">
-        <div class="literature-grid">
-            <div class="lit-item"><div class="lit-tag">Mirror</div><b>Luft (1955) Johari Window:</b> 盲目區大小決定信任基礎。</div>
-            <div class="lit-item"><div class="lit-tag">Matrix</div><b>Jacka (2014) RACI:</b> 權責清晰度與執行力成強正相關。</div>
-            <div class="lit-item"><div class="lit-tag">Flow</div><b>Shannon (1949):</b> 溝通障礙導致戰略意圖在傳遞中失真。</div>
-            <div class="lit-item"><div class="lit-tag">Safety</div><b>Edmondson (1999):</b> 心理安全感是學習型組織的先決條件。</div>
+            <h4 id="remindTitle">💡 顧問關鍵點評</h4>
+            <p id="remindText" style="font-size:14px; line-height:1.6; color:#475569;"></p>
         </div>
     </div>
 
@@ -145,103 +136,95 @@ window.onload = function() {
         flow:   parseInt(params.get('flow'))   || 5,
         safe:   parseInt(params.get('safe'))   || 5
     };
-
     const totalScore = scores.mirror + scores.matrix + scores.flow + scores.safe;
-    
-    // 資料庫
-    const insightDB = {
-        mirror: { title: "Mirror (鏡像)", theory: "Johari Window",
-            high: { status: "認知共振", color: "#52c41a", insight: "目標高度對齊，具備自我修正基因。", action: "建立跨部門知識共享機制。" },
-            mid:  { status: "認知雜訊", color: "#faad14", insight: "中基層理解落差，盲區隱現。", action: "啟動雙向回饋機制。" },
-            low:  { status: "認知斷層", color: "#ff4d4f", insight: "管理層與基層認知嚴重不對稱。", action: "召開真相對齊會議。" }
-        },
-        matrix: { title: "Matrix (結構)", theory: "RACI Theory",
-            high: { status: "靈活治理", color: "#52c41a", insight: "權責清晰且具備彈性。", action: "導入去中心化決策權。" },
-            mid:  { status: "功能重疊", color: "#faad14", insight: "基本定義明確，但灰區仍多。", action: "梳理核心流程 RACI。" },
-            low:  { status: "結構失序", color: "#ff4d4f", insight: "權責模糊，職能空缺與重疊並存。", action: "重建指揮鏈與問責體系。" }
-        },
-        flow: { title: "Flow (能流)", theory: "Communication Theory",
-            high: { status: "透明流動", color: "#52c41a", insight: "資訊傳遞幾無損耗。", action: "導入 AI 輔助資訊摘要。" },
-            mid:  { status: "節點阻滯", color: "#faad14", insight: "資訊在特定層級發生阻滯。", action: "建立即時異常回報系統。" },
-            low:  { status: "資訊孤島", color: "#ff4d4f", insight: "資訊碎片化，單位僅掌握局部事實。", action: "實現數據激進透明化。" }
-        },
-        safe: { title: "Safety (安全)", theory: "Psychological Safety",
-            high: { status: "無畏創新", color: "#52c41a", insight: "團隊容錯率高，失敗學習力強。", action: "建立無責異常回報機制。" },
-            mid:  { status: "條件信任", color: "#faad14", insight: "信任建立在利益上，有保留。", action: "強化領導者的脆弱領導力。" },
-            low:  { status: "恐懼文化", color: "#ff4d4f", insight: "防衛性行為主導，隱瞞錯誤。", action: "停止懲罰，重建心理邊界。" }
-        }
+
+    // 內容資料庫
+    const DB = {
+        mirror: { title: "Mirror (鏡像對稱)", high: "認知共振", mid: "認知雜訊", low: "認知斷層" },
+        matrix: { title: "Matrix (結構效能)", high: "靈活治理", mid: "功能重疊", low: "結構失序" },
+        flow:   { title: "Flow (資訊能流)", high: "透明流動", mid: "節點阻滯", low: "資訊孤島" },
+        safe:   { title: "Safety (心理安全)", high: "無畏創新", mid: "條件信任", low: "恐懼文化" }
     };
 
-    function getLevel(s) { return s >= 18 ? 'high' : (s >= 12 ? 'mid' : 'low'); }
-    const worstKey = Object.keys(scores).reduce((a, b) => scores[a] < scores[b] ? a : b);
-    const bestKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+    function getLv(s) { return s >= 18 ? 'high' : (s >= 12 ? 'mid' : 'low'); }
+    const worstK = Object.keys(scores).reduce((a, b) => scores[a] < scores[b] ? a : b);
+    const bestK = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
 
-    // 1. 總分 UI
-    const riskUI = totalScore >= 70 ? { title: "高能卓越型", desc: "組織具備強大能量。", color: "#52c41a", bg: "#f6ffed" } :
-                   totalScore >= 45 ? { title: "亞健康運作型", desc: "組織效能存在跑冒滴漏。", color: "#faad14", bg: "#fffbe6" } :
-                                    { title: "高風險失能型", desc: "系統架構與信任鏈條嚴重毀損。", color: "#ff4d4f", bg: "#fff1f0" };
+    // 1. 頂部狀態更新
+    const riskUI = totalScore >= 70 ? { title: "高能卓越型 (Optimized)", color: "#52c41a", bg: "#f6ffed" } :
+                   totalScore >= 45 ? { title: "亞健康運作型 (Vulnerable)", color: "#faad14", bg: "#fffbe6" } :
+                                    { title: "高風險失能型 (Fragile)", color: "#ff4d4f", bg: "#fff1f0" };
 
     document.getElementById('totalScoreVal').innerText = totalScore;
     document.getElementById('totalScoreVal').style.color = riskUI.color;
     document.getElementById('riskTitle').innerText = riskUI.title;
     document.getElementById('riskTitle').style.color = riskUI.color;
-    document.getElementById('riskDesc').innerText = riskUI.desc;
     document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
 
-    // 2. 構面卡片渲染
+    // 2. 構面卡片
+    const details = {
+        mirror: { theory: "Johari Window", desc: "目標理解與反饋一致性。", action: "啟動雙向回饋機制。" },
+        matrix: { theory: "RACI Theory", desc: "權責定義與資源分配效率。", action: "重新梳理核心 RACI 矩陣。" },
+        flow: { theory: "Communication Theory", desc: "資訊傳遞透明度與損耗率。", action: "建立即時異常回報看板。" },
+        safe: { theory: "Psychological Safety", desc: "錯誤容忍度與團隊信任感。", action: "導入無責異常申報文化。" }
+    };
+    
     let aiGridHTML = "";
     ['mirror', 'matrix', 'flow', 'safe'].forEach(k => {
-        const lv = getLevel(scores[k]);
-        const d = insightDB[k][lv];
-        aiGridHTML += `
-            <div class="ai-card" style="border-top-color: ${d.color}">
-                <h4>${insightDB[k].title} <span class="status-tag" style="background:${d.color}22; color:${d.color}">${d.status}</span></h4>
-                <div class="ai-theory">${insightDB[k].theory}</div>
-                <div class="ai-desc"><strong>洞察:</strong> ${d.insight}</div>
-                <div class="action-list-title">顧問建議</div>
-                <ul class="action-list"><li>${d.action}</li></ul>
-            </div>`;
+        const lv = getLv(scores[k]);
+        aiGridHTML += `<div class="ai-card" style="border-top-color: ${lv==='high'? '#52c41a' : lv==='mid'?'#faad14':'#ff4d4f'}">
+            <h4>${DB[k].title} <span class="status-tag" style="background:#eee;">${DB[k][lv]}</span></h4>
+            <div class="ai-theory">${details[k].theory}</div>
+            <div class="ai-desc">${details[k].desc}</div>
+            <div class="action-list-title">建議行動</div>
+            <ul class="action-list"><li>${details[k].action}</li></ul>
+        </div>`;
     });
     document.getElementById('aiGrid').innerHTML = aiGridHTML;
 
-    // 3. 衝突診斷引擎 (🔥核心邏輯整合)
-    let conflicts = [];
-    if(scores.safe <= 8 && scores.flow >= 15) {
-        conflicts.push({ type: "表面溝通 / 實質沉默", desc: "資訊流動快，但員工不敢說真話。", advice: "建立心理安全回報機制。" });
+    // 3. 🔥【強化核心：綜合結論分析】
+    let summaryHTML = "";
+    const bestStatus = DB[bestK][getLv(scores[bestK])];
+    const worstStatus = DB[worstK][getLv(scores[worstK])];
+
+    summaryHTML = `本次診斷反映組織綜合管理能量為 <b>${totalScore}</b>。
+    當前組織展現出強大的 <b>「${bestStatus}」</b> 特質（位於 ${DB[bestK].title}），這是目前維持運作的核心動能。
+    然而，系統內部的能量耗損主要源於 <b>「${worstStatus}」</b>（位於 ${DB[worstK].title}），該構面已形成明顯的「管理瓶頸」，限制了整體策略執行力。
+    <br><br>
+    <b>戰略解讀：</b>組織目前的運作模式呈現「局部優化、整體受限」的特徵。若不優先修復脆弱構面，優勢構面的能量將被內耗持續侵蝕。`;
+
+    document.getElementById('conclusionContent').innerHTML = summaryHTML;
+
+    // 4. 🔥【強化核心：衝突診斷引擎】
+    let alerts = [];
+    if(scores.safe <= 10 && scores.flow >= 16) {
+        alerts.push({ type: "虛假透明度 (False Transparency)", desc: "資訊流動雖快，但因缺乏安全感導致員工隱瞞真實風險。" });
     }
-    if(scores.matrix <= 8 && scores.mirror >= 15) {
-        conflicts.push({ type: "認知一致 / 行動失序", desc: "大家知道目標，但沒人負責執行。", advice: "導入 RACI 制度釐清權責。" });
-    }
-    if(scores.mirror <= 8 && scores.safe >= 15) {
-        conflicts.push({ type: "敢說但說不清", desc: "員工願意表達，但因缺乏共識導致溝通混亂。", advice: "建立共同語言與對稱目標。" });
+    if(scores.matrix <= 10 && scores.mirror >= 16) {
+        alerts.push({ type: "認知空轉 (Cognitive Free-wheeling)", desc: "團隊對目標有共識，但缺乏明確權責落地，導致行動失序。" });
     }
     if(Math.max(...Object.values(scores)) - Math.min(...Object.values(scores)) >= 12) {
-        conflicts.push({ type: "系統結構性失衡", desc: "構面落差過大，局部優化但整體失能。", advice: "優先補強最低分維度。" });
+        alerts.push({ type: "系統對稱性破缺 (Symmetry Breaking)", desc: "構面間極度不平衡，組織面臨結構性斷層風險。" });
     }
-
-    document.getElementById('conflictArea').innerHTML = conflicts.map(c => `
-        <div class="conflict-box">
-            <div class="conflict-header"><i class="fa-solid fa-triangle-exclamation"></i> 衝突警示：${c.type}</div>
-            <div style="font-size:12px; color:#555;">${c.desc}</div>
-            <div style="font-size:12px; font-weight:bold; color:var(--primary); margin-top:5px;">💡 建議：${c.advice}</div>
+    
+    document.getElementById('alertArea').innerHTML = alerts.map(a => `
+        <div class="conflict-tag">
+            <strong>⚠️ ${a.type}</strong><br>
+            <small style="font-size:12px;">診斷警示：${a.desc}</small>
         </div>
     `).join('');
 
-    // 4. 綜合結論
-    document.getElementById('conclusionText').innerHTML = `
-        本次診斷顯示，組織總分為 <b>${totalScore}</b>。<br>
-        優勢構面：<b>${insightDB[bestKey].title}</b>（${scores[bestKey]}分）<br>
-        弱點構面：<b>${insightDB[worstKey].title}</b>（${scores[worstKey]}分）<br>
-        組織在「${insightDB[bestKey][getLevel(scores[bestKey])].status}」具備能量，但正被「${insightDB[worstKey][getLevel(scores[worstKey])].status}」所限制。
-    `;
-
-    // 5. 下一步行動
-    const steps = [`針對 ${insightDB[worstKey].title} 進行瓶頸復盤`, `強化 ${insightDB[bestKey].title} 的槓桿作用`, "導入 MMTF 定期動態監測機制"];
-    document.getElementById('stepsContainer').innerHTML = steps.map((s, i) => `
+    // 5. 行動指南路徑
+    const actionPath = [
+        `優先補強核心缺口：針對 <b>${DB[worstK].title}</b> 實施專項干預。`,
+        `槓桿現有優勢：利用 <b>${DB[bestK].title}</b> 的能量帶動跨單位協同。`,
+        `導入 MMTF 雙向監測：建立 90 天一次的管理能量動態追蹤。`
+    ];
+    document.getElementById('stepsContainer').innerHTML = actionPath.map((s, i) => `
         <div class="step-item"><div class="step-num">${i+1}</div><div class="step-txt">${s}</div></div>
     `).join('');
 
-    document.getElementById('remindText').innerText = `優先修復「${insightDB[worstKey].title}」，這是目前提升組織能量的最短路徑。`;
+    document.getElementById('remindText').innerText = `目前最重要的管理動作是「修補而非擴張」。在「${worstStatus}」未改善前，任何新的流程導入都可能增加員工的心理負荷。`;
 
     // 6. 雷達圖
     new Chart(document.getElementById('radarChart'), {
@@ -262,8 +245,7 @@ window.onload = function() {
         }
     });
 
-    const today = new Date();
-    document.getElementById('reportDate').innerText = `MMTF 旗艦診斷模組 v2.0 | 診斷日期：${today.toISOString().split('T')[0]}`;
+    document.getElementById('reportDate').innerText = `MMTF 旗艦診斷模組 v2.1 | 生成日期：${new Date().toISOString().split('T')[0]}`;
 };
 </script>
 </body>
