@@ -118,6 +118,11 @@
     <div class="top-risk-row">
         <div class="risk-main" id="riskMainCard">
             <div class="score-circle" id="totalScoreCircle">
+                // ✅ 動態圓環
+const circle = document.getElementById('totalScoreCircle');
+
+circle.style.setProperty('--progress', totalScore);
+circle.style.setProperty('--progress-color', riskUI.color);
                 <span class="score-val" id="totalScoreVal">--</span>
                 <span style="font-size:11px; color:#999;">/100</span>
             </div>
