@@ -420,7 +420,260 @@ document.getElementById('reportDate').innerText =
 </html>
 
 
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+   <meta charset="UTF-8">
+   <title>MMTF 組織氣候與管理效能診斷專業報告</title>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   <style>
+       :root {
+           --high: #ff4d4f; --mid: #faad14; --low: #52c41a;
+           --primary: #1a3a63; --bg: #f0f2f5; --card-blue: #f8fafc;
+       }
+       * { box-sizing: border-box; }
+       body { margin: 0; padding: 20px; background-color: #cbd5e1; display: flex; flex-direction: column; align-items: center; font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; position: relative; }
 
+       /* 浮水印樣式 */
+       body::before {
+           content: "版權所有@許銘祥";
+           position: fixed;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%) rotate(-30deg);
+           font-size: 80px;
+           color: rgba(0, 0, 0, 0.05);
+           white-space: nowrap;
+           pointer-events: none;
+           z-index: 9999;
+       }
+
+       .report-container {
+           width: 1100px;
+           background: #fff;
+           padding: 40px;
+           border-radius: 12px;
+           box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+           color: #1e293b;
+           position: relative;
+           z-index: 1;
+       }
+
+       .header { text-align: center; margin-bottom: 30px; }
+       .header h1 { font-size: 32px; color: var(--primary); margin: 0; font-weight: 700; border-bottom: 3px solid var(--primary); display: inline-block; padding-bottom: 10px; }
+
+       /* 1. 指標區 - 圓形填滿效果 */
+       .top-risk-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; margin-bottom: 30px; }
+       .risk-main { border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; display: flex; align-items: center; background: #fff; }
+       
+       /* 圓形進度條核心樣式 */
+       .score-circle { 
+           width: 120px; height: 120px; 
+           border-radius: 50%; 
+           display: flex; flex-direction: column; align-items: center; justify-content: center; 
+           margin-right: 25px; 
+           background: #eee; /* 底色 */
+           position: relative;
+       }
+       /* 內部圓形遮罩 */
+       .score-circle::after {
+           content: "";
+           position: absolute;
+           width: 95px; height: 95px;
+           background: #fff;
+           border-radius: 50%;
+       }
+       .score-val, .score-label { position: relative; z-index: 2; }
+       .score-val { font-size: 36px; font-weight: bold; line-height: 1; }
+       .score-label { font-size: 11px; color: #999; margin-top: 2px; }
+
+       .risk-text h2 { font-size: 28px; margin: 0; }
+
+       /* 2.實證分析 卡片樣式不變 */
+       .section-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; border-left: 5px solid var(--primary); padding-left: 10px; margin-top: 25px; }
+       .ai-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 35px; }
+       .ai-card { background: #fff; border: 1px solid #e2e8f0; border-top: 5px solid var(--primary); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; }
+       .ai-card h4 { margin: 0 0 8px 0; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 5px; justify-content: space-between; }
+       .status-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+       .ai-theory { font-size: 11px; color: #888; font-style: italic; margin-bottom: 8px; }
+       .ai-desc { font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 12px; height: 80px; overflow: hidden; }
+       .action-list-title { font-size: 12px; font-weight: bold; color: #1e293b; margin-bottom: 6px; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+       .action-list { list-style: none; padding: 0; margin: 0; }
+       .action-list li { font-size: 11px; color: #64748b; margin-bottom: 4px; display: flex; gap: 5px; }
+       .action-list li::before { content: '•'; font-weight: bold; }
+
+       /* 3. 中段分析 */
+       .mid-row { display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 40px; margin-bottom: 35px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
+       .radar-box { text-align: center; border-right: 1px solid #f1f5f9; padding-right: 20px; }
+       #radarChart { max-width: 170px !important; max-height: 170px !important; margin: 0 auto; }
+       .conclusion-box { font-size: 14px; line-height: 1.8; color: #334155; }
+
+       /* 4. 底部行動與提醒工具包 */
+       .bottom-row { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
+       .steps-box { background: var(--card-blue); padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; }
+       .step-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; position: relative; }
+       .step-item:not(:last-child)::after { content: ''; position: absolute; left: 14px; top: 32px; width: 2px; height: calc(100% - 15px); background: #cbd5e1; }
+       .step-num { width: 30px; height: 30px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; flex-shrink: 0; }
+       .step-txt { font-size: 13px; font-weight: 500; padding-top: 5px; }
+
+       .remind-box { padding: 25px; border-radius: 16px; border: 1px dashed #ccc; background: #fffbe6; }
+       .toolkit-box { margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px; }
+       .toolkit-title { font-size: 13px; font-weight: bold; color: #856404; display: flex; align-items: center; gap: 5px; }
+       .toolkit-item { font-size: 12px; color: #555; background: rgba(255,255,255,0.6); padding: 8px; border-radius: 6px; margin-top: 8px; border-left: 3px solid var(--primary); }
+
+       .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 40px; }
+   </style>
+</head>
+<body>
+
+<div class="report-container">
+   <div class="header">
+       <h1>MMTF 組織診斷與實證分析報告</h1>
+   </div>
+
+   <div class="top-risk-row">
+       <div class="risk-main" id="riskMainCard">
+           <!-- 圓形填滿區域 -->
+           <div class="score-circle" id="totalScoreCircle">
+                <span class="score-val" id="totalScoreVal">--</span>
+                <span class="score-label">/100</span>
+           </div>
+           <div class="risk-text">
+                <h2 id="riskTitle">計算中...</h2>
+                <p id="riskDesc" style="font-size:14px; color:#64748b; margin:5px 0 0 0;">正在分析數據請稍候。</p>
+           </div>
+       </div>
+       <div class="risk-main" style="display:block; background:#fff;">
+           <div style="font-weight:bold; font-size:14px; margin-bottom:10px;">📊 MMTF 指標定義</div>
+           <p style="font-size:12px; color:#666; line-height:1.6; margin:0;">本診斷透過對稱性理論評估管理能量。圓形填滿度越高代表組織風險越低；低填滿度警示組織存在嚴重的內耗與認知斷層。</p>
+       </div>
+   </div>
+
+   <div class="section-title"><i class="fa-solid fa-brain"></i> 實證構面分析</div>
+   <div class="ai-grid" id="aiGrid"></div>
+
+   <div class="mid-row">
+       <div class="radar-box">
+           <canvas id="radarChart"></canvas>
+           <p style="font-size:11px; color:#94a3b8; margin-top:10px;">MMTF 四維雷達圖</p>
+       </div>
+       <div class="conclusion-box">
+           <h3 style="margin-top:0; color:var(--primary);">🔍 診斷綜合結論</h3>
+           <div id="conclusionText">載入中...</div>
+       </div>
+   </div>
+
+   <div class="bottom-row">
+       <div class="steps-box">
+           <h4 style="margin:0 0 20px 0; color:var(--primary);">🚀 下一步行動指南</h4>
+           <div id="stepsContainer"></div>
+       </div>
+       <div class="remind-box" id="remindBox">
+           <h4 id="remindTitle">💡 顧問關鍵提醒</h4>
+           <p id="remindText" style="font-size: 13px; margin-bottom: 0;">載入中...</p>
+           
+           <!-- 工具包方案 -->
+           <div class="toolkit-box">
+               <div class="toolkit-title"><i class="fa-solid fa-toolbox"></i> MMTF 管理工具包方案</div>
+               <div id="toolkitContent"></div>
+           </div>
+       </div>
+   </div>
+
+   <div class="footer" id="reportDate"></div>
+</div>
+
+<script>
+window.onload = function() {
+   const params = new URLSearchParams(window.location.search);
+   const scores = {
+       mirror: parseInt(params.get('mirror')) || 15,
+       matrix: parseInt(params.get('matrix')) || 15,
+       flow: parseInt(params.get('flow')) || 15,
+       safe: parseInt(params.get('safe')) || 15
+   };
+   const totalScore = Math.round(((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100);
+
+   const insightDB = {
+       mirror: { title: "Mirror (鏡像對稱)", theory: "Johari Window", 
+                toolkit: "方案 A：【組織認知對齊工作坊】 - 消除盲點與隱藏區。" },
+       matrix: { title: "Matrix (結構效能)", theory: "RACI Theory", 
+                toolkit: "方案 B：【RACI 職權重新設計模組】 - 釐清灰區權責。" },
+       flow: { title: "Flow (資訊能流)", theory: "Communication Theory", 
+              toolkit: "方案 C：【能流看板管理系統】 - 數位化資訊透明工具。" },
+       safe: { title: "Safety (心理安全)", theory: "Psychological Safety", 
+              toolkit: "方案 D：【恐懼消除與心理安全機制】 - 重建異常回報鏈。" }
+   };
+
+   function getLevel(s) { return s >= 18 ? 'high' : (s >= 12 ? 'mid' : 'low'); }
+   const worstKey = Object.keys(scores).reduce((a, b) => scores[a] < scores[b] ? a : b);
+
+   const riskUI = totalScore >= 70 ? { title: "高能卓越型", color: "#52c41a", bg: "#f6ffed" } :
+                   totalScore >= 45 ? { title: "亞健康運作型", color: "#faad14", bg: "#fffbe6" } :
+                                    { title: "高風險失能型", color: "#ff4d4f", bg: "#fff1f0" };
+
+   // 1. 設置圓形填滿比例 (conic-gradient)
+   const circle = document.getElementById('totalScoreCircle');
+   circle.style.background = `conic-gradient(${riskUI.color} ${totalScore * 3.6}deg, #eee 0deg)`;
+   
+   document.getElementById('totalScoreVal').innerText = totalScore;
+   document.getElementById('totalScoreVal').style.color = riskUI.color;
+   document.getElementById('riskTitle').innerText = riskUI.title;
+   document.getElementById('riskTitle').style.color = riskUI.color;
+   document.getElementById('riskDesc').innerText = "當前組織管理能量填滿率為 " + totalScore + "%，處於" + riskUI.title + "狀態。";
+   document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
+
+   // 2. 設置工具包方案 (根據弱項)
+   document.getElementById('toolkitContent').innerHTML = `
+        <div class="toolkit-item"><strong>首選工具：</strong>${insightDB[worstKey].toolkit}</div>
+        <div class="toolkit-item"><strong>進階配套：</strong>【MMTF 數位管理效能監測儀】</div>
+   `;
+   document.getElementById('remindText').innerText = `目前系統最脆弱的節點是「${insightDB[worstKey].title}」，建議優先執行下方工具包方案。`;
+
+   // 3. 渲染卡片 (簡化內容版本)
+   const aiGrid = document.getElementById('aiGrid');
+   ['mirror', 'matrix', 'flow', 'safe'].forEach(key => {
+       const s = scores[key];
+       const level = getLevel(s);
+       const color = s >= 18 ? '#52c41a' : (s >= 12 ? '#faad14' : '#ff4d4f');
+       aiGrid.innerHTML += `
+           <div class="ai-card" style="border-top-color: ${color}">
+               <h4>${insightDB[key].title} <span class="status-tag" style="background:${color}22; color:${color}">得分: ${s}</span></h4>
+               <div class="ai-theory">${insightDB[key].theory}</div>
+               <div class="ai-desc">根據數據顯示，此構面能量處於關鍵優化期，需注意${s < 12 ? '嚴重的內耗損害' : '潛在的執行阻滯'}。</div>
+               <div class="action-list-title">顧問建議</div>
+               <ul class="action-list">
+                   <li>啟動${insightDB[key].title}專項優化</li>
+                   <li>監測 KPI 變化</li>
+               </ul>
+           </div>`;
+   });
+
+   // 4. 結論與行動指南 (不變)
+   document.getElementById('conclusionText').innerHTML = `本次診斷總分 <b>${totalScore}</b>，系統瓶頸位於 <b>${insightDB[worstKey].title}</b>。`;
+   const steps = [`修補 ${insightDB[worstKey].title} 缺口`, "執行工具包推薦方案", "導入雙向診斷機制", "持續監測動態變化"];
+   document.getElementById('stepsContainer').innerHTML = steps.map((s, i) => `
+       <div class="step-item">
+           <div class="step-num">${i+1}</div>
+           <div class="step-txt">${s}</div>
+       </div>`).join('');
+
+   // 5. 雷達圖 (不變)
+   new Chart(document.getElementById('radarChart'), {
+       type: 'radar',
+       data: {
+           labels: ["Mirror", "Matrix", "Flow", "Safety"],
+           datasets: [{ data: [scores.mirror, scores.matrix, scores.flow, scores.safe], backgroundColor: `${riskUI.color}22`, borderColor: riskUI.color, borderWidth: 2 }]
+       },
+       options: { scales: { r: { min: 0, max: 25, ticks: { display: false } } }, plugins: { legend: { display: false } } }
+   });
+
+   document.getElementById('reportDate').innerText = `MMTF 專業診斷模組 v1.2 | 版權所有@許銘祥 | 診斷日期：${new Date().toLocaleDateString()}`;
+};
+</script>
+</body>
+</html>
 
 
 
