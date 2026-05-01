@@ -28,20 +28,7 @@
         /* 1. 指標區 */
         .top-risk-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; margin-bottom: 30px; }
         .risk-main { border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; display: flex; align-items: center; background: #fff; transition: background 0.3s; }
-        .score-circle {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-right: 25px;
-    background: radial-gradient(closest-side, white 85%, transparent 85% 100%),
-                conic-gradient(#eee 0%, #eee 0%); /* 初始為灰色 */
-    position: relative;
-    transition: background 0.3s ease;
-}
+        .score-circle { width: 110px; height: 110px; border: 10px solid #eee; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 25px; background: #fff; }
         .score-val { font-size: 36px; font-weight: bold; }
         .risk-text h2 { font-size: 28px; margin: 0; }
 
@@ -218,38 +205,7 @@ window.onload = function() {
                    totalScore >= 45 ? { title: "亞健康運作型 (Vulnerable)", desc: "組織效能在特定維度存在「跑冒滴漏」，潛力被內耗稀釋。", color: "#faad14", bg: "#fffbe6", rTitle: "💡 管理優化提醒", remind: `建議優先解決「${insightDB[worstKey].title}」問題，避免其拖累全局表現。` } :
                                     { title: "高風險失能型 (Fragile)", desc: "系統架構與信任鏈條出現嚴重毀損，需立即啟動管理干預。", color: "#ff4d4f", bg: "#fff1f0", rTitle: "💡 危機管理提醒", remind: "當前任務不是追逐新目標，而是修復基礎的心理安全感與認知共識。" };
 
-    d// --- 4. 渲染頂部總分 UI 與 動畫 ---
-const scoreValEl = document.getElementById('totalScoreVal');
-const circleEl = document.getElementById('totalScoreCircle');
-let currentCount = 0;
-const duration = 1500; // 動畫持續 1.5 秒
-const frameRate = 1000 / 60; // 60 FPS
-const totalFrames = Math.round(duration / frameRate);
-const increment = totalScore / totalFrames;
-
-const animateScore = () => {
-    currentCount += increment;
-    if (currentCount >= totalScore) {
-        currentCount = totalScore;
-        clearInterval(timer);
-    }
-    
-    const displayScore = Math.floor(currentCount);
-    scoreValEl.innerText = displayScore;
-    
-    // 動態計算圓環顏色與比例
-    // 使用 conic-gradient 產生進度條效果
-    circleEl.style.background = `
-        radial-gradient(closest-side, white 85%, transparent 85% 100%),
-        conic-gradient(${riskUI.color} ${displayScore}%, #eee 0)
-    `;
-};
-
-const timer = setInterval(animateScore, frameRate);
-
-// 其餘顏色設定保持不變
-scoreValEl.style.color = riskUI.color;
-// ... (其餘原有的代碼)
+    document.getElementById('totalScoreVal').innerText = totalScore;
     document.getElementById('totalScoreVal').style.color = riskUI.color;
     document.getElementById('riskTitle').innerText = riskUI.title;
     document.getElementById('riskTitle').style.color = riskUI.color;
@@ -462,6 +418,7 @@ document.getElementById('reportDate').innerText =
 </script>
 </body>
 </html>
+
 
 
 
