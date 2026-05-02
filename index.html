@@ -432,7 +432,7 @@ document.getElementById('conclusionText').innerHTML = conclusionHTML;
             plugins: { legend: { display: false } }
         }
     });
-};
+
 const today = new Date();
 
 const formattedDate = today.getFullYear() + '-' +
@@ -440,7 +440,7 @@ const formattedDate = today.getFullYear() + '-' +
     String(today.getDate()).padStart(2, '0');
 
 document.getElementById('reportDate').innerText =
-`MMTF 專業診斷模組 v1.0 (邏輯引擎版) | 診斷日期：${formattedDate}`;   
+`MMTF 專業診斷模組 v1.0 (邏輯引擎版) | 診斷日期：${formattedDate}`;   };
 </script>
 </body>
 </html>
