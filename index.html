@@ -211,7 +211,33 @@ window.onload = function() {
     document.getElementById('riskTitle').style.color = riskUI.color;
     document.getElementById('riskDesc').innerText = riskUI.desc;
     document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
-    document.getElementById('remindText').innerText = riskUI.remind;
+    // ===== 顧問決策引擎輸出（不影響原本邏輯） =====
+
+let conflictHTML = "";
+
+if (conflictList.length > 0) {
+
+    conflictHTML += `<div style="margin-top:10px;">`;
+    conflictHTML += `<div style="font-weight:bold; margin-bottom:6px;">🧠 顧問決策引擎診斷</div>`;
+
+    conflictList.forEach(c => {
+        conflictHTML += `
+        <div style="margin-bottom:8px; padding:8px; border-left:3px solid #ff4d4f; background:#fff;">
+            <div style="font-weight:bold; color:#ff4d4f;">${c.type}</div>
+            <div style="font-size:12px; color:#555;">${c.desc}</div>
+            <div style="font-size:12px; color:#999;">影響：${c.impact}</div>
+            <div style="font-size:12px; color:#1a3a63;">建議：${c.advice}</div>
+        </div>
+        `;
+    });
+
+    conflictHTML += `</div>`;
+
+}
+
+// 最終合併（保留原本提醒 + 新增決策引擎）
+document.getElementById('remindText').innerHTML =
+    riskUI.remind + conflictHTML;
     document.getElementById('remindTitle').innerText = riskUI.rTitle;
     document.getElementById('remindBox').style.background = riskUI.bg;
     document.getElementById('remindBox').style.borderColor = riskUI.color;
