@@ -122,6 +122,36 @@
     <div class="top-risk-row">
         <div class="risk-main" id="riskMainCard">
             <div class="score-circle" id="totalScoreCircle">
+                // 找到圓圈元素
+const circle = document.getElementById('totalScoreCircle');
+
+// 動畫參數設定
+let currentDisplayPercent = 0;
+const targetPercent = totalScore; // 目標總分
+const duration = 1500; // 動畫持續 1.5 秒
+const startTime = performance.now();
+
+function animateTotalScore(timestamp) {
+    const elapsed = timestamp - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // 使用 Ease-out 動畫曲線讓結尾更平滑
+    const easedProgress = 1 - Math.pow(1 - progress, 3);
+    currentDisplayPercent = Math.floor(easedProgress * targetPercent);
+    
+    // 動態更新圓環進度與顏色
+    circle.style.background = `
+        radial-gradient(closest-side, white 80%, transparent 0%),
+        conic-gradient(${riskUI.color} ${currentDisplayPercent}%, #eee 0%)
+    `;
+
+    if (progress < 1) {
+        requestAnimationFrame(animateTotalScore);
+    }
+}
+
+// 啟動動畫
+requestAnimationFrame(animateTotalScore);
                 <span class="score-val" id="totalScoreVal">--</span>
                 <span style="font-size:11px; color:#999;">/100</span>
             </div>
