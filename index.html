@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -31,77 +32,8 @@
         .score-circle { width: 110px; height: 110px; border: 10px solid #eee; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 25px; background: #fff; }
         .score-val { font-size: 36px; font-weight: bold; }
         .risk-text h2 { font-size: 28px; margin: 0; }
-   /* 浮水印樣式 */
-       body::before {
-           content: "版權所有@許銘祥";
-           position: fixed;
-           top: 50%;
-           left: 50%;
-           transform: translate(-50%, -50%) rotate(-30deg);
-           font-size: 80px;
-           color: rgba(0, 0, 0, 0.05);
-           white-space: nowrap;
-           pointer-events: none;
-           z-index: 9999;
-       }
 
-       .report-container {
-           width: 1100px;
-           background: #fff;
-           padding: 40px;
-           border-radius: 12px;
-           box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-           color: #1e293b;
-           position: relative;
-           z-index: 1;
-       }
-
-       .header { text-align: center; margin-bottom: 30px; }
-       .header h1 { font-size: 32px; color: var(--primary); margin: 0; font-weight: 700; border-bottom: 3px solid var(--primary); display: inline-block; padding-bottom: 10px; }
-
-       /* 1. 指標區 - 圓形填滿效果 */
-       .top-risk-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; margin-bottom: 30px; }
-       .risk-main { border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; display: flex; align-items: center; background: #fff; }
-       
-       /* 圓形進度條核心樣式 */
-       .score-circle { 
-           width: 120px; height: 120px; 
-           border-radius: 50%; 
-           display: flex; flex-direction: column; align-items: center; justify-content: center; 
-           margin-right: 25px; 
-           background: #eee; /* 底色 */
-           position: relative;
-       }
-       /* 內部圓形遮罩 */
-       .score-circle::after {
-           content: "";
-           position: absolute;
-           width: 95px; height: 95px;
-           background: #fff;
-           border-radius: 50%;
-       }
-       .score-val, .score-label { position: relative; z-index: 2; }
-       .score-val { font-size: 36px; font-weight: bold; line-height: 1; }
-       .score-label { font-size: 11px; color: #999; margin-top: 2px; }
-
-       .risk-text h2 { font-size: 28px; margin: 0; }
-
-   
-       /* 4. 底部行動與提醒工具包 */
-       .bottom-row { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
-       .steps-box { background: var(--card-blue); padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; }
-       .step-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; position: relative; }
-       .step-item:not(:last-child)::after { content: ''; position: absolute; left: 14px; top: 32px; width: 2px; height: calc(100% - 15px); background: #cbd5e1; }
-       .step-num { width: 30px; height: 30px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; flex-shrink: 0; }
-       .step-txt { font-size: 13px; font-weight: 500; padding-top: 5px; }
-
-       .remind-box { padding: 25px; border-radius: 16px; border: 1px dashed #ccc; background: #fffbe6; }
-       .toolkit-box { margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px; }
-       .toolkit-title { font-size: 13px; font-weight: bold; color: #856404; display: flex; align-items: center; gap: 5px; }
-       .toolkit-item { font-size: 12px; color: #555; background: rgba(255,255,255,0.6); padding: 8px; border-radius: 6px; margin-top: 8px; border-left: 3px solid var(--primary); }
-
-       .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 40px; }
-        /* 2.實證分析 1x4 卡片 */
+        /* 2. AI 實證分析 1x4 卡片 */
         .section-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; border-left: 5px solid var(--primary); padding-left: 10px; margin-top: 25px; }
         .ai-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 35px; }
         .ai-card { background: #fff; border: 1px solid #e2e8f0; border-top: 5px solid var(--primary); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; }
@@ -167,7 +99,7 @@
     </div>
 
     <!-- 2. 四維度卡片 (動態注入) -->
-    <div class="section-title"><i class="fa-solid fa-brain"></i>實證構面分析</div>
+    <div class="section-title"><i class="fa-solid fa-brain"></i> AI 實證構面分析</div>
     <div class="ai-grid" id="aiGrid">
         <!-- JS 動態生成 -->
     </div>
@@ -234,16 +166,6 @@ window.onload = function() {
         safe: parseInt(params.get('safe')) || 15
     };
     const totalScore = Math.round(((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100);
-  // 1. 設置圓形填滿比例 (conic-gradient)
-   const circle = document.getElementById('totalScoreCircle');
-   circle.style.background = `conic-gradient(${riskUI.color} ${totalScore * 3.6}deg, #eee 0deg)`;
-   
-   document.getElementById('totalScoreVal').innerText = totalScore;
-   document.getElementById('totalScoreVal').style.color = riskUI.color;
-   document.getElementById('riskTitle').innerText = riskUI.title;
-   document.getElementById('riskTitle').style.color = riskUI.color;
-   document.getElementById('riskDesc').innerText = "當前組織管理能量填滿率為 " + totalScore + "%，處於" + riskUI.title + "狀態。";
-   document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
 
     // 2. 顧問級內容資料庫 (McKinsey Style)
     const insightDB = {
@@ -261,7 +183,7 @@ window.onload = function() {
         },
         flow: {
             title: "Flow (資訊能流)", theory: "Communication Theory",
-            high: { status: "透明流動", color: "#52c41a", insight: "資訊傳遞幾無損耗，數據驅動決策已成為文化。", implication: "組織對市場變化的反應時間低於同行平均。", action: "導入輔助資訊摘要，進一步優化決策品質。" },
+            high: { status: "透明流動", color: "#52c41a", insight: "資訊傳遞幾無損耗，數據驅動決策已成為文化。", implication: "組織對市場變化的反應時間低於同行平均。", action: "導入 AI 輔助資訊摘要，進一步優化決策品質。" },
             mid:  { status: "節點阻滯", color: "#faad14", insight: "資訊在特定管理層級發生阻滯，透明度不均。", implication: "基層反應問題到決策層存在延遲（Latency）。", action: "建立看板管理與即時異常回報系統，縮短傳遞路徑。" },
             low:  { status: "資訊孤島", color: "#ff4d4f", insight: "資訊高度碎片化，各單位僅掌握局部事實。", implication: "策略意圖在落地過程中被嚴重扭曲，決策依賴直覺而非數據。", action: "建立企業數位大屏，實現核心經營數據的激進透明化。" }
         },
@@ -316,77 +238,8 @@ window.onload = function() {
         `;
     });
 
-// ===== 6-1 衝突診斷引擎（MMTF Conflict Engine） =====
-
-function detectConflict(scores) {
-
-    const m = scores.mirror;
-    const x = scores.matrix;
-    const f = scores.flow;
-    const s = scores.safe;
-
-    // 門檻
-    const HIGH = 18;
-    const LOW = 10;
-
-    let conflicts = [];
-
-    // 1. 高 Flow + 低 Safety
-    if (f >= HIGH && s <= LOW) {
-        conflicts.push({
-            type: "假透明組織",
-            desc: "資訊高度流動，但心理安全不足，員工不敢回報真實問題。",
-            impact: "數據看似正常，但風險被系統性隱藏。",
-            advice: "優先修復心理安全，否則資訊透明將淪為表象。"
-        });
-    }
-
-    // 2. 高 Matrix + 低 Mirror
-    if (x >= HIGH && m <= LOW) {
-        conflicts.push({
-            type: "結構僵化組織",
-            desc: "權責清楚，但上下認知不一致。",
-            impact: "命令被形式執行，但結果偏離戰略。",
-            advice: "建立認知對齊機制，而非強化控制。"
-        });
-    }
-
-    // 3. 高 Mirror + 低 Flow
-    if (m >= HIGH && f <= LOW) {
-        conflicts.push({
-            type: "共識卡死組織",
-            desc: "團隊理解一致，但資訊傳遞效率低。",
-            impact: "決策正確但執行延遲。",
-            advice: "優化資訊管道與決策節點。"
-        });
-    }
-
-    // 4. 高 Safety + 低 Matrix
-    if (s >= HIGH && x <= LOW) {
-        conflicts.push({
-            type: "過度民主組織",
-            desc: "氛圍安全，但缺乏結構與決策權威。",
-            impact: "討論很多但落地困難。",
-            advice: "建立清晰決策權責（RACI）。"
-        });
-    }
-
-    // 5. 全面失衡（高低差過大）
-    if (Math.max(m,x,f,s) - Math.min(m,x,f,s) >= 12) {
-        conflicts.push({
-            type: "結構性失衡組織",
-            desc: "四大構面差異過大，系統協同失效。",
-            impact: "局部優化但整體失能。",
-            advice: "優先修復最低構面，建立系統平衡。"
-        });
-    }
-
-    return conflicts;
-}
-
-const conflictList = detectConflict(scores);
-    
- // 6. 渲染綜合結論（最終穩定版）
+    // 6. 渲染綜合結論 (顧問診斷視角)
+   // 6. 渲染綜合結論（修正版：避免滿分/同分錯誤）
 
 const values = Object.values(scores);
 const maxScore = Math.max(...values);
@@ -395,13 +248,6 @@ const minScore = Math.min(...values);
 const allSame = maxScore === minScore;
 const allHigh = values.every(v => v === 25);
 const allLow  = values.every(v => v <= 5);
-
-// ✅ 關鍵修正：抓 level + status
-const bestLevel = getLevel(scores[bestKey]);
-const worstLevel = getLevel(scores[worstKey]);
-
-const bestStatus = insightDB[bestKey][bestLevel].status;
-const worstStatus = insightDB[worstKey][worstLevel].status;
 
 let conclusionHTML = "";
 
@@ -442,10 +288,8 @@ if (allHigh) {
     本次診斷顯示，組織的核心對稱性指標為 <b>${totalScore}%</b>。<br>
     最顯著的優勢在於 <b>${insightDB[bestKey].title}</b> (${scores[bestKey]}分)，
     而系統最脆弱的節點則位於 <b>${insightDB[worstKey].title}</b> (${scores[worstKey]}分)。<br><br>
-    
-    這意味著組織雖然在「${bestStatus}」上具備優勢，
-    但整體效能正被「${worstStatus}」所限制。<br><br>
-    
+    這意味著組織雖然在「${insightDB[bestKey].status}」上具備優勢，
+    但整體效能正被「${insightDB[worstKey].status}」所限制。<br><br>
     <strong>戰略建議：</strong>應優先修復最低構面，避免其成為系統瓶頸。
     `;
 }
@@ -465,25 +309,6 @@ document.getElementById('conclusionText').innerHTML = conclusionHTML;
             <div class="step-txt">${s}</div>
         </div>
     `).join('');
-   const params = new URLSearchParams(window.location.search);
-   const scores = {
-       mirror: parseInt(params.get('mirror')) || 15,
-       matrix: parseInt(params.get('matrix')) || 15,
-       flow: parseInt(params.get('flow')) || 15,
-       safe: parseInt(params.get('safe')) || 15
-   };
-   const totalScore = Math.round(((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100);
-
-   const insightDB = {
-       mirror: { title: "Mirror (鏡像對稱)", theory: "Johari Window", 
-                toolkit: "方案 A：【組織認知對齊工作坊】 - 消除盲點與隱藏區。" },
-       matrix: { title: "Matrix (結構效能)", theory: "RACI Theory", 
-                toolkit: "方案 B：【RACI 職權重新設計模組】 - 釐清灰區權責。" },
-       flow: { title: "Flow (資訊能流)", theory: "Communication Theory", 
-              toolkit: "方案 C：【能流看板管理系統】 - 數位化資訊透明工具。" },
-       safe: { title: "Safety (心理安全)", theory: "Psychological Safety", 
-              toolkit: "方案 D：【恐懼消除與心理安全機制】 - 重建異常回報鏈。" }
-   };
 
     // 8. 繪製雷達圖
     new Chart(document.getElementById('radarChart'), {
@@ -517,12 +342,6 @@ document.getElementById('reportDate').innerText =
 </body>
 </html>
 
-
-
-    
-   </style>
-</head>
-<body>
 
 
 
