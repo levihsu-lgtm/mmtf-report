@@ -307,7 +307,82 @@ function detectConflict(scores) {
 }
 
 const conflictList = detectConflict(scores);
-    
+ // ===== 6-2 顧問決策引擎 + SaaS 商業引導（新增，不影響原邏輯） =====
+
+function renderConsultingEngine(conflicts, scores) {
+
+    let html = "";
+
+    // 1️⃣ 衝突診斷輸出
+    if (conflicts.length > 0) {
+
+        html += `
+        <div style="margin-top:15px;">
+            <div style="font-size:13px; font-weight:bold; margin-bottom:8px;">
+                ⚠️ 組織衝突診斷
+            </div>
+        `;
+
+        conflicts.forEach(c => {
+            html += `
+            <div style="margin-bottom:10px; font-size:12px; line-height:1.5;">
+                <b>${c.type}</b><br>
+                ▸ ${c.desc}<br>
+                ▸ <span style="color:#999;">影響：</span>${c.impact}<br>
+                ▸ <span style="color:#1a3a63;">建議：</span>${c.advice}
+            </div>
+            `;
+        });
+
+        html += `</div>`;
+    }
+
+    // 2️⃣ 顧問升級建議（依最低維度）
+    const minKey = Object.keys(scores).reduce((a,b)=>scores[a]<scores[b]?a:b);
+
+    html += `
+    <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #ddd;">
+        <div style="font-size:13px; font-weight:bold; margin-bottom:8px;">
+            🧠 顧問決策建議
+        </div>
+        <div style="font-size:12px; line-height:1.6;">
+            建議優先針對 <b>${minKey.toUpperCase()}</b> 維度進行深度診斷，
+            此構面為目前組織效能瓶頸來源。
+        </div>
+    </div>
+    `;
+
+    // 3️⃣ SaaS 商品導流（關鍵商業化）
+    html += `
+    <div style="margin-top:18px; padding:12px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
+        
+        <div style="font-size:13px; font-weight:bold; margin-bottom:6px;">
+            🚀 顧問升級方案（MMTF SaaS）
+        </div>
+
+        <div style="font-size:12px; line-height:1.6; margin-bottom:10px;">
+            解鎖完整顧問模組，取得：
+            <ul style="padding-left:16px; margin:5px 0;">
+                <li>✔ 組織風險深度報告（PDF）</li>
+                <li>✔ 部門別診斷拆解</li>
+                <li>✔ 90天改善行動藍圖</li>
+                <li>✔ 顧問決策模擬工具</li>
+            </ul>
+        </div>
+
+        <a href="https://your-payment-link.com"
+           style="display:inline-block; padding:8px 14px; background:#1a3a63; color:#fff; text-decoration:none; border-radius:6px; font-size:12px;">
+           🔓 解鎖完整顧問版
+        </a>
+
+    </div>
+    `;
+
+    return html;
+}
+
+// 👉 插入提醒欄位（不覆蓋原本內容）
+document.getElementById('remindBox').innerHTML += renderConsultingEngine(conflictList, scores);   
 // 6. 渲染綜合結論
 const values = Object.values(scores);
 const maxScore = Math.max(...values);
