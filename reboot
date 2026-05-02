@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>MMTF 組織診斷系統</title>
+
+<style>
+body{
+    font-family:"Microsoft JhengHei";
+    margin:0;
+    background:#0f172a;
+    color:#fff;
+    text-align:center;
+}
+
+.container{
+    padding:80px 20px;
+}
+
+h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#94a3b8;
+    margin-bottom:40px;
+}
+
+.card{
+    background:#fff;
+    color:#1e293b;
+    border-radius:16px;
+    padding:30px;
+    width:320px;
+    margin:0 auto;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+.price{
+    font-size:32px;
+    font-weight:bold;
+    margin:20px 0;
+}
+
+ul{
+    text-align:left;
+    font-size:14px;
+    line-height:1.8;
+}
+
+button{
+    margin-top:20px;
+    width:100%;
+    padding:12px;
+    background:#22c55e;
+    border:none;
+    color:#fff;
+    font-size:16px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#16a34a;
+}
+
+.badge{
+    background:#ef4444;
+    padding:4px 10px;
+    font-size:12px;
+    border-radius:20px;
+    display:inline-block;
+    margin-bottom:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>MMTF 組織診斷系統</h1>
+<div class="subtitle">
+用 4 個維度，看穿你的組織問題
+</div>
+
+<div class="card">
+
+<div class="badge">顧問級分析</div>
+
+<h2>完整診斷報告</h2>
+
+<div class="price">NT$ 1,200</div>
+
+<ul>
+<li>✔ 組織風險深度報告（PDF）</li>
+<li>✔ 四維度結構分析</li>
+<li>✔ 部門問題拆解</li>
+<li>✔ 90 天改善行動藍圖</li>
+<li>✔ 顧問決策模擬工具</li>
+</ul>
+
+<button onclick="goCheckout()">立即取得報告</button>
+
+</div>
+
+</div>
+
+<script>
+function goCheckout(){
+    window.location.href = "checkout.html";
+}
+</script>
+
+</body>
+</html>
