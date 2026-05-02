@@ -427,8 +427,12 @@ document.getElementById('conclusionText').innerHTML = conclusionHTML;
                 pointBackgroundColor: riskUI.color
             }]
         },
-        // 放在 window.onload 最後一行「裡面」
-
+                }
+ });
+};
+    }
+    });
+};
 const today = new Date();
 
 const formattedDate = today.getFullYear() + '-' +
@@ -436,13 +440,7 @@ const formattedDate = today.getFullYear() + '-' +
     String(today.getDate()).padStart(2, '0');
 
 document.getElementById('reportDate').innerText =
-`MMTF 專業診斷模組 v1.0 (邏輯引擎版) | 診斷日期：${formattedDate}`;
-        options: {
-            scales: { r: { min: 0, max: 25, ticks: { display: false, stepSize: 5 } } },
-            plugins: { legend: { display: false } }
-        }
- });
-};
+`MMTF 專業診斷模組 v1.0 (邏輯引擎版) | 診斷日期：${formattedDate}`;   
  
 </script>
 </body>
