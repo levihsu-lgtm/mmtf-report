@@ -243,6 +243,24 @@ window.onload = function() {
                                     { title: "高風險失能型 (Fragile)", desc: "系統架構與信任鏈結出現嚴重毀損，需立即啟動管理干預。", color: "#ff4d4f", bg: "#fff1f0", rTitle: "💡 危機管理提醒", remind: "當前任務不是追逐新目標，而是修復基礎的心理安全感與認知共識。" };
     
     document.getElementById('totalScoreVal').innerText = totalScore;
+    // ===== 圓形填滿效果 =====
+const circle = document.getElementById('totalScoreCircle');
+
+// 分數 → 角度（360度）
+const percent = totalScore;
+const degree = percent * 3.6;
+
+// 動畫效果（漸進）
+let current = 0;
+
+const animateCircle = setInterval(() => {
+    if (current >= degree) {
+        clearInterval(animateCircle);
+    } else {
+        current += 5;
+        circle.style.background = `conic-gradient(${riskUI.color} ${current}deg, #eee ${current}deg)`;
+    }
+}, 10);
     document.getElementById('totalScoreVal').style.color = riskUI.color;
     document.getElementById('riskTitle').innerText = riskUI.title;
     document.getElementById('riskTitle').style.color = riskUI.color;
