@@ -172,50 +172,58 @@ const riskUI = totalScore >= 70 ? {
     title: "高能卓越型", 
     color: "#52c41a", 
     bg: "#f6ffed", 
-    remind: "當前組織運作流暢，應預防優勢陷阱與路徑依賴。",
-    toolkitTitle: "成長維護工具包",
-    toolkit: "導入「同儕回饋機制 (Peer Review)」與「激勵性衝突引導」，確保高標表現不導致團隊思維僵化。"
+    remind: "當前組織運作流暢，建議持續優化組織彈性，避免成功後的路徑依賴與慣性思維。",
+    toolkitTitle: "成長與創新維護工具包",
+    toolkitAction: "引導顧問可透過「同儕回饋機制」深化信任，並利用「激勵性衝突」激發團隊創新動能。"
 } : totalScore >= 45 ? { 
     title: "亞健康運作型", 
     color: "#faad14", 
     bg: "#fffbe6", 
-    remind: `組織效能受損，應優先解決「${insightDB[worstKey].title}」之核心瓶頸。`,
-    toolkitTitle: "專業調解工具包",
-    toolkit: "啟動「關鍵對話 (Crucial Conversations)」工作坊，修復因資訊不對稱或目標認知差異產生的部門衝突。"
+    remind: `組織效能受損，應優先針對「${insightDB[worstKey].title}」進行專項診斷，排除效能瓶頸。`,
+    toolkitTitle: "專業調解與對齊工具包",
+    toolkitAction: "引導顧問啟動「關鍵對話」工作坊，介入處理部門間因資訊不對稱產生的目標衝突與資源內耗。"
 } : { 
     title: "高風險失能型", 
     color: "#ff4d4f", 
     bg: "#fff1f0", 
-    remind: "組織處於高壓或失能狀態，必須立即介入以重建基礎能量。",
-    toolkitTitle: "危機干預工具包",
-    toolkit: "優先執行「心理安全感掃描」與「高階核心對齊會議」，防止功能性失能進一步惡化為組織性對立。"
+    remind: "組織處於高壓失能狀態，能量傳導嚴重受阻，必須立即進行結構性干預以防危機擴大。",
+    toolkitTitle: "危機干預與重建工具包",
+    toolkitAction: "引導顧問應優先執行「心理安全感掃描」並召開「高階核心對齊會議」，建立最低限度的組織安全邊界。"
 };
 
-// 渲染 UI
+// 渲染 UI 基礎顏色
 document.getElementById('totalScoreVal').innerText = totalScore;
 document.getElementById('totalScoreVal').style.color = riskUI.color;
 document.getElementById('riskTitle').innerText = riskUI.title;
 document.getElementById('riskTitle').style.color = riskUI.color;
-document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
 
-// --- 重新優化的提醒區塊內容 ---
+// --- 重新設計的並列式提醒與工具包區塊 ---
 const remindBox = document.getElementById('remindBox');
 remindBox.style.background = riskUI.bg;
 remindBox.style.borderColor = riskUI.color;
+remindBox.style.padding = "20px";
+
 remindBox.innerHTML = `
-    <h4 style="color:${riskUI.color}; margin-top:0; border-bottom:1px solid ${riskUI.color}44; padding-bottom:8px;">
-        <i class="fa-solid fa-lightbulb"></i> 顧問關鍵提醒
-    </h4>
-    <p style="font-size:13px; line-height:1.6; color:#1e293b; margin-bottom:15px;">
-        ${riskUI.remind}
-    </p>
-    
-    <div style="background:#ffffffcc; border-radius:8px; padding:12px; border-left:4px solid ${riskUI.color};">
-        <div style="font-size:12px; font-weight:bold; color:${riskUI.color}; margin-bottom:5px;">
-            <i class="fa-solid fa-toolbox"></i> ${riskUI.toolkitTitle}
+    <!-- 第一部分：診斷提醒 -->
+    <div style="margin-bottom: 20px;">
+        <h4 style="color:${riskUI.color}; margin:0 0 10px 0; font-size:15px;">
+            <i class="fa-solid fa-clipboard-check"></i> 管理優化核心提醒
+        </h4>
+        <p style="font-size:13px; line-height:1.6; color:#1e293b; margin:0;">
+            ${riskUI.remind}
+        </p>
+    </div>
+
+    <!-- 第二部分：後續衝突工具包 (顧問專業引導) -->
+    <div style="background:#ffffffcc; border-radius:10px; padding:15px; border:1px solid ${riskUI.color}33;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:12px; font-weight:bold; color:${riskUI.color};">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> ${riskUI.toolkitTitle}
+            </span>
+            <span style="font-size:10px; color:#94a3b8; font-weight:normal;">顧問專業引導：尹勤</span>
         </div>
-        <div style="font-size:12px; line-height:1.5; color:#475569;">
-            ${riskUI.toolkit}
+        <div style="font-size:12px; line-height:1.6; color:#475569; font-style: normal;">
+            <strong>行動指引：</strong>${riskUI.toolkitAction}
         </div>
     </div>
 `;
