@@ -54,20 +54,7 @@
         /* 1. 指標區 */
         .top-risk-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; margin-bottom: 30px; }
         .risk-main { border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; display: flex; align-items: center; background: #fff; transition: background 0.3s; }
-        .score-circle {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-right: 25px;
-            /* 初始為灰色環，等待 JS 動畫注入 */
-            background: radial-gradient(closest-side, white 80%, transparent 0%),
-                        conic-gradient(#eee 0%, #eee 0%);
-            transition: background 0.3s ease;
-        }
+        .score-circle { width: 110px; height: 110px; border: 10px solid #eee; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 25px; background: #fff; }
         .score-val { font-size: 36px; font-weight: bold; }
         .risk-text h2 { font-size: 28px; margin: 0; }
 
@@ -190,17 +177,7 @@
             </div>
         </div>
     </div>
-/* 新增：後續指引引擎的獨立欄位樣式 */
-.engine-container {
-    width: 100%;
-    margin-bottom: 25px;
-    padding: 18px;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-left: 6px solid var(--primary); /* 採用深藍色強調專業感 */
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
+
     <div class="footer" id="reportDate"></div>
 </div>
 <script>
@@ -421,20 +398,7 @@ if (allHigh) {
 }
 
 document.getElementById('conclusionText').innerHTML = conclusionHTML;
-<!-- 新增：位於文獻前的指引引擎欄位 -->
-<div class="engine-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-        <span style="font-size: 15px; font-weight: bold; color: var(--primary);">
-            <i class="fa-solid fa-gears"></i> MMTF 後續指引引擎
-        </span>
-        <span style="font-size: 13px; color: #64748b;">
-            專業引導顧問：<strong>尹勤</strong>
-        </span>
-    </div>
-    <div id="engineAction" style="font-size: 14px; color: #334155; line-height: 1.6;">
-        <!-- 由 JavaScript 自動填充行動指引 -->
-    </div>
-</div>
+
     // 7. 渲染步驟
     const steps = [
         `針對 ${insightDB[worstKey].title} 進行專案復盤`,
@@ -448,26 +412,7 @@ document.getElementById('conclusionText').innerHTML = conclusionHTML;
             <div class="step-txt">${s}</div>
         </div>
     `).join('');
-// 7. 動畫核心：總分圓圈動畫[cite: 1]
-    const circle = document.getElementById('totalScoreCircle');
-    const startTime = performance.now();
-    const duration = 1500;
 
-    function animateTotalScore(timestamp) {
-        const elapsed = timestamp - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
-        const currentDisplayPercent = Math.floor(easedProgress * totalScore);
-        
-        circle.style.background = `
-            radial-gradient(closest-side, white 80%, transparent 0%),
-            conic-gradient(${riskUI.color} ${currentDisplayPercent}%, #eee 0%)
-        `;
-        if (progress < 1) requestAnimationFrame(animateTotalScore);
-    }
-    requestAnimationFrame(animateTotalScore);
-    // 根據診斷結果自動填入指引引擎內容[cite: 1]
-document.getElementById('engineAction').innerHTML = `<strong>專業行動建議：</strong>${res.eng}`;
     // 8. 繪製雷達圖
     new Chart(document.getElementById('radarChart'), {
         type: 'radar',
@@ -499,6 +444,8 @@ document.getElementById('reportDate').innerText =
 </script>
 </body>
 </html>
+
+
 
 
 
