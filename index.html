@@ -167,7 +167,58 @@
             <p id="remindText">載入中...</p>
         </div>
     </div>
+// 4. 擴充後的風險 UI 與 衝突工具包 (Conflict Toolkit)
+const riskUI = totalScore >= 70 ? { 
+    title: "高能卓越型", 
+    color: "#52c41a", 
+    bg: "#f6ffed", 
+    remind: "當前組織運作流暢，應預防優勢陷阱與路徑依賴。",
+    toolkitTitle: "成長維護工具包",
+    toolkit: "導入「同儕回饋機制 (Peer Review)」與「激勵性衝突引導」，確保高標表現不導致團隊思維僵化。"
+} : totalScore >= 45 ? { 
+    title: "亞健康運作型", 
+    color: "#faad14", 
+    bg: "#fffbe6", 
+    remind: `組織效能受損，應優先解決「${insightDB[worstKey].title}」之核心瓶頸。`,
+    toolkitTitle: "專業調解工具包",
+    toolkit: "啟動「關鍵對話 (Crucial Conversations)」工作坊，修復因資訊不對稱或目標認知差異產生的部門衝突。"
+} : { 
+    title: "高風險失能型", 
+    color: "#ff4d4f", 
+    bg: "#fff1f0", 
+    remind: "組織處於高壓或失能狀態，必須立即介入以重建基礎能量。",
+    toolkitTitle: "危機干預工具包",
+    toolkit: "優先執行「心理安全感掃描」與「高階核心對齊會議」，防止功能性失能進一步惡化為組織性對立。"
+};
 
+// 渲染 UI
+document.getElementById('totalScoreVal').innerText = totalScore;
+document.getElementById('totalScoreVal').style.color = riskUI.color;
+document.getElementById('riskTitle').innerText = riskUI.title;
+document.getElementById('riskTitle').style.color = riskUI.color;
+document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
+
+// --- 重新優化的提醒區塊內容 ---
+const remindBox = document.getElementById('remindBox');
+remindBox.style.background = riskUI.bg;
+remindBox.style.borderColor = riskUI.color;
+remindBox.innerHTML = `
+    <h4 style="color:${riskUI.color}; margin-top:0; border-bottom:1px solid ${riskUI.color}44; padding-bottom:8px;">
+        <i class="fa-solid fa-lightbulb"></i> 顧問關鍵提醒
+    </h4>
+    <p style="font-size:13px; line-height:1.6; color:#1e293b; margin-bottom:15px;">
+        ${riskUI.remind}
+    </p>
+    
+    <div style="background:#ffffffcc; border-radius:8px; padding:12px; border-left:4px solid ${riskUI.color};">
+        <div style="font-size:12px; font-weight:bold; color:${riskUI.color}; margin-bottom:5px;">
+            <i class="fa-solid fa-toolbox"></i> ${riskUI.toolkitTitle}
+        </div>
+        <div style="font-size:12px; line-height:1.5; color:#475569;">
+            ${riskUI.toolkit}
+        </div>
+    </div>
+`;
     <!-- 5. 文獻參考 -->
     <div class="section-title"><i class="fa-solid fa-book"></i> 文獻實證背景</div>
     <div class="literature-section">
