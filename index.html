@@ -234,6 +234,16 @@ window.onload = function() {
         safe: parseInt(params.get('safe')) || 15
     };
     const totalScore = Math.round(((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100);
+  // 1. 設置圓形填滿比例 (conic-gradient)
+   const circle = document.getElementById('totalScoreCircle');
+   circle.style.background = `conic-gradient(${riskUI.color} ${totalScore * 3.6}deg, #eee 0deg)`;
+   
+   document.getElementById('totalScoreVal').innerText = totalScore;
+   document.getElementById('totalScoreVal').style.color = riskUI.color;
+   document.getElementById('riskTitle').innerText = riskUI.title;
+   document.getElementById('riskTitle').style.color = riskUI.color;
+   document.getElementById('riskDesc').innerText = "當前組織管理能量填滿率為 " + totalScore + "%，處於" + riskUI.title + "狀態。";
+   document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
 
     // 2. 顧問級內容資料庫 (McKinsey Style)
     const insightDB = {
@@ -455,6 +465,25 @@ document.getElementById('conclusionText').innerHTML = conclusionHTML;
             <div class="step-txt">${s}</div>
         </div>
     `).join('');
+   const params = new URLSearchParams(window.location.search);
+   const scores = {
+       mirror: parseInt(params.get('mirror')) || 15,
+       matrix: parseInt(params.get('matrix')) || 15,
+       flow: parseInt(params.get('flow')) || 15,
+       safe: parseInt(params.get('safe')) || 15
+   };
+   const totalScore = Math.round(((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100);
+
+   const insightDB = {
+       mirror: { title: "Mirror (鏡像對稱)", theory: "Johari Window", 
+                toolkit: "方案 A：【組織認知對齊工作坊】 - 消除盲點與隱藏區。" },
+       matrix: { title: "Matrix (結構效能)", theory: "RACI Theory", 
+                toolkit: "方案 B：【RACI 職權重新設計模組】 - 釐清灰區權責。" },
+       flow: { title: "Flow (資訊能流)", theory: "Communication Theory", 
+              toolkit: "方案 C：【能流看板管理系統】 - 數位化資訊透明工具。" },
+       safe: { title: "Safety (心理安全)", theory: "Psychological Safety", 
+              toolkit: "方案 D：【恐懼消除與心理安全機制】 - 重建異常回報鏈。" }
+   };
 
     // 8. 繪製雷達圖
     new Chart(document.getElementById('radarChart'), {
@@ -495,153 +524,11 @@ document.getElementById('reportDate').innerText =
 </head>
 <body>
 
-<div class="report-container">
-   <div class="header">
-       <h1>MMTF 組織診斷與實證分析報告</h1>
-   </div>
 
-   <div class="top-risk-row">
-       <div class="risk-main" id="riskMainCard">
-           <!-- 圓形填滿區域 -->
-           <div class="score-circle" id="totalScoreCircle">
-                <span class="score-val" id="totalScoreVal">--</span>
-                <span class="score-label">/100</span>
-           </div>
-           <div class="risk-text">
-                <h2 id="riskTitle">計算中...</h2>
-                <p id="riskDesc" style="font-size:14px; color:#64748b; margin:5px 0 0 0;">正在分析數據請稍候。</p>
-           </div>
-       </div>
-       <div class="risk-main" style="display:block; background:#fff;">
-           <div style="font-weight:bold; font-size:14px; margin-bottom:10px;">📊 MMTF 指標定義</div>
-           <p style="font-size:12px; color:#666; line-height:1.6; margin:0;">本診斷透過對稱性理論評估管理能量。圓形填滿度越高代表組織風險越低；低填滿度警示組織存在嚴重的內耗與認知斷層。</p>
-       </div>
-   </div>
 
-   <div class="section-title"><i class="fa-solid fa-brain"></i> 實證構面分析</div>
-   <div class="ai-grid" id="aiGrid"></div>
 
-   <div class="mid-row">
-       <div class="radar-box">
-           <canvas id="radarChart"></canvas>
-           <p style="font-size:11px; color:#94a3b8; margin-top:10px;">MMTF 四維雷達圖</p>
-       </div>
-       <div class="conclusion-box">
-           <h3 style="margin-top:0; color:var(--primary);">🔍 診斷綜合結論</h3>
-           <div id="conclusionText">載入中...</div>
-       </div>
-   </div>
+ 
 
-   <div class="bottom-row">
-       <div class="steps-box">
-           <h4 style="margin:0 0 20px 0; color:var(--primary);">🚀 下一步行動指南</h4>
-           <div id="stepsContainer"></div>
-       </div>
-       <div class="remind-box" id="remindBox">
-           <h4 id="remindTitle">💡 顧問關鍵提醒</h4>
-           <p id="remindText" style="font-size: 13px; margin-bottom: 0;">載入中...</p>
-           
-           <!-- 工具包方案 -->
-           <div class="toolkit-box">
-               <div class="toolkit-title"><i class="fa-solid fa-toolbox"></i> MMTF 管理工具包方案</div>
-               <div id="toolkitContent"></div>
-           </div>
-       </div>
-   </div>
-
-   <div class="footer" id="reportDate"></div>
-</div>
-
-<script>
-window.onload = function() {
-   const params = new URLSearchParams(window.location.search);
-   const scores = {
-       mirror: parseInt(params.get('mirror')) || 15,
-       matrix: parseInt(params.get('matrix')) || 15,
-       flow: parseInt(params.get('flow')) || 15,
-       safe: parseInt(params.get('safe')) || 15
-   };
-   const totalScore = Math.round(((scores.mirror + scores.matrix + scores.flow + scores.safe) / 100) * 100);
-
-   const insightDB = {
-       mirror: { title: "Mirror (鏡像對稱)", theory: "Johari Window", 
-                toolkit: "方案 A：【組織認知對齊工作坊】 - 消除盲點與隱藏區。" },
-       matrix: { title: "Matrix (結構效能)", theory: "RACI Theory", 
-                toolkit: "方案 B：【RACI 職權重新設計模組】 - 釐清灰區權責。" },
-       flow: { title: "Flow (資訊能流)", theory: "Communication Theory", 
-              toolkit: "方案 C：【能流看板管理系統】 - 數位化資訊透明工具。" },
-       safe: { title: "Safety (心理安全)", theory: "Psychological Safety", 
-              toolkit: "方案 D：【恐懼消除與心理安全機制】 - 重建異常回報鏈。" }
-   };
-
-   function getLevel(s) { return s >= 18 ? 'high' : (s >= 12 ? 'mid' : 'low'); }
-   const worstKey = Object.keys(scores).reduce((a, b) => scores[a] < scores[b] ? a : b);
-
-   const riskUI = totalScore >= 70 ? { title: "高能卓越型", color: "#52c41a", bg: "#f6ffed" } :
-                   totalScore >= 45 ? { title: "亞健康運作型", color: "#faad14", bg: "#fffbe6" } :
-                                    { title: "高風險失能型", color: "#ff4d4f", bg: "#fff1f0" };
-
-   // 1. 設置圓形填滿比例 (conic-gradient)
-   const circle = document.getElementById('totalScoreCircle');
-   circle.style.background = `conic-gradient(${riskUI.color} ${totalScore * 3.6}deg, #eee 0deg)`;
-   
-   document.getElementById('totalScoreVal').innerText = totalScore;
-   document.getElementById('totalScoreVal').style.color = riskUI.color;
-   document.getElementById('riskTitle').innerText = riskUI.title;
-   document.getElementById('riskTitle').style.color = riskUI.color;
-   document.getElementById('riskDesc').innerText = "當前組織管理能量填滿率為 " + totalScore + "%，處於" + riskUI.title + "狀態。";
-   document.getElementById('riskMainCard').style.background = `linear-gradient(135deg, #fff 0%, ${riskUI.bg} 100%)`;
-
-   // 2. 設置工具包方案 (根據弱項)
-   document.getElementById('toolkitContent').innerHTML = `
-        <div class="toolkit-item"><strong>首選工具：</strong>${insightDB[worstKey].toolkit}</div>
-        <div class="toolkit-item"><strong>進階配套：</strong>【MMTF 數位管理效能監測儀】</div>
-   `;
-   document.getElementById('remindText').innerText = `目前系統最脆弱的節點是「${insightDB[worstKey].title}」，建議優先執行下方工具包方案。`;
-
-   // 3. 渲染卡片 (簡化內容版本)
-   const aiGrid = document.getElementById('aiGrid');
-   ['mirror', 'matrix', 'flow', 'safe'].forEach(key => {
-       const s = scores[key];
-       const level = getLevel(s);
-       const color = s >= 18 ? '#52c41a' : (s >= 12 ? '#faad14' : '#ff4d4f');
-       aiGrid.innerHTML += `
-           <div class="ai-card" style="border-top-color: ${color}">
-               <h4>${insightDB[key].title} <span class="status-tag" style="background:${color}22; color:${color}">得分: ${s}</span></h4>
-               <div class="ai-theory">${insightDB[key].theory}</div>
-               <div class="ai-desc">根據數據顯示，此構面能量處於關鍵優化期，需注意${s < 12 ? '嚴重的內耗損害' : '潛在的執行阻滯'}。</div>
-               <div class="action-list-title">顧問建議</div>
-               <ul class="action-list">
-                   <li>啟動${insightDB[key].title}專項優化</li>
-                   <li>監測 KPI 變化</li>
-               </ul>
-           </div>`;
-   });
-
-   // 4. 結論與行動指南 (不變)
-   document.getElementById('conclusionText').innerHTML = `本次診斷總分 <b>${totalScore}</b>，系統瓶頸位於 <b>${insightDB[worstKey].title}</b>。`;
-   const steps = [`修補 ${insightDB[worstKey].title} 缺口`, "執行工具包推薦方案", "導入雙向診斷機制", "持續監測動態變化"];
-   document.getElementById('stepsContainer').innerHTML = steps.map((s, i) => `
-       <div class="step-item">
-           <div class="step-num">${i+1}</div>
-           <div class="step-txt">${s}</div>
-       </div>`).join('');
-
-   // 5. 雷達圖 (不變)
-   new Chart(document.getElementById('radarChart'), {
-       type: 'radar',
-       data: {
-           labels: ["Mirror", "Matrix", "Flow", "Safety"],
-           datasets: [{ data: [scores.mirror, scores.matrix, scores.flow, scores.safe], backgroundColor: `${riskUI.color}22`, borderColor: riskUI.color, borderWidth: 2 }]
-       },
-       options: { scales: { r: { min: 0, max: 25, ticks: { display: false } } }, plugins: { legend: { display: false } } }
-   });
-
-   document.getElementById('reportDate').innerText = `MMTF 專業診斷模組 v1.2 | 版權所有@許銘祥 | 診斷日期：${new Date().toLocaleDateString()}`;
-};
-</script>
-</body>
-</html>
 
 
 
