@@ -390,8 +390,14 @@ function renderConsultingEngine(conflicts, scores) {
             🧠 顧問決策建議
         </div>
         <div style="font-size:12px; line-height:1.6;">
-            建議優先針對 <b>${minKey.toUpperCase()}</b> 維度進行深度診斷，
-            此構面為目前組織效能瓶頸來源。
+${
+            // 判斷是否為滿分/卓越狀態（假設滿分為 25）
+            Object.values(scores).every(s => s >= 25) 
+            ? `組織若要再進化，目前的關鍵瓶頸在於 <b>SAFE（心理安全感）</b> 的深度。<br>
+               這決定了組織在高度優化狀態下，是否仍具備發現下一個風險並持續學習的能力。`
+            : `建議優先針對 <b>${minKey.toUpperCase()}</b> 維度進行深度診斷，<br>
+               此構面為目前組織效能瓶頸來源。`
+        }
         </div>
     </div>
     `;
