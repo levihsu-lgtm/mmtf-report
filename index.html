@@ -244,7 +244,7 @@ window.onload = function() {
     
     // 4. 渲染頂部總分 UI
     const riskUI = totalScore >= 70 ? { title: "高能卓越型 (Optimized)", desc: "組織具備強大的對稱性能量，是擴張的最佳時機。", color: "#52c41a", bg: "#f6ffed", rTitle: "💡 卓越領航提醒", remind: "預防「優勢陷阱」，應刻意引入異見者以維持認知多樣性。" } :
-                   totalScore >= 45 ? { title: "亞健康運作型 (Vulnerable)", desc: "組織效能在特定維度存在「漏洞」，潛力被內耗稀釋。", color: "#faad14", bg: "#fffbe6", rTitle: "💡 管理優化提醒", remind: `建議優先解決「${insightDB[worstKey].title}」問題，避免其拖累全局表現。` } :
+                   totalScore >= 45 ? { title: "亞健康運作型 (Vulnerable)", desc: "組織效能在特定維度存在「組織內耗與隱形成本流失」，潛力被內耗稀釋。", color: "#faad14", bg: "#fffbe6", rTitle: "💡 管理優化提醒", remind: `建議優先解決「${insightDB[worstKey].title}」問題，避免其拖累全局表現。` } :
                                     { title: "高風險失能型 (Fragile)", desc: "系統架構與信任鏈結出現嚴重毀損，需立即啟動管理干預。", color: "#ff4d4f", bg: "#fff1f0", rTitle: "💡 危機管理提醒", remind: "當前任務不是追逐新目標，而是修復基礎的心理安全感與認知共識。" };
     
     document.getElementById('totalScoreVal').innerText = totalScore;
