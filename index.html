@@ -211,28 +211,28 @@ window.onload = function() {
     // 2. 顧問級內容資料庫 (修正為台灣用語)
     const insightDB = {
         mirror: {
-            title: "Mirror (鏡像對稱)", theory: "Johari Window",
-            high: { status: "認知共振", color: "#52c41a", insight: "團隊目標認知高度一致，具備極強的自我修正 DNA。", implication: "決策傳達無須重複確認，執行速度快。", action: "建立跨部門知識共享機制，防止局部最佳化。" },
-            mid:  { status: "認知雜訊", color: "#faad14", insight: "中基層對策略理解存在些微落差，盲區隱現。", implication: "執行過程中可能出現偏差，需頻繁微調。", action: "啟動雙向回饋機制（Feedback Loop），對齊關鍵指標。" },
-            low:  { status: "認知斷層", color: "#ff4d4f", insight: "管理層與基層認知嚴重不對稱，存在「黑箱」效應。", implication: "指示在傳遞中失真，第一線員工產生強烈無力感。", action: "立即召開「資訊對齊會議」，打破資訊壁壘。" }
+            title: "Mirror (鏡像對稱)", theory: "Johari Window團隊認知一致性",
+            high: { status: "團隊方向一致", color: "#52c41a", insight: "團隊目標認知高度一致，具備極強的自我修正 DNA。", implication: "決策傳達無須重複確認，執行速度快。", action: "建立跨部門知識共享機制，防止局部最佳化。" },
+            mid:  { status: "開始出現誤解", color: "#faad14", insight: "主管與現場開始出現理解落差。", implication: "事情容易越做越偏。", action: "增加雙向溝通與回饋（Feedback Loop）。" },
+            low:  { status: "團隊已經失去共識", color: "#ff4d4f", insight: "主管以為大家都懂，但第一線其實早就不知道為什麼而做。", implication: "團隊開始只剩交差。", action: "重新建立上下共識。" }
         },
         matrix: {
-            title: "Matrix (結構效能)", theory: "RACI Theory",
-            high: { status: "靈活治理", color: "#52c41a", insight: "權責邊界清晰且具備彈性，資源分配高度對齊。", implication: "溝通成本極低，團隊自主性強。", action: "導入去中心化決策權，提升應對市場的敏捷度。" },
-            mid:  { status: "職能重疊", color: "#faad14", insight: "權責定義基本明確，但跨部門灰色地帶仍多。", implication: "遇到複雜問題時推諉現象偶發，效率耗損。", action: "重新梳理核心流程的 RACI 矩陣，釐清灰色區域。" },
-            low:  { status: "結構失序", color: "#ff4d4f", insight: "權責模糊，職能空缺與重疊並存，當責機制失效。", implication: "組織內部嚴重內耗，重要專案常因無人負責而停滯。", action: "啟動組織架構診斷，重建指揮鏈結與當責體制。" }
+            title: "Matrix (結構效能)", theory: "RACI Theory組織協作效率",
+            high: { status: "團隊協作順暢", color: "#52c41a", insight: "權角色與責任清楚。", implication: "事情推進速度快。", action: "進一步授權核心團隊。" },
+            mid:  { status: "事情開始互相卡住", color: "#faad14", insight: "權責定義基本明確，但跨部門灰色地帶仍多。", implication: "遇到複雜問題時推諉現象偶發，效率耗損。", action: "重新釐清權責。" },
+            low:  { status: "沒人真正負責", color: "#ff4d4f", insight: "事情很多人在做，但真正出問題時卻沒人負責。", implication: "組織內部嚴重內耗，重要專案常因無人負責而停滯。", action: "重建決策權責。" }
         },
         flow: {
-            title: "Flow (資訊能流)", theory: "Communication Theory",
-            high: { status: "透明流動", color: "#52c41a", insight: "資訊傳遞幾無損耗，數據驅動決策已成為文化。", implication: "組織對市場變化的反應時間優於同業平均。", action: "導入輔助資訊摘要，進一步優化決策品質。" },
-            mid:  { status: "資訊斷層", color: "#faad14", insight: "資訊在特定管理層級發生阻塞，透明度不均。", implication: "基層反應問題到決策層存在延遲（Latency）。", action: "建立儀表板管理與即時異常回報系統，縮短傳遞路徑。" },
-            low:  { status: "資訊孤島", color: "#ff4d4f", insight: "資訊高度碎片化，各單位僅掌握局部事實。", implication: "策略意圖在執行過程中被嚴重扭曲，決策依賴直覺而非數據。", action: "建立企業戰情室，實現核心經營數據的高度透明化。" }
+            title: "Flow (資訊能流)", theory: "Communication Theory溝通與執行流動",
+            high: { status: "資訊流動順暢", color: "#52c41a", insight: "資訊傳遞幾無損耗且快速。", implication: "團隊反應速度快。", action: "導入輔助資訊摘要，進一步優化決策品質。" },
+            mid:  { status: "訊息開始卡關", color: "#faad14", insight: "資訊在特定管理層級發生阻塞，透明度不均。", implication: "基層反應問題到決策層存在延遲（Latency）。", action: "建立儀表板管理與即時異常回報系統，縮短傳遞路徑。" },
+            low:  { status: "部門彼此斷線", color: "#ff4d4f", insight: "問題其實早就出現，只是資訊一直沒有真正往上傳。", implication: "策主管看到的可能不是現場真實狀況。", action: "建立企業戰情室，實現核心經營數據的高度透明化。" }
         },
         safe: {
-            title: "Safety (心理安全)", theory: "Psychological Safety",
-            high: { status: "無畏創新", color: "#52c41a", insight: "團隊容錯率高，具備強大的失敗學習能力。", implication: "員工敢於挑戰現狀，是創新的沃土。", action: "建立無責異常回報機制（Blame-free Reporting System）。" },
-            mid:  { status: "條件信任", color: "#faad14", insight: "信任基礎建立在既有利益上，面對危機時仍有保留。", implication: "負面消息傳遞緩慢，潛在風險易被掩蓋。", action: "強化領導者的脆弱領導力（Vulnerability），展現承擔責任的姿態。" },
-            low:  { status: "恐懼氛圍", color: "#ff4d4f", insight: "防衛性行為主導，員工傾向於隱瞞錯誤以自保。", implication: "組織失去糾錯能力，重大系統性風險正在積聚。", action: "停止對錯誤的懲罰性措施，重建安全的心理邊界。" }
+            title: "Safety (心理安全)", theory: "Psychological Safety員工敢不敢說真話？",
+            high: { status: "團隊敢說真話", color: "#52c41a", insight: "團隊容錯率高，具備強大的失敗學習能力。", implication: "員工敢於挑戰現狀，是創新的沃土。", action: "建立無責異常回報機制（Blame-free Reporting System）。" },
+            mid:  { status: "開始選擇沉默", color: "#faad14", insight: "信任基礎建立在既有利益上，面對危機時仍有保留，部分員工開始保留真實想法。", implication: "負面消息傳遞緩慢，潛在風險易被掩蓋。", action: "提升主管信任感（Vulnerability），展現承擔責任的姿態。" },
+            low:  { status: "員工正在自我保護", color: "#ff4d4f", insight: "防衛性行為主導，員工傾向於隱瞞錯誤以自保。", implication: "真正危險的團隊通常最安靜。", action: "停止對錯誤的懲罰性措施，重建安全的心理邊界。" }
         }
     };
     
