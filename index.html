@@ -426,9 +426,23 @@ function renderText(){
  document.getElementById('dynamicEvidence').innerHTML=evidence+evidence2+evidence3+evidence4;
  const ordered=[...dims].sort((a,b)=>scores[a.key]-scores[b.key]);
  document.getElementById('dynamicActions').innerHTML=ordered.map((d,i)=>{
-  const item=insightDB[d.key][getLevel(scores[d.key])];
-  return `<p><b>${i+1}. ${item.title}（${scores[d.key]}/25；平均 ${means[d.key].toFixed(1)}/5）— ${item.action}</b><br>${item.implication}<br><span class="muted">追蹤方式：指定負責人、指標與期限；改善後以相同題項複測並比較變化。</span></p>`;
- }).join('');
+ 
+const ordered = [...dims].sort((a, b) => {
+  const diff = scores[a.key] - scores[b.key];
+  return diff !== 0 ? diff : dims.indexOf(a) - dims.indexOf(b);
+});
+
+document.getElementById('dynamicActions').innerHTML = ordered.map((d, i) => {
+  const item = insightDB[d.key][getLevel(scores[d.key])];
+
+  return `<p>
+    <b>${i + 1}. ${d.name}（${d.zh}）— ${scores[d.key]}/25；平均 ${means[d.key].toFixed(1)}/5</b><br>
+    <b>改善建議：</b>${item.action}<br>
+    ${item.implication}<br>
+    <span class="muted">追蹤方式：指定負責人、指標與期限；改善後以相同題項複測並比較變化。</span>
+  </p>`;
+}).join('');
+
 }
 drawQuadrant();drawRadar();drawBars();renderText();
 })();
