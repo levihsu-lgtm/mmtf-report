@@ -247,11 +247,16 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 <strong>MMTF 組織診斷與顧問分析報告</strong><br>
 <span class="copyright">版權所有 © MMTF｜未經授權，請勿複製、散布、轉售或移除版權標示。</span><br>
 本報告為管理診斷參考；分級門檻、座標映射組態應依實證資料持續檢驗。<br>
+<span id="diagnosticVersion">MMTF 專業診斷模組 v1.0（邏輯引擎版）｜診斷日期：—</span><br>
 </footer>
 </main>
 <script>
 (function(){
 'use strict';
+const now = new Date();
+const formattedDate = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+const versionEl = document.getElementById('diagnosticVersion');
+if (versionEl) versionEl.textContent = `MMTF 專業診斷模組 v1.0（邏輯引擎版）｜診斷日期：${formattedDate}`;
 const dims=[
  {key:'mirror',name:'Mirror',zh:'鏡像構面',color:'#299bd9',icon:'◉',theory:'資訊透明、問題覺察與回饋',desc:'檢視組織是否能辨識問題、揭露資訊並讓回饋被看見。',actions:['建立領導回應與透明機制','強化問題揭露、回饋閉環與主管言行一致性']},
  {key:'matrix',name:'Matrix',zh:'結構構面',color:'#439b67',icon:'▦',theory:'權責配置、制度支持與協作',desc:'檢視制度、責任分工、資源配置是否支持問題處理。',actions:['釐清權責與決策邊界','確認制度是否真正支持跨部門協作']},
