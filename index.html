@@ -154,6 +154,7 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 .report #dynamicInterpretation,.report #dynamicEvidence,.report #dynamicActions {
   font-size:14px !important; line-height:1.65 !important;
 }
+.render-error{margin:8px;padding:10px;border:1px solid #e8a2a8;border-radius:6px;background:#fff1f2;color:#a61b29;font-size:14px!important;line-height:1.5}
 </style>
 </head>
 <body>
@@ -175,7 +176,7 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
   <div class="live-main panel-live">
     <h2>四象限動態定位｜組織效能理論參考圖</h2>
     <div class="plot-wrap">
-      <svg id="quadrantChart" viewBox="0 0 680 430" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
+      <svg id="quadrantChart" viewBox="0 0 720 460" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
     </div>
     <div class="axis-note">橫軸：資訊與感知基礎（Awareness）　｜　縱軸：組織回應與行動能力（Action）</div>
     <p class="chart-disclaimer">定位規則（本版本操作化定義）：Awareness＝（Mirror＋Safety）÷2；Action＝（Matrix＋Flow）÷2。此映射是 MMTF 報告的分析假設，尚非經驗證的標準公式。</p>
@@ -245,8 +246,9 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 </section>
 <footer class="footer">
 <strong>MMTF 組織診斷與顧問分析報告</strong><br>
-<span class="copyright">版權所有 © MMTF許銘祥｜未經授權，請勿複製、散布、轉售或移除版權標示。</span><br>
-本報告為管理診斷參考；分級門檻、座標映射及理論最佳組態應依實徵評估確認。<br>
+<span class="copyright">版權所有 © MMTF｜未經授權，請勿複製、散布、轉售或移除版權標示。</span><br>
+浮水印與版權標示為報告識別用途；正式發布前請填入實際權利人名稱、聯絡方式與年份。<br>
+本報告為管理診斷參考；分級門檻、座標映射及理論最佳組態應依研究設計與實證資料持續檢驗。
 </footer>
 </main>
 <script>
@@ -312,7 +314,7 @@ const ring=document.querySelector('.ring');
 ring.style.background=`conic-gradient(#ed1c2e 0 ${Math.max(0,Math.min(100,total))}%,#e9edf1 ${Math.max(0,Math.min(100,total))}% 100%)`;
 document.getElementById('dimensions').innerHTML=dims.map(d=>{
  const item=insightDB[d.key][getLevel(scores[d.key])];
- return `<article class="dimension" style="--c:${d.color}"><h3><span style="display:inline-block;background:${item.color};color:white;border-radius:50%;padding:3px 6px;margin-right:4px">${d.icon}</span>${d.name}（${d.zh}）<span class="tag" style="background:${item.color}22;color:${item.color}">${item.status}</span></h3><div class="theory">${item.theory}</div><p><b>洞察：</b>${item.insight}</p><p><b>管理影響：</b>${item.implication}</p><b>顧問行動建議</b><ul><li>${item.action}</li><li>設定負責人、追蹤指標與檢視期限。</li></ul><p><b>本次原始分數：</b>${scores[d.key]} / 25（平均 ${means[d.key].toFixed(1)} / 5）</p></article>`;
+ return `<article class="dimension" style="--c:${d.color}"><h3><span style="display:inline-block;background:${item.color};color:white;border-radius:50%;padding:3px 6px;margin-right:4px">${d.icon}</span>${d.name}（${d.zh}）<span class="tag" style="background:${item.color}22;color:${item.color}">${item.status}</span></h3><div class="theory">${insightDB[d.key].theory}</div><p><b>洞察：</b>${item.insight}</p><p><b>管理影響：</b>${item.implication}</p><b>顧問行動建議</b><ul><li>${item.action}</li><li>設定負責人、追蹤指標與檢視期限。</li></ul><p><b>本次原始分數：</b>${scores[d.key]} / 25（平均 ${means[d.key].toFixed(1)} / 5）</p></article>`;
 }).join('');
 document.getElementById('liveScoreRows').innerHTML=dims.map(d=>{
  const v=means[d.key],level=getLevel(scores[d.key]),cl=level==='low'?'num-low':level==='mid'?'num-mid':'num-high';
@@ -424,27 +426,32 @@ function renderText(){
  const evidence3=`<p><b>組態配適｜Doty、Glick & Huber（1993）：</b>該研究顯示不同組態理論的實證結果並不一致。四構面配適可以作為待檢驗的理論命題，但不能僅依圖形位置或分數均衡宣稱最佳。</p>`;
  const evidence4=`<p><b>本次證據界線：</b>目前外部研究可提供理論對照，但並未直接檢驗本次 Mirror=${scores.mirror}、Matrix=${scores.matrix}、Flow=${scores.flow}、Safety=${scores.safe} 的組合。因此應區分「參考文獻支持的概念」與「MMTF 模型自身仍需驗證的假設」。</p>`;
  document.getElementById('dynamicEvidence').innerHTML=evidence+evidence2+evidence3+evidence4;
- const ordered=[...dims].sort((a,b)=>scores[a.key]-scores[b.key]);
+ const ordered=[...dims].sort((a,b)=>(scores[a.key]-scores[b.key]) || (dims.findIndex(x=>x.key===a.key)-dims.findIndex(x=>x.key===b.key)));
  document.getElementById('dynamicActions').innerHTML=ordered.map((d,i)=>{
- 
-const ordered = [...dims].sort((a, b) => {
-  const diff = scores[a.key] - scores[b.key];
-  return diff !== 0 ? diff : dims.indexOf(a) - dims.indexOf(b);
-});
-
-document.getElementById('dynamicActions').innerHTML = ordered.map((d, i) => {
-  const item = insightDB[d.key][getLevel(scores[d.key])];
-
-  return `<p>
-    <b>${i + 1}. ${d.name}（${d.zh}）— ${scores[d.key]}/25；平均 ${means[d.key].toFixed(1)}/5</b><br>
-    <b>改善建議：</b>${item.action}<br>
-    ${item.implication}<br>
-    <span class="muted">追蹤方式：指定負責人、指標與期限；改善後以相同題項複測並比較變化。</span>
-  </p>`;
-}).join('');
-
+  const item=insightDB[d.key][getLevel(scores[d.key])];
+  return `<p><b>${i+1}. ${d.name}（${d.zh}，${scores[d.key]}/25；平均 ${means[d.key].toFixed(1)}/5）— ${item.action}</b><br>${item.implication}<br><span class="muted">追蹤方式：指定負責人、指標與期限；改善後以相同題項複測並比較變化。</span></p>`;
+ }).join('');
 }
-drawQuadrant();drawRadar();drawBars();renderText();
+const renderJobs = [
+  ['四象限圖', drawQuadrant],
+  ['雷達圖', drawRadar],
+  ['長條圖', drawBars],
+  ['文字分析', renderText]
+];
+renderJobs.forEach(([label, fn]) => {
+  try { fn(); }
+  catch (err) {
+    console.error('MMTF ' + label + ' rendering failed:', err);
+    const fallback = document.createElement('p');
+    fallback.className = 'render-error';
+    fallback.textContent = label + '載入失敗，請確認程式版本。';
+    const target = label === '四象限圖' ? document.querySelector('.plot-wrap') :
+      label === '雷達圖' ? document.getElementById('liveRadar').parentElement :
+      label === '長條圖' ? document.getElementById('liveBars').parentElement :
+      document.getElementById('dynamicInterpretation');
+    if (target) target.appendChild(fallback);
+  }
+});
 })();
 </script>
 </body>
