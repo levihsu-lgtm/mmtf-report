@@ -147,14 +147,6 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
   .report .step strong, .report .footer { font-size:14px !important; }
 }
 
-/* 僅調整理論對照與實證研究提示區塊，其他版面維持原樣 */
-#dynamicEvidence .mmtf-evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;row-gap:0}
-#dynamicEvidence .mmtf-evidence-grid>div{padding:7px 4px 10px;border-bottom:1px solid #e5edf3;font-size:14px;line-height:1.65;color:#68778a;overflow-wrap:anywhere}
-#dynamicEvidence .mmtf-evidence-grid b{color:#17466d;font-weight:700}
-#dynamicEvidence .evidence-score{display:inline-block;margin-top:4px;color:#52647a;font-size:12px}
-#dynamicEvidence .evidence-note{margin:10px 0 0;font-size:12px;color:#68778a;line-height:1.6}
-@media(max-width:560px){#dynamicEvidence .mmtf-evidence-grid{grid-template-columns:1fr}}
-
 </style>
 </head>
 <body>
@@ -379,22 +371,33 @@ function renderText(){
    signalText = `最低分為 ${fmtList(tiedLowest)}；最高分為 ${fmtList(tiedHighest)}，最高與最低相差 ${scoreSpread.toFixed(1)} 分。這是本次自評中較明顯的相對差異，可優先核對低分構面對應的題目與實際情境；較高分只代表相對較高，不等於已達良好或沒有改善需求。`;
  }
  const overallText = overall < 2 ? '整體平均落在本報告設定的低分區間' : overall < 3.5 ? '整體平均落在本報告設定的中低區間' : '整體平均落在本報告設定的相對較高區間';
- let diagnosis=`<p><b>整體結果：</b>四構面總分 ${total}/100，整體平均 ${overall.toFixed(2)}/5；${overallText}。依目前操作規則，整體分類為「${risk}」。四象限座標為 Awareness ${quadrantX.toFixed(1)}、Action ${quadrantY.toFixed(1)}，落在「${quadrant}」。此處分類用於整理本次回應，不宜單憑分數視為組織的客觀定論。</p>`;
- diagnosis+=`<p><b>數據差異：</b>${signalText}</p>`;
- diagnosis+=`<p><b>四構面判讀：</b>Mirror ${means.mirror.toFixed(1)}/5（問題覺察與回饋）、Matrix ${means.matrix.toFixed(1)}/5（制度、權責與資源承接）、Flow ${means.flow.toFixed(1)}/5（資訊傳遞與協作）、Safety ${means.safe.toFixed(1)}/5（提出疑問、表達異議及尋求協助時的安全感）。分數呈現的是本次填答者對各面向的自評；較高分代表相對較高，並不自動等於沒有問題，較低分則是值得進一步查證的線索。</p>`;
- diagnosis+=`<p><b>構面組合：</b>Mirror 與 Safety 可協助整理問題是否容易被看見、提出及討論；Matrix 與 Flow 可協助整理組織是否有權責、資源與資訊流程承接問題。若前一組相對較高、後一組相對較低，可進一步查核「問題已被察覺或提出，但是否缺乏承接與回應」；若前一組相對較低，則可查核員工是否難以辨識或表達問題。這些是供後續查證的分析方向，不是由分數直接推定的因果關係。</p>`;
- diagnosis+=`<p><b>後續查證：</b>請選取近期一件具體工作事件，依序核對問題如何被發現、是否有人提出、由誰負責、資訊如何傳遞、主管或相關單位如何回應，以及是否追蹤結果。改善優先順序應綜合構面分數、單題回答、事件影響、訪談內容及流程紀錄決定，不宜只依最低分排序。</p>`;
- diagnosis+=`<p><b>解讀範圍：</b>本次內容屬描述性診斷，呈現輸入分數的高低與組合；在尚未結合樣本分布、量表信效度、題項資料及外部指標前，不推論因果、統計顯著性或整體組織效能。</p>`;
+ let diagnosis=`<p><b>整體結果：</b>四構面總分 ${total}/100，平均 ${overall.toFixed(2)}/5；${overallText}（「${risk}」為本報告目前採用的操作性分類，並非已驗證的臨床或組織效能標準）。象限座標為 Awareness ${quadrantX.toFixed(1)}、Action ${quadrantY.toFixed(1)}，依目前公式落在「${quadrant}」。</p>`;
+ diagnosis+=`<p><b>主要數據訊號：</b>${signalText}</p>`;
+ diagnosis+=`<p><b>四構面如何理解：</b>Mirror ${means.mirror.toFixed(1)}/5（問題覺察與回饋）、Matrix ${means.matrix.toFixed(1)}/5（制度與權責承接）、Flow ${means.flow.toFixed(1)}/5（資訊流動與協作）、Safety ${means.safe.toFixed(1)}/5（表達意見的安全感）。這些分數呈現的是參與者對各面向的自評，不會單獨證明組織中某種問題一定存在。若構面分數有差距，可把差距當作後續核對的線索；若分數相同或接近，則應查看題項層級的差異，避免只用構面平均掩蓋不同經驗。</p>`;
+ diagnosis+=`<p><b>建議如何確認：</b>請參與者回想最近一次具體工作事件，核對問題如何被發現、由誰承接、資訊如何傳遞、提出疑慮後得到什麼回應。若要決定改善優先順序，應綜合分數差異、題項回答、事件影響程度及其他流程資料；不能只因某構面分數低就直接斷定原因或指定為唯一優先項目。</p>`;
+ diagnosis+=`<p><b>判讀界線：</b>目前是依本次輸入的四構面分數做描述性分析，並非推論統計。未有樣本分布、量表信效度、題項資料與外部結果指標前，不應推斷因果、統計顯著性。</p>`;
  document.getElementById('dynamicInterpretation').innerHTML=diagnosis;
- // 理論對照與實證研究提示：四篇文獻採用截圖中的雙欄卡片樣式，分數提示仍依本次數據動態更新。
+ // 理論對照欄位：完全依本次實際分數與構面相對差異產生解讀；不預設高分／低分必然代表特定組織事實。
  const scoreBand = v => v < 1.5 ? '本次自評相對較低' : v < 2.5 ? '本次自評略低於中點' : v < 3.5 ? '本次自評在中間範圍' : v < 4.5 ? '本次自評相對較高' : '本次自評很高';
- const evidence = `<div class="mmtf-evidence-grid">
- <div><b>Mirror｜認知與回饋</b><br>Luft & Ingham（1955），Johari Window：作為自我／他人認知與回饋的概念參照。<br><span class="evidence-score">本次 Mirror：${means.mirror.toFixed(1)}/5（${scoreBand(means.mirror)}）</span></div>
- <div><b>Matrix｜組織結構</b><br>Galbraith（2009），組織設計相關著作：作為組織結構與協調機制的理論參照。<br><span class="evidence-score">本次 Matrix：${means.matrix.toFixed(1)}/5（${scoreBand(means.matrix)}）</span></div>
- <div><b>Flow｜資訊傳遞</b><br>Shannon & Weaver（1949），The Mathematical Theory of Communication：作為訊息傳遞與噪音的概念背景。<br><span class="evidence-score">本次 Flow：${means.flow.toFixed(1)}/5（${scoreBand(means.flow)}）</span></div>
- <div><b>Safety｜心理安全</b><br>Edmondson（1999），Psychological Safety and Learning Behavior in Work Teams：支持心理安全與團隊學習行為之關聯。<br><span class="evidence-score">本次 Safety：${means.safe.toFixed(1)}/5（${scoreBand(means.safe)}）</span></div>
- </div><p class="evidence-note">以上文獻用於說明各構面的概念來源與理論關聯；可依本次分數回看相關題目及具體工作情境，再決定是否需要進一步訪談或流程查證。</p>`;
- document.getElementById('dynamicEvidence').innerHTML=evidence;
+ const scorePattern = `Mirror ${means.mirror.toFixed(1)}/5（${scoreBand(means.mirror)}）、Matrix ${means.matrix.toFixed(1)}/5（${scoreBand(means.matrix)}）、Flow ${means.flow.toFixed(1)}/5（${scoreBand(means.flow)}）、Safety ${means.safe.toFixed(1)}/5（${scoreBand(means.safe)}）`;
+ const scorePairs = [
+  ['Mirror','鏡像／問題覺察',means.mirror],['Matrix','結構／制度承接',means.matrix],['Flow','資訊流動／協作',means.flow],['Safety','心理安全／表達意見',means.safe]
+ ];
+ const sortedScores=[...scorePairs].sort((a,b)=>b[2]-a[2]);
+ const highest=sortedScores[0], lowest=sortedScores[sortedScores.length-1];
+ const spread=highest[2]-lowest[2];
+ let mmtfReading;
+ if (spread < 0.5) {
+   mmtfReading = `四個構面的自評分數相近，最高與最低構面差距為 ${spread.toFixed(1)} 分。這表示本次回答沒有呈現明顯的構面落差；分數相近不等於各面向都沒有問題，也不代表組織運作必然一致。建議請參與者以最近一次具體工作事件，分別說明問題如何被看見、由誰承接、資訊如何流動，以及提出不同意見後發生什麼事。`;
+ } else {
+   mmtfReading = `本次分數中，${highest[0]}（${highest[2].toFixed(1)}/5）相對較高，${lowest[0]}（${lowest[2].toFixed(1)}/5）相對較低，兩者相差 ${spread.toFixed(1)} 分。這是參與者對不同面向的自評差異，不直接代表某個面向一定良好或失效。分析時應先確認差異是否反映真實工作經驗，例如不同流程、不同主管、不同部門或不同事件，再判斷這些面向如何互相影響。`;
+ }
+ const evidence=`<p><b>一、數據與理論的整體對照</b><br><b>本次分數：</b>${scorePattern}。<br><b>數據呈現的關鍵落差：</b>${mmtfReading}<br><b>與四篇文獻的連結：</b>四篇文獻分別提供回饋與自我認知、組織設計、訊息傳遞、心理安全的分析視角。將它們放在一起看，可用來追問：問題能否被看見（Mirror）、是否有清楚的責任與決策安排承接（Matrix）、資訊能否完整傳遞並轉化成協作（Flow），以及成員是否敢提出疑慮（Safety）。這是以既有概念解讀本次分數的整合分析，不是說四篇文獻已經驗證 MMTF 整體模型。</p>`;
+ const evidence2=`<p><b>二、Mirror｜認知與回饋：Luft & Ingham（1955），Johari Window</b><br><b>本次數據：</b>${means.mirror.toFixed(1)}/5（${scoreBand(means.mirror)}）。${means.mirror<=means.safe?`Mirror 與 Safety 都落在相對低分區，可能值得一併檢視「問題是否被看見」以及「看見後是否敢說出來」這兩個不同環節。`:`Mirror 相較 Safety ${means.mirror>means.safe?'略高':'略低'}，但仍應與題項及事件例子一起解讀。`}<br><b>理論對照：</b>Johari Window 著重自我認知、他人觀點與回饋如何讓盲點被看見。若 Mirror 的低分反映回饋不易取得、問題不易被說明或他人觀點未能進入討論，便可用這個概念追查資訊落差如何形成；但不能只靠分數認定組織一定缺乏透明度。<br><b>實證研究提示：</b>訪談時可追問最近一次發現問題或收到不同回饋的事件：誰先注意到？當事人是否知道他人如何看待這件事？回饋有沒有被討論、澄清或採取行動？可再對照會議紀錄、問題回報紀錄或員工意見管道，判斷是「問題未被察覺」還是「問題已被察覺但未被表達」。</p>`;
+ const evidence3=`<p><b>三、Matrix｜組織結構：Galbraith（2009），組織設計相關著作</b><br><b>本次數據：</b>${means.matrix.toFixed(1)}/5（${scoreBand(means.matrix)}）。${means.matrix===maxValue?`Matrix 是本次相對最高的構面，表示受測者對制度、分工或權責安排的評價相對較高；這並不代表整體流程必然有效。`:means.matrix<2.5?`Matrix 自評偏低，可優先核對權責、決策權限、資源與跨部門協調是否有具體障礙。`:`Matrix 位於中間範圍，宜確認制度安排在不同部門與工作情境中的實際落實程度。`}<br><b>理論對照：</b>Galbraith 的組織設計觀點可協助分析分工、決策與協調安排。若 Matrix 相對較高、但 Flow 明顯較低，可能代表正式分工或制度感受尚可，資訊交接與跨部門執行卻未必順暢；此為值得查證的落差，不宜直接推定制度已有效運作。<br><b>實證研究提示：</b>抽查一至兩個跨部門案件，追蹤誰負責、誰有決策權、需要哪些資源、卡關時由誰協調，以及最後由誰確認完成。將問卷結果與流程圖、責任分工表、案件處理時程及未結案件紀錄比對，才能區分「制度設計問題」與「制度執行問題」。</p>`;
+ const evidence4=`<p><b>四、Flow｜資訊傳遞：Shannon & Weaver（1949），The Mathematical Theory of Communication</b><br><b>本次數據：</b>${means.flow.toFixed(1)}/5（${scoreBand(means.flow)}）。${means.flow===minValue?`Flow 是本次最低分構面，值得優先檢視訊息是否遺漏、延遲、被誤解，或傳遞後沒有明確的接手與回覆。`:`Flow 與最低分構面的差距為 ${(means.flow-minValue).toFixed(1)} 分；可依題項內容確認資訊傳遞是否為主要困難之一。`}<br><b>理論對照：</b>Shannon & Weaver 的傳播模型提供訊息、通道與雜訊的概念背景。若 Flow 偏低，可能的查證方向包括訊息不完整、傳遞管道不一致、接收者不清楚下一步，或資訊在交接中失真。這些是依理論提出的可能機制，需由實際工作紀錄確認，而不是把低分直接等同於某一種故障。<br><b>實證研究提示：</b>選取近期工作交接、異常通報或跨部門任務，核對原始訊息、接收時間、回覆內容、責任承接與結案結果。可記錄重複詢問、退件、延遲及重工情形；若多次出現同類中斷，才較有依據判斷資訊傳遞機制需要改善。</p>`;
+ const evidence5=`<p><b>五、Safety｜心理安全：Edmondson（1999），Psychological Safety and Learning Behavior in Work Teams</b><br><b>本次數據：</b>${means.safe.toFixed(1)}/5（${scoreBand(means.safe)}）。${means.safe<2.5?`Safety 自評偏低，應檢視員工提出問題、承認錯誤或表達不同意見時，是否預期會遭到責備、忽視或其他人際風險。`:`Safety 自評相對不低，仍需確認不同職務、主管與事件情境是否有不一致的經驗。`}<br><b>理論對照：</b>Edmondson（1999）研究了團隊心理安全與團隊學習行為的關係。若 Safety 偏低，且 Mirror 也偏低，值得探討員工是否既不容易提出問題，也不容易透過回饋與討論修正共同理解；若 Safety 相對較高但 Flow 偏低，則可進一步檢視員工即使敢說，資訊是否仍能被接收、傳遞並轉化為行動。這些組合是待驗證的解釋方向，不是由分數直接證明的因果關係。<br><b>實證研究提示：</b>可訪談員工最近一次提問、回報錯誤或提出異議的經驗，記錄主管與同事如何回應、是否有後續討論，以及是否造成不利後果。將不同部門、職級或主管情境分開比較，避免以單一平均分數概括所有人的心理安全經驗。<br><b>四構面整合判讀：</b>本次四構面差異應連同具體事件一起看：問題有沒有被看見（Mirror）、有沒有責任與資源承接（Matrix）、資訊有沒有完整流動（Flow）、員工敢不敢提出疑慮（Safety）。若這些環節中任一處中斷，整體改善可能無法落地；實際瓶頸需由訪談、流程紀錄及後續資料確認。</p>`;
+ document.getElementById('dynamicEvidence').innerHTML=evidence+evidence2+evidence3+evidence4+evidence5;
  const ordered=[...dims].sort((a,b)=>means[a.key]-means[b.key]);
  const actionGroups=[];
  ordered.forEach(d=>{const v=means[d.key];let g=actionGroups.find(x=>Math.abs(x.value-v)<0.001);if(!g){g={value:v,items:[]};actionGroups.push(g);}g.items.push(d);});
