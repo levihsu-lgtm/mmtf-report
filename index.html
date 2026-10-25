@@ -353,12 +353,29 @@ function drawBars(){
  svg.innerHTML=s;
 }
 function renderText(){
- const weakText=weakest.map(d=>`${d.name} ${means[d.key].toFixed(1)}`).join('、');
- const strongerText=strongest.map(d=>`${d.name} ${means[d.key].toFixed(1)}`).join('、');
- let diagnosis=`<p><b>整體結果：</b>四構面總分 ${total}/100，平均 ${overall.toFixed(2)}/5，依目前報告門檻歸為「${risk}」。象限操作化座標為 Awareness ${quadrantX.toFixed(1)}、Action ${quadrantY.toFixed(1)}，落在「${quadrant}」。</p>`;
- diagnosis+=`<p><b>主要數據訊號：</b>最低構面為 ${weakText}；相對較高為 ${strongerText}。目前 Flow 與 Safety 均為 ${means.flow.toFixed(1)}、${means.safe.toFixed(1)}，顯示流程資訊轉化與安全發聲是優先核查的面向。Mirror ${means.mirror.toFixed(1)}、Matrix ${means.matrix.toFixed(1)} 相對較高，但不代表這兩項已達良好程度。</p>`;
- diagnosis+=`<p><b>理論解讀：</b>若 Mirror 代表問題覺察與回饋、Matrix 代表制度權責、Flow 代表資訊傳遞與執行、Safety 代表人際風險下的發聲安全，這組分數呈現「有一定認知與結構基礎，但流程與發聲面向明顯偏弱」的初步模式。這是依構面定義所作的解讀假設，仍需用訪談或流程資料確認。</p>`;
- diagnosis+=`<p><b>避免過度推論：</b>這些分數是本次提供的四構面分數，不是對全體員工的推論統計；在沒有樣本數、分布、信效度與組織績效指標前，不能判定因果、統計顯著性或宣稱此組合已被研究證實。</p>`;
+ const scoreRows = dims.map(d=>({key:d.key,name:d.name,zh:d.zh,value:means[d.key]}));
+ const minValue = Math.min(...scoreRows.map(d=>d.value));
+ const maxValue = Math.max(...scoreRows.map(d=>d.value));
+ const scoreSpread = maxValue-minValue;
+ const tiedLowest = scoreRows.filter(d=>Math.abs(d.value-minValue)<0.001);
+ const tiedHighest = scoreRows.filter(d=>Math.abs(d.value-maxValue)<0.001);
+ const fmtList = rows => rows.map(d=>`${d.name} ${d.value.toFixed(1)}`).join('、');
+ const isAllEqual = scoreSpread < 0.001;
+ const isNearEqual = scoreSpread >= 0.001 && scoreSpread < 0.5;
+ let signalText;
+ if (isAllEqual) {
+   signalText = `四個構面目前都是 ${maxValue.toFixed(1)}/5，分數完全相同，因此無法從構面間的高低排序出優先項目。這表示本次資料沒有顯示構面差距；是否存在具體困難，仍需結合題目回答與實際工作例子確認。`;
+ } else if (isNearEqual) {
+   signalText = `最低分為 ${fmtList(tiedLowest)}；最高分為 ${fmtList(tiedHighest)}。四構面最大差距僅 ${scoreSpread.toFixed(1)} 分，差距不大，不宜將某一構面單獨判定為主要問題。建議先查看各題回答及參與者舉出的實際例子。`;
+ } else {
+   signalText = `最低分為 ${fmtList(tiedLowest)}；最高分為 ${fmtList(tiedHighest)}，最高與最低相差 ${scoreSpread.toFixed(1)} 分。這是本次自評中較明顯的相對差異，可優先核對低分構面對應的題目與實際情境；較高分只代表相對較高，不等於已達良好或沒有改善需求。`;
+ }
+ const overallText = overall < 2 ? '整體平均落在本報告設定的低分區間' : overall < 3.5 ? '整體平均落在本報告設定的中低區間' : '整體平均落在本報告設定的相對較高區間';
+ let diagnosis=`<p><b>整體結果：</b>四構面總分 ${total}/100，平均 ${overall.toFixed(2)}/5；${overallText}（「${risk}」為本報告目前採用的操作性分類，並非已驗證的臨床或組織效能標準）。象限座標為 Awareness ${quadrantX.toFixed(1)}、Action ${quadrantY.toFixed(1)}，依目前公式落在「${quadrant}」。</p>`;
+ diagnosis+=`<p><b>主要數據訊號：</b>${signalText}</p>`;
+ diagnosis+=`<p><b>四構面如何理解：</b>Mirror ${means.mirror.toFixed(1)}/5（問題覺察與回饋）、Matrix ${means.matrix.toFixed(1)}/5（制度與權責承接）、Flow ${means.flow.toFixed(1)}/5（資訊流動與協作）、Safety ${means.safe.toFixed(1)}/5（表達意見的安全感）。這些分數呈現的是參與者對各面向的自評，不會單獨證明組織中某種問題一定存在。若構面分數有差距，可把差距當作後續核對的線索；若分數相同或接近，則應查看題項層級的差異，避免只用構面平均掩蓋不同經驗。</p>`;
+ diagnosis+=`<p><b>建議如何確認：</b>請參與者回想最近一次具體工作事件，核對問題如何被發現、由誰承接、資訊如何傳遞、提出疑慮後得到什麼回應。若要決定改善優先順序，應綜合分數差異、題項回答、事件影響程度及其他流程資料；不能只因某構面分數低就直接斷定原因或指定為唯一優先項目。</p>`;
+ diagnosis+=`<p><b>判讀界線：</b>目前是依本次輸入的四構面分數做描述性分析，並非推論統計。未有樣本分布、量表信效度、題項資料與外部結果指標前，不應推斷因果、統計顯著性，也不應將 256 種理論組合視為已經實證確認的組織類型。</p>`;
  document.getElementById('dynamicInterpretation').innerHTML=diagnosis;
  // 理論對照欄位：完全依本次實際分數與構面相對差異產生解讀；不預設高分／低分必然代表特定組織事實。
  const scoreBand = v => v < 1.5 ? '本次自評相對較低' : v < 2.5 ? '本次自評略低於中點' : v < 3.5 ? '本次自評在中間範圍' : v < 4.5 ? '本次自評相對較高' : '本次自評很高';
@@ -376,13 +393,15 @@ function renderText(){
    mmtfReading = `本次分數中，${highest[0]}（${highest[2].toFixed(1)}/5）相對較高，${lowest[0]}（${lowest[2].toFixed(1)}/5）相對較低，兩者相差 ${spread.toFixed(1)} 分。這是參與者對不同面向的自評差異，不直接代表某個面向一定良好或失效。分析時應先確認差異是否反映真實工作經驗，例如不同流程、不同主管、不同部門或不同事件，再判斷這些面向如何互相影響。`;
  }
  const evidence=`<p><b>一、本次分數呈現的情況</b><br><b>本次分數：</b>${scorePattern}。<br><b>組合解讀：</b>${mmtfReading}<br><b>這代表什麼：</b>這些數字反映參與者對四個面向的自我評估。分數本身不會自動說明原因；需要回到具體工作經驗，確認分數差異發生在哪些情境、涉及哪些人或流程，以及是否有不同的例子。</p>`;
- const evidence2=`<p><b>二、Mirror｜鏡像構面：Rawlins（2009）組織透明度研究</b><br><b>本次分數如何連結文獻：</b>你的 Mirror 自評為 ${means.mirror.toFixed(1)}/5（${scoreBand(means.mirror)}）。Rawlins 的研究可協助思考組織資訊是否充分、是否開放、利害關係人能否參與，以及組織是否回應與負責。這些概念可用來理解 Mirror 分數所反映的資訊可見性、問題被提出及回饋被回應的經驗；但應以本次實際題目涵蓋的內容為準。<br><b>可以怎麼理解：</b>請回想最近一次你發現或提出問題的經驗：相關資訊是否容易取得？你知道誰能處理嗎？提出後是否收到回應？如果不同問題的經驗不一樣，也應如實呈現，不必把分數簡化成「透明」或「不透明」。<br><b>文獻對照：</b>若 Mirror 題項涉及資訊公開、回饋與問責，與 Rawlins 的透明度概念有部分對應；若題項也包含內在自我覺察，則不完全等同。這是概念上的對照，不代表 Rawlins 已測量或驗證 MMTF 的 Mirror 分數。</p>`;
- const evidence3=`<p><b>三、Matrix 與 Flow｜Galbraith（1973／1974）組織設計與資訊處理觀點</b><br><b>本次分數如何連結文獻：</b>Matrix 自評為 ${means.matrix.toFixed(1)}/5（${scoreBand(means.matrix)}）；Flow 自評為 ${means.flow.toFixed(1)}/5（${scoreBand(means.flow)}）。Galbraith 的觀點可協助理解組織如何透過分工、權責、協調及資訊處理來完成工作。Matrix 可連結到制度與責任安排的經驗；Flow 可連結到資訊傳遞、跨部門合作及訊息能否推進到下一步的經驗。<br><b>本次兩構面的分數差異：</b>${Math.abs(means.matrix-means.flow)<0.5 ? `Matrix 與 Flow 的分數相近（差距 ${Math.abs(means.matrix-means.flow).toFixed(1)} 分）。可請參與者描述一項近期任務，看看分工、資訊傳遞、決策與追蹤是否在同一流程中順利銜接。` : means.matrix>means.flow ? `Matrix 比 Flow 高 ${Math.abs(means.matrix-means.flow).toFixed(1)} 分。這不直接證明制度良好或資訊流動有問題；可進一步詢問，實際任務中制度與權責安排如何轉化成資訊交接、協作和完成行動。` : `Flow 比 Matrix 高 ${Math.abs(means.matrix-means.flow).toFixed(1)} 分。這不直接證明協作順暢或制度不足；可進一步了解資訊與任務是透過正式流程、非正式協作，還是個人經驗推進，以及這種方式在不同情境下是否一致。`}<br><b>文獻對照：</b>Galbraith 提供理解組織設計與資訊處理需求的理論視角；實際的組織流程是否符合這些描述，仍須由參與者案例或流程資料確認，不能只憑分數推定。</p>`;
- const evidence4=`<p><b>四、Safety｜心理安全：Edmondson（1999）團隊學習研究</b><br><b>本次分數如何連結文獻：</b>你的 Safety 自評為 ${means.safe.toFixed(1)}/5（${scoreBand(means.safe)}）。Edmondson 對製造業團隊的研究發現，團隊心理安全與學習行為有關。這可協助理解參與者對提問、回報錯誤、表達不同意見及承認不確定性的感受。<br><b>可以怎麼理解：</b>請回想最近一次你提出疑問、不同意見或承認錯誤的情境：其他人如何回應？之後有沒有討論或改善？是否因人、事件或主管不同而有不同經驗？這些實例比單看分數更能說明本次自評的背景。<br><b>文獻對照：</b>若 MMTF 的 Safety 題項涉及人際風險與發聲，便與 Edmondson 的心理安全概念有較直接的對應；研究支持的是心理安全與團隊學習行為的關聯，不能直接把本次分數等同於實際學習成效。</p>`;
- const evidence5=`<p><b>五、四構面整合｜Doty、Glick 與 Huber（1993）組態與配適研究</b><br><b>本次四構面的組合：</b>最高自評為 ${highest[0]}（${highest[2].toFixed(1)}/5），最低自評為 ${lowest[0]}（${lowest[2].toFixed(1)}/5），構面差距 ${spread.toFixed(1)} 分。這個差異可作為理解參與者工作經驗的起點，而不是直接判定組織屬於某一固定類型。<br><b>文獻如何協助理解：</b>Doty、Glick 與 Huber 的研究顯示，不同組態理論的實證支持程度並不一致。因此，將四構面一起觀察是可研究的方向，但每一種分數組合的實際意義，仍應透過參與者描述、情境資料及後續研究確認。<br><b>下一步可以怎麼做：</b>依本次分數差異邀請參與者分享具體事件，詢問哪些經驗符合目前的分數、哪些不符合，以及四個面向在事件中如何互相影響。訪談結果可用來補充或修正 MMTF 的解讀，不應只收集支持原先推論的例子。<br><b>整體說明：</b>本欄位以本次實際分數作為起點，文獻用來提供理解情境的參考，不會單憑分數高低替參與者下結論。分數反映的是自評，原因與實際運作仍需透過工作案例、訪談或其他資料確認。</p>`;
+ const evidence2=`<p><b>二、Mirror｜認知與回饋：Luft & Ingham（1955），Johari Window</b><br><b>依本次分數解讀：</b>Mirror 為 ${means.mirror.toFixed(1)}/5（${scoreBand(means.mirror)}）。這個分數代表你對「看見自己／工作中的盲點，以及接收或提供回饋」相關題目的自我評估。分數本身不能直接說明你是否缺乏自我覺察，應回想實際工作經驗確認。<br><b>文獻如何呼應：</b>Johari Window 提供理解「自己知道、他人看見、彼此尚未說開」及回饋如何增加彼此理解的概念參照。若本次 Mirror 題目涉及自我認知、他人回饋或盲點，便與此概念相呼應。<br><b>對你有什麼意義：</b>想想最近一次收到不同意見或回饋的情況：你是否理解對方的觀點？有沒有機會說明自己的想法？回饋後是否更清楚問題所在？這些經驗可幫助解釋本次分數，而不是由分數直接推定原因。</p>`;
+ const evidence3=`<p><b>三、Matrix｜組織結構：Galbraith（2009），組織設計相關著作</b><br><b>依本次分數解讀：</b>Matrix 為 ${means.matrix.toFixed(1)}/5（${scoreBand(means.matrix)}）。這個分數反映你對工作中的分工、權責、制度安排與協調方式的自我評估；不能單靠分數判定組織結構一定健全或失靈。<br><b>文獻如何呼應：</b>Galbraith 的組織設計觀點可用來理解工作如何分工、由誰決策，以及不同單位如何協調。若本次 Matrix 題目涉及責任是否清楚、流程是否有承接或部門間如何協作，便可用這些概念協助理解。<br><b>對你有什麼意義：</b>回想最近一項需要多人合作的任務：你是否知道誰負責、誰能決定、遇到卡關該找誰？實際例子能說明分數背後的工作情況。</p>`;
+ const evidence4=`<p><b>四、Flow｜資訊傳遞：Shannon & Weaver（1949），The Mathematical Theory of Communication</b><br><b>依本次分數解讀：</b>Flow 為 ${means.flow.toFixed(1)}/5（${scoreBand(means.flow)}）。這個分數反映你對工作資訊是否能被傳達、理解及接續使用的自我評估；它本身不能證明資訊一定失真或流程一定順暢。<br><b>文獻如何呼應：</b>Shannon & Weaver 的傳播模型提供訊息傳遞、通道與噪音的概念背景，可協助思考資訊在傳遞過程中是否出現遺漏、延遲、誤解或干擾。這是資訊傳遞層面的概念參照，不等同於對組織協作成效的直接驗證。<br><b>對你有什麼意義：</b>回想最近一次工作交接或接收重要通知：訊息是否完整？你是否知道下一步要做什麼？是否因資訊不清而需要重問或重做？請以實際事件確認分數所反映的情況。</p>`;
+ const evidence5=`<p><b>五、Safety｜心理安全：Edmondson（1999），Psychological Safety and Learning Behavior in Work Teams</b><br><b>依本次分數解讀：</b>Safety 為 ${means.safe.toFixed(1)}/5（${scoreBand(means.safe)}）。這個分數反映你對工作中提出問題、表達不同意見、承認錯誤或尋求協助時的感受；不能只憑分數判定團隊是否安全。<br><b>文獻如何呼應：</b>Edmondson（1999）的研究指出，團隊心理安全與團隊學習行為有關。若本次 Safety 題目涉及發聲、提問、回報錯誤或表達不同意見，便與該研究關注的概念直接相關。<br><b>對你有什麼意義：</b>回想最近一次你提出疑問、指出錯誤或表達不同意見：別人如何回應？事情後來有沒有被討論或改善？不同情境可能帶來不同經驗，請用具體例子補充分數。<br><b>四構面一起看：</b>${mmtfReading} 四個面向的分數可協助你整理經驗，但不會自動證明彼此存在因果關係。若想更了解原因，可針對具體事件追問：問題如何被看見、由誰承接、資訊如何傳遞，以及提出意見後發生什麼事。</p>`;
  document.getElementById('dynamicEvidence').innerHTML=evidence+evidence2+evidence3+evidence4+evidence5;
  const ordered=[...dims].sort((a,b)=>means[a.key]-means[b.key]);
- document.getElementById('dynamicActions').innerHTML=ordered.map((d,i)=>`<p><b>${i+1}. ${d.name}（${means[d.key].toFixed(1)}/5）— ${d.actions[0]}</b><br>${d.actions[1]}。<br><span class="muted">建議追蹤：設定具體指標、負責人與期限；改善後以相同題目再測並比較。</span></p>`).join('');
+ const actionGroups=[];
+ ordered.forEach(d=>{const v=means[d.key];let g=actionGroups.find(x=>Math.abs(x.value-v)<0.001);if(!g){g={value:v,items:[]};actionGroups.push(g);}g.items.push(d);});
+ document.getElementById('dynamicActions').innerHTML=actionGroups.map((g,i)=>`<p><b>${actionGroups.length===1?'共同檢視':`分數層級 ${i+1}`}｜${g.items.map(d=>`${d.name}（${means[d.key].toFixed(1)}/5）`).join('、')}</b><br>${g.items.map(d=>`${d.actions[0]}；${d.actions[1]}`).join('。')}。<br><span class="muted">此排序僅依分數排列；同分構面不再硬性排名。實際改善先後仍應參考題項回答、事件影響及可取得的流程資料。</span></p>`).join('');
 }
 drawQuadrant();drawRadar();drawBars();renderText();
 })();
