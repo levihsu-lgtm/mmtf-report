@@ -147,6 +147,14 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
   .report .step strong, .report .footer { font-size:14px !important; }
 }
 
+/* 僅調整理論對照與實證研究提示區塊，其他版面維持原樣 */
+#dynamicEvidence .mmtf-evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;row-gap:0}
+#dynamicEvidence .mmtf-evidence-grid>div{padding:7px 4px 10px;border-bottom:1px solid #e5edf3;font-size:14px;line-height:1.65;color:#68778a;overflow-wrap:anywhere}
+#dynamicEvidence .mmtf-evidence-grid b{color:#17466d;font-weight:700}
+#dynamicEvidence .evidence-score{display:inline-block;margin-top:4px;color:#52647a;font-size:12px}
+#dynamicEvidence .evidence-note{margin:10px 0 0;font-size:12px;color:#68778a;line-height:1.6}
+@media(max-width:560px){#dynamicEvidence .mmtf-evidence-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -378,27 +386,15 @@ function renderText(){
  diagnosis+=`<p><b>後續查證：</b>請選取近期一件具體工作事件，依序核對問題如何被發現、是否有人提出、由誰負責、資訊如何傳遞、主管或相關單位如何回應，以及是否追蹤結果。改善優先順序應綜合構面分數、單題回答、事件影響、訪談內容及流程紀錄決定，不宜只依最低分排序。</p>`;
  diagnosis+=`<p><b>解讀範圍：</b>本次內容屬描述性診斷，呈現輸入分數的高低與組合；在尚未結合樣本分布、量表信效度、題項資料及外部指標前，不推論因果、統計顯著性或整體組織效能。</p>`;
  document.getElementById('dynamicInterpretation').innerHTML=diagnosis;
- // 理論對照與實證研究提示：依本次分數提供概念對照與後續查證問題。
+ // 理論對照與實證研究提示：四篇文獻採用截圖中的雙欄卡片樣式，分數提示仍依本次數據動態更新。
  const scoreBand = v => v < 1.5 ? '本次自評相對較低' : v < 2.5 ? '本次自評略低於中點' : v < 3.5 ? '本次自評在中間範圍' : v < 4.5 ? '本次自評相對較高' : '本次自評很高';
- const scorePattern = `Mirror ${means.mirror.toFixed(1)}/5（${scoreBand(means.mirror)}）、Matrix ${means.matrix.toFixed(1)}/5（${scoreBand(means.matrix)}）、Flow ${means.flow.toFixed(1)}/5（${scoreBand(means.flow)}）、Safety ${means.safe.toFixed(1)}/5（${scoreBand(means.safe)}）`;
- const scorePairs = [
-  ['Mirror','鏡像／問題覺察',means.mirror],['Matrix','結構／制度承接',means.matrix],['Flow','資訊流動／協作',means.flow],['Safety','心理安全／表達意見',means.safe]
- ];
- const sortedScores=[...scorePairs].sort((a,b)=>b[2]-a[2]);
- const highest=sortedScores[0], lowest=sortedScores[sortedScores.length-1];
- const spread=highest[2]-lowest[2];
- let mmtfReading;
- if (spread < 0.5) {
-   mmtfReading = `四構面分數相近，最高與最低差距為 ${spread.toFixed(1)} 分，這次回應沒有呈現明顯的構面落差。分數相近不代表各面向都沒有問題，建議查看單題回答並以具體事件核對四個面向的實際差異。`;
- } else {
-   mmtfReading = `本次自評相對較高的是 ${highest[0]}（${highest[2].toFixed(1)}/5），相對較低的是 ${lowest[0]}（${lowest[2].toFixed(1)}/5），相差 ${spread.toFixed(1)} 分。這項差異可作為後續訪談與流程查核的起點，仍需確認是否受到工作任務、主管、部門或事件情境影響。`;
- }
- const evidence=`<p><b>本次數據與理論閱讀方式</b><br><b>本次分數：</b>${scorePattern}。<br><b>組合觀察：</b>${mmtfReading}<br><b>實證提示：</b>可將低分題目轉成具體訪談問題，並與工作流程、事件紀錄或不同角色的說法交叉核對。若要主張構面之間具有關係，仍需以適當研究設計與資料分析檢驗，不能只依本次分數作結論。</p>`;
- const evidence2=`<p><b>Mirror｜認知與回饋：Luft & Ingham（1955），Johari Window</b><br><b>本次分數：</b>${means.mirror.toFixed(1)}/5（${scoreBand(means.mirror)}）。此分數反映填答者對問題覺察、盲點與回饋相關題目的自評。<br><b>理論對照：</b>Johari Window 可作為理解自我認知、他人觀察、尚未揭露資訊與回饋的概念參照。若題目涉及回饋是否能被接收、不同觀點是否能被說明，可用此概念整理經驗。<br><b>實證查證：</b>請回想最近一次收到不同意見或回饋：資訊是否具體？雙方是否有機會澄清？回饋是否改變了對問題的理解？可比較不同角色對同一事件的描述，確認問題是未被察覺、未被說出，還是已提出但沒有後續。</p>`;
- const evidence3=`<p><b>Matrix｜組織結構：Galbraith（2009），組織設計相關著作</b><br><b>本次分數：</b>${means.matrix.toFixed(1)}/5（${scoreBand(means.matrix)}）。此分數反映填答者對分工、權責、制度安排與協調方式的自評。<br><b>理論對照：</b>組織設計觀點可協助分析任務分工、決策權配置，以及不同單位之間的協調方式。<br><b>實證查證：</b>選取一項近期需要跨人員或跨部門合作的任務，確認誰負責、誰有決策權、需要哪些資源、遇到卡關由誰承接，以及實際責任是否與正式規定一致。可將制度文件與實際流程相互比對，避免只以制度是否存在判定其有效性。</p>`;
- const evidence4=`<p><b>Flow｜資訊傳遞：Shannon & Weaver（1949），The Mathematical Theory of Communication</b><br><b>本次分數：</b>${means.flow.toFixed(1)}/5（${scoreBand(means.flow)}）。此分數反映填答者對工作資訊傳遞、理解與後續使用的自評。<br><b>理論對照：</b>傳播模型中的訊息、通道與噪音概念，可用來思考資訊是否出現遺漏、延遲、誤解或干擾；它提供資訊傳遞的概念背景。<br><b>實證查證：</b>回顧一次工作交接、異常通報或重要通知，核對訊息是否完整、接收者是否確認理解、下一步是否明確，以及是否發生重問、重做或延誤。若要分析跨部門協作，另需記錄回覆時間、責任承接與處理結果。</p>`;
- const evidence5=`<p><b>Safety｜心理安全：Edmondson（1999），Psychological Safety and Learning Behavior in Work Teams</b><br><b>本次分數：</b>${means.safe.toFixed(1)}/5（${scoreBand(means.safe)}）。此分數反映填答者對提出疑問、表達不同意見、承認錯誤或尋求協助時的感受。<br><b>理論對照：</b>Edmondson（1999）探討團隊心理安全與團隊學習行為的關係，可作為理解發聲、提問及錯誤討論的理論參照。<br><b>實證查證：</b>請回想最近一次提出疑問、指出錯誤或表達不同意見：對方如何回應？是否受到責備或被忽視？問題後來是否進入討論並獲得處理？可比較不同工作情境與角色的經驗，區分「敢不敢提出」與「提出後是否得到回應」。<br><b>四構面整合：</b>${mmtfReading} 可進一步追蹤問題如何被看見、由誰承接、資訊如何流動，以及提出意見後是否有回應與改善紀錄；這些資料可協助形成後續研究問題與量表修訂方向。</p>`;
- document.getElementById('dynamicEvidence').innerHTML=evidence+evidence2+evidence3+evidence4+evidence5;
+ const evidence = `<div class="mmtf-evidence-grid">
+ <div><b>Mirror｜認知與回饋</b><br>Luft & Ingham（1955），Johari Window：作為自我／他人認知與回饋的概念參照。<br><span class="evidence-score">本次 Mirror：${means.mirror.toFixed(1)}/5（${scoreBand(means.mirror)}）</span></div>
+ <div><b>Matrix｜組織結構</b><br>Galbraith（2009），組織設計相關著作：作為組織結構與協調機制的理論參照。<br><span class="evidence-score">本次 Matrix：${means.matrix.toFixed(1)}/5（${scoreBand(means.matrix)}）</span></div>
+ <div><b>Flow｜資訊傳遞</b><br>Shannon & Weaver（1949），The Mathematical Theory of Communication：作為訊息傳遞與噪音的概念背景。<br><span class="evidence-score">本次 Flow：${means.flow.toFixed(1)}/5（${scoreBand(means.flow)}）</span></div>
+ <div><b>Safety｜心理安全</b><br>Edmondson（1999），Psychological Safety and Learning Behavior in Work Teams：支持心理安全與團隊學習行為之關聯。<br><span class="evidence-score">本次 Safety：${means.safe.toFixed(1)}/5（${scoreBand(means.safe)}）</span></div>
+ </div><p class="evidence-note">以上文獻用於說明各構面的概念來源與理論關聯；可依本次分數回看相關題目及具體工作情境，再決定是否需要進一步訪談或流程查證。</p>`;
+ document.getElementById('dynamicEvidence').innerHTML=evidence;
  const ordered=[...dims].sort((a,b)=>means[a.key]-means[b.key]);
  const actionGroups=[];
  ordered.forEach(d=>{const v=means[d.key];let g=actionGroups.find(x=>Math.abs(x.value-v)<0.001);if(!g){g={value:v,items:[]};actionGroups.push(g);}g.items.push(d);});
