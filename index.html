@@ -242,8 +242,13 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 <footer class="footer">
 <strong>MMTF 組織診斷與顧問分析報告</strong><br>
 <span class="copyright">版權所有 © MMTF許銘祥｜未經授權，請勿複製、散布、轉售或移除版權標示。</span><br>
-浮水印與版權標示為報告識別用途；正式發布前請填入實際權利人名稱、聯絡方式與年份。<br>
-本報告為管理診斷參考；分級門檻、座標映射及理論最佳組態應依研究設計與實證資料持續檢驗。
+浮水印與版權標示為報告識別用途。<br>
+    const today = new Date();
+const formattedDate = today.getFullYear() + '-' +
+    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+    String(today.getDate()).padStart(2, '0');
+document.getElementById('reportDate').innerText =
+`MMTF 專業診斷模組 v2.0 (邏輯引擎版) | 診斷日期：${formattedDate}`; 
 </footer>
 </main>
 <script>
@@ -407,13 +412,7 @@ function renderText(){
   document.getElementById('dynamicInterpretation').innerHTML = output;
 }
 drawQuadrant();drawRadar();drawBars();renderText();
-})();
-  const today = new Date();
-const formattedDate = today.getFullYear() + '-' +
-    String(today.getMonth() + 1).padStart(2, '0') + '-' +
-    String(today.getDate()).padStart(2, '0');
-document.getElementById('reportDate').innerText =
-`MMTF 專業診斷模組 v2.0 (邏輯引擎版) | 診斷日期：${formattedDate}`;   
+})(); 
 </script>
 </body>
 </html>
