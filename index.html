@@ -346,273 +346,53 @@ document.getElementById('liveMean').textContent=overall.toFixed(2);
    JS 模組 C / 四象限定位圖
    只修改象限圖的 SVG、座標、色彩與標籤時，編輯此函式。
    ////////////////////////////////////////////////////////////// */
-/* //////////////////////////////////////////////////////////////
-   JS 模組 C / 四象限定位圖
-   只修改象限圖的 SVG、座標、色彩與標籤時，編輯此函式。
-
-   功能：
-   1. 保留中央水平、垂直十字虛線
-   2. 移除理論最佳點
-   3. 保留四象限漸層與組織效能曲線
-   4. 依四構面分數動態計算本次結果座標
-   5. 更新象限標題、說明與定位標籤
-   ////////////////////////////////////////////////////////////// */
-function renderQuadrant() {
-    const container = document.getElementById('quadrantChart');
-    if (!container) return;
-
-    // 四構面平均分數：原始分數 0–25，換算為 0–5
-    const mirror = Number(scores.mirror) / 5;
-    const matrix = Number(scores.matrix) / 5;
-    const flow   = Number(scores.flow) / 5;
-    const safe   = Number(scores.safe) / 5;
-
-    // X 軸：組織資訊與感知基礎
-    // Y 軸：組織回應與行動能力
-    const awareness = (mirror + safe) / 2;
-    const action = (matrix + flow) / 2;
-
-    // SVG 畫布尺寸與繪圖區域
-    const W = 1000;
-    const H = 680;
-    const L = 100;
-    const T = 35;
-    const R = 25;
-    const B = 85;
-    const PW = W - L - R;
-    const PH = H - T - B;
-    const MID_X = L + PW / 2;
-    const MID_Y = T + PH / 2;
-
-    // 將 0–5 分轉成 SVG 座標
-    const x = value => L + (value / 5) * PW;
-    const y = value => T + ((5 - value) / 5) * PH;
-
-    const px = x(awareness);
-    const py = y(action);
-
-    // 四象限標題與說明
-    const quadrants = [
-        {
-            title: 'Ⅱ 潛能未釋放區',
-            subtitle: '高行動 × 低感知',
-            color: '#e58a00',
-            x: L + 28,
-            y: T + 24,
-            lines: [
-                '具備回應與執行能力，',
-                '但資訊基礎不足。',
-                '問題不易被看見，可能',
-                '僅處理已知問題。',
-                '績效中等，存在盲點風險。'
-            ]
-        },
-        {
-            title: 'Ⅰ 最佳運作區',
-            subtitle: '高行動 × 高感知',
-            color: '#087b36',
-            x: MID_X + 28,
-            y: T + 24,
-            lines: [
-                '資訊透明、權責明確、',
-                '流動順暢、發聲安全。',
-                '能快速回應並形成組織學習。',
-                '具備持續改善的條件。'
-            ]
-        },
-        {
-            title: 'Ⅲ 失衡風險區',
-            subtitle: '低行動 × 低感知',
-            color: '#cf2027',
-            x: L + 28,
-            y: MID_Y + 24,
-            lines: [
-                '資訊不透明、權責不清、',
-                '流動受阻、發聲不足。',
-                '問題難以揭露且難以處理。',
-                '需進一步核對工作風險。'
-            ]
-        },
-        {
-            title: 'Ⅳ 看見未轉化區',
-            subtitle: '高感知 × 低行動',
-            color: '#0873d1',
-            x: MID_X + 28,
-            y: MID_Y + 24,
-            lines: [
-                '資訊看得見、問題能揭露，',
-                '但仍需確認回應、資源與協作。',
-                '可能出現看見問題卻未改善的落差。',
-                '需核對後續處理與追蹤。'
-            ]
-        }
-    ];
-
-    // 曲線使用平滑曲線，不包含理論最佳點標記
-    const curve = `
-        M ${x(1.2)} ${y(1.0)}
-        C ${x(1.8)} ${y(1.8)},
-          ${x(2.3)} ${y(3.3)},
-          ${x(3.0)} ${y(3.7)}
-        S ${x(4.0)} ${y(3.2)},
-          ${x(4.7)} ${y(2.7)}
-    `;
-
-    // 四象限標籤卡
-    function quadrantLabel(q) {
-        const lines = q.lines.map((line, i) => `
-            <text x="${q.x + 16}"
-                  y="${q.y + 102 + i * 27}"
-                  font-size="17"
-                  fill="#17233d">${line}</text>
-        `).join('');
-
-        return `
-            <g>
-                <rect x="${q.x}" y="${q.y}"
-                      width="${PW / 2 - 50}" height="65"
-                      rx="12"
-                      fill="#ffffff"
-                      fill-opacity="0.82"
-                      stroke="${q.color}"
-                      stroke-width="1.4"/>
-                <text x="${q.x + (PW / 2 - 50) / 2}"
-                      y="${q.y + 28}"
-                      text-anchor="middle"
-                      font-size="22"
-                      font-weight="700"
-                      fill="#14213d">${q.title}</text>
-                <text x="${q.x + (PW / 2 - 50) / 2}"
-                      y="${q.y + 51}"
-                      text-anchor="middle"
-                      font-size="15"
-                      fill="#14213d">${q.subtitle}</text>
-                ${lines}
-            </g>
-        `;
-    }
-
-    container.innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}"
-         width="100%"
-         role="img"
-         aria-label="MMTF 四象限定位圖"
-         xmlns="http://www.w3.org/2000/svg">
-
-        <defs>
-            <linearGradient id="mmtfGradient" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#ffd66b"/>
-                <stop offset="28%" stop-color="#ffef9e"/>
-                <stop offset="52%" stop-color="#55df7a"/>
-                <stop offset="73%" stop-color="#20bce8"/>
-                <stop offset="100%" stop-color="#a8e5ff"/>
-            </linearGradient>
-
-            <linearGradient id="mmtfLowerGradient" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#ff5a62" stop-opacity="0.8"/>
-                <stop offset="50%" stop-color="#f5a0c0" stop-opacity="0.35"/>
-                <stop offset="100%" stop-color="#20bce8" stop-opacity="0.5"/>
-            </linearGradient>
-
-            <clipPath id="mmtfPlotClip">
-                <rect x="${L}" y="${T}" width="${PW}" height="${PH}" rx="5"/>
-            </clipPath>
-        </defs>
-
-        <!-- 圖面背景 -->
-        <rect x="${L}" y="${T}" width="${PW}" height="${PH}"
-              rx="5" fill="url(#mmtfGradient)"/>
-
-        <!-- 左下風險區色彩 -->
-        <rect x="${L}" y="${MID_Y}" width="${PW / 2}" height="${PH / 2}"
-              fill="#ff5a62" fill-opacity="0.45"/>
-
-        <!-- 右下看見未轉化區 -->
-        <rect x="${MID_X}" y="${MID_Y}" width="${PW / 2}" height="${PH / 2}"
-              fill="#36bafa" fill-opacity="0.48"/>
-
-        <!-- 裝飾性效能曲面等高線 -->
-        <g clip-path="url(#mmtfPlotClip)"
-           fill="none" stroke="#ffffff" stroke-opacity="0.48"
-           stroke-width="1.1">
-            <path d="M ${L} ${T + PH * 0.75} C ${L + PW * .18} ${T + PH * .67}, ${L + PW * .32} ${T + PH * .38}, ${L + PW * .52} ${T + PH * .26} S ${L + PW * .79} ${T + PH * .55}, ${L + PW} ${T + PH * .58}"/>
-            <path d="M ${L} ${T + PH * 0.82} C ${L + PW * .18} ${T + PH * .74}, ${L + PW * .35} ${T + PH * .45}, ${L + PW * .53} ${T + PH * .33} S ${L + PW * .82} ${T + PH * .61}, ${L + PW} ${T + PH * .65}"/>
-            <path d="M ${L} ${T + PH * 0.88} C ${L + PW * .20} ${T + PH * .80}, ${L + PW * .37} ${T + PH * .52}, ${L + PW * .54} ${T + PH * .40} S ${L + PW * .84} ${T + PH * .68}, ${L + PW} ${T + PH * .72}"/>
-            <path d="M ${L} ${T + PH * 0.62} C ${L + PW * .20} ${T + PH * .56}, ${L + PW * .35} ${T + PH * .22}, ${L + PW * .54} ${T + PH * .18} S ${L + PW * .80} ${T + PH * .44}, ${L + PW} ${T + PH * .47}"/>
-        </g>
-
-        <!-- 中央十字虛線：依要求保留 -->
-        <g stroke="#27364b" stroke-width="1.3"
-           stroke-dasharray="7 5" opacity="0.8">
-            <line x1="${MID_X}" y1="${T}" x2="${MID_X}" y2="${T + PH}"/>
-            <line x1="${L}" y1="${MID_Y}" x2="${L + PW}" y2="${MID_Y}"/>
-        </g>
-
-        <!-- 組織效能曲線：不顯示理論最佳點 -->
-        <path d="${curve}" fill="none"
-              stroke="#17233d" stroke-width="3"
-              stroke-linecap="round"/>
-
-        <!-- 象限內容 -->
-        ${quadrants.map(quadrantLabel).join('')}
-
-        <!-- 本次結果定位點 -->
-        <g>
-            <circle cx="${px}" cy="${py}" r="12"
-                    fill="#d40000" stroke="#ffffff" stroke-width="3.5"/>
-
-            <line x1="${px + 7}" y1="${py + 7}"
-                  x2="${px + 28}" y2="${py + 28}"
-                  stroke="#d40000" stroke-width="2.5"/>
-
-            <rect x="${px + 25}" y="${py + 22}"
-                  width="165" height="56" rx="8"
-                  fill="#b80000" stroke="#ffffff" stroke-width="1.2"/>
-
-            <text x="${px + 107}" y="${py + 44}"
-                  text-anchor="middle" font-size="16"
-                  font-weight="700" fill="#ffffff">本次結果位置</text>
-
-            <text x="${px + 107}" y="${py + 66}"
-                  text-anchor="middle" font-size="16"
-                  fill="#ffffff">(${awareness.toFixed(1)}, ${action.toFixed(1)})</text>
-        </g>
-
-        <!-- 座標軸 -->
-        <g stroke="#14213d" stroke-width="4" fill="none">
-            <line x1="${L}" y1="${T + PH}" x2="${L}" y2="${T - 8}"/>
-            <line x1="${L}" y1="${T + PH}" x2="${L + PW + 8}" y2="${T + PH}"/>
-        </g>
-
-        <path d="M ${L} ${T - 12} l -9 17 h 18 z" fill="#14213d"/>
-        <path d="M ${L + PW + 14} ${T + PH} l -17 -9 v 18 z" fill="#14213d"/>
-
-        <text x="${L - 28}" y="${T + 12}"
-              font-size="18" fill="#14213d">高</text>
-        <text x="${L - 28}" y="${T + PH}"
-              font-size="18" fill="#14213d">低</text>
-        <text x="${L}" y="${T + PH + 36}"
-              font-size="18" fill="#14213d">低</text>
-        <text x="${L + PW}" y="${T + PH + 36}"
-              text-anchor="end" font-size="18" fill="#14213d">高</text>
-
-        <text x="${L + PW / 2}" y="${H - 18}"
-              text-anchor="middle" font-size="22"
-              font-weight="700" fill="#14213d">
-            組織資訊與感知基礎（Awareness）
-        </text>
-
-        <text x="25" y="${T + PH / 2}"
-              transform="rotate(-90 25 ${T + PH / 2})"
-              text-anchor="middle" font-size="21"
-              font-weight="700" fill="#14213d">
-            組織回應與行動能力（Action）
-        </text>
-
-        <!-- 外框 -->
-        <rect x="${L}" y="${T}" width="${PW}" height="${PH}"
-              fill="none" stroke="#14213d" stroke-width="1.5"/>
-    </svg>`;
+function drawQuadrant(){
+ const svg=document.getElementById('quadrantChart');
+ const L=88,R=700,T=24,B=430,W=R-L,H=B-T;
+ const x=v=>L+(v/5)*W, y=v=>B-(v/5)*H;
+ const tx=x(3.65),ty=y(4.05),px=x(quadrantX),py=y(quadrantY);
+ let s=`<defs>
+ <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe59a"/><stop offset="1" stop-color="#fff7dc"/></linearGradient>
+ <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9f3ad"/><stop offset="1" stop-color="#e8ffe8"/></linearGradient>
+ <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffaaa5"/><stop offset="1" stop-color="#ffe0dc"/></linearGradient>
+ <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9f1ff"/><stop offset="1" stop-color="#a9dfff"/></linearGradient>
+ <radialGradient id="qpeak"><stop offset="0" stop-color="#19e56b" stop-opacity=".92"/><stop offset=".55" stop-color="#54e6ad" stop-opacity=".48"/><stop offset="1" stop-color="#35c9ff" stop-opacity="0"/></radialGradient>
+ <clipPath id="qclip"><rect x="${L}" y="${T}" width="${W}" height="${H}" rx="2"/></clipPath>
+ </defs>`;
+ const midX=x(2.5),midY=y(2.5);
+ s+=`<rect x="${L}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q2bg)"/><rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/><rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/><rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>`;
+ s+=`<g clip-path="url(#qclip)"><ellipse cx="${tx}" cy="${ty}" rx="190" ry="155" fill="url(#qpeak)"/>`;
+ // soft efficiency contours flowing through the theoretical high-high region
+ for(let i=0;i<9;i++){
+   const yy=365-i*29, bend=tx-70+i*5, endY=yy-150+i*8;
+   s+=`<path d="M ${L-8} ${yy} C ${L+100} ${yy-75}, ${bend-80} ${endY+80}, ${bend} ${endY} S ${R-100} ${endY+42}, ${R+15} ${yy-120+i*9}" fill="none" stroke="#fff" stroke-width="1.2" opacity=".64"/>`;
+ }
+ s+=`<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.65)} ${y(4.05)}" fill="none" stroke="#172b24" stroke-width="2.3" stroke-dasharray="7 5"/>`;
+ s+=`</g>`;
+ s+=`<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.5"/>`;
+ // quadrant heading pills
+ const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="29" rx="7" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+19}" text-anchor="middle" font-size="13" font-weight="800" fill="#182a27">${label}</text>`;
+ s+=pill(L+18,T+16,176,'Ⅱ 潛能未釋放區','#fff8e8','#c98237');
+ s+=pill(R-194,T+16,176,'Ⅰ 最佳運作區','#e5ffe5','#4a9c55');
+ s+=pill(L+18,midY+16,176,'Ⅲ 失衡風險區','#fff0ee','#d75b54');
+ s+=pill(R-194,midY+16,176,'Ⅳ 看見未轉化區','#eef8ff','#5485d9');
+ // compact, consistent 12px body text inside each quadrant
+ s+=`<g font-size="12" fill="#26332f">
+ <text x="${L+23}" y="${T+69}"><tspan x="${L+23}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+23}" dy="17">• 但資訊基礎與問題覺察不足</tspan><tspan x="${L+23}" dy="17">• 需補足透明回饋機制</tspan></text>
+ <text x="${R-22}" y="${T+69}" text-anchor="end"><tspan x="${R-22}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${R-22}" dy="17">• 流程順暢、發聲安全</tspan><tspan x="${R-22}" dy="17">• 支持協作與持續學習</tspan></text>
+ <text x="${L+23}" y="${midY+69}"><tspan x="${L+23}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+23}" dy="17">• 流動受阻、發聲不足</tspan><tspan x="${L+23}" dy="17">• 優先建立回報與支持</tspan></text>
+ <text x="${R-22}" y="${midY+69}" text-anchor="end"><tspan x="${R-22}" dy="0">• 能看見問題與風險</tspan><tspan x="${R-22}" dy="17">• 但未有效轉化為行動</tspan><tspan x="${R-22}" dy="17">• 強化資源配置與追蹤</tspan></text></g>`;
+ // fixed theoretical optimum marker and callout
+ const starPoints=Array.from({length:10},(_,i)=>{const a=-Math.PI/2+i*Math.PI/5;const rr=i%2===0?12:5.5;return `${tx+Math.cos(a)*rr},${ty+Math.sin(a)*rr}`}).join(' ');
+ const labelX=Math.min(tx+25,R-152),labelY=Math.max(T+58,ty-55);
+ s+=`<polygon points="${starPoints}" fill="#e11d2e" stroke="#fff" stroke-width="2"/><path d="M ${tx+8} ${ty+6} L ${labelX+3} ${labelY+26}" stroke="#e11d2e" stroke-width="2.2"/><rect x="${labelX}" y="${labelY}" width="145" height="54" rx="6" fill="#fff" stroke="#e11d2e" stroke-width="1.4"/><rect x="${labelX}" y="${labelY}" width="145" height="20" rx="5" fill="#d7192d"/><text x="${labelX+72.5}" y="${labelY+14}" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="800">MMTF 理論最佳組態</text><text x="${labelX+72.5}" y="${labelY+34}" text-anchor="middle" font-size="9.5" fill="#b91c1c">四構面皆高</text>`;
+ // actual score point remains data-driven
+ const resultLabelX=Math.min(Math.max(px+12,L+8),R-128),resultLabelY=Math.min(Math.max(py-48,T+8),B-43);
+ s+=`<line x1="${px}" y1="${py}" x2="${px+13}" y2="${py-20}" stroke="#b31324" stroke-width="2"/><circle cx="${px}" cy="${py}" r="8" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="122" height="37" rx="5" fill="#b80c20" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+61}" y="${resultLabelY+14}" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="800">本次結果位置</text><text x="${resultLabelX+61}" y="${resultLabelY+28}" text-anchor="middle" font-size="9.5" fill="#fff">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+ // axes and scale cues
+ s+=`<path d="M ${L} ${B+1} L ${R+8} ${B+1} l -8 -5 m 8 5 l -8 5" fill="none" stroke="#111827" stroke-width="2.2"/><path d="M ${L} ${B} L ${L} ${T-8} l -5 8 m 5 -8 l 5 8" fill="none" stroke="#111827" stroke-width="2.2"/>`;
+ s+=`<text x="${L}" y="${B+20}" font-size="10.5" fill="#263746">低</text><text x="${R}" y="${B+20}" text-anchor="end" font-size="10.5" fill="#263746">高</text><text x="${L-12}" y="${T+5}" text-anchor="end" font-size="10.5" fill="#263746">高</text><text x="${L-12}" y="${B}" text-anchor="end" font-size="10.5" fill="#263746">低</text>`;
+ svg.innerHTML=s;
 }
 /* //////////////////////////////////////////////////////////////
    JS 模組 D / 雷達圖
