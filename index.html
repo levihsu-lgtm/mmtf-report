@@ -1,11 +1,26 @@
 <!DOCTYPE html>
+<!--
+MMTF 2.0 單檔模組化維護說明
+所有 HTML、CSS、JavaScript 都在同一個 index.html 內，沒有拆成外部檔案。
+使用「/////」與模組名稱作區隔，搜尋「模組 A /」「模組 B /」即可定位。
+常見更新位置：構面文字＝JS 模組 A；計分與網址＝JS 模組 B；象限圖＝JS 模組 C；
+雷達圖＝JS 模組 D；長條圖＝JS 模組 E；診斷分析＝JS 模組 F；顏色版面＝CSS 模組。
+請保留模組起訖標記與既有 HTML id，避免影響 JavaScript 更新頁面。
+-->
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="MMTF 組織診斷與顧問分析報告｜含浮水印與版權標示">
 <title>MMTF 動態組織診斷與理論／實證分析報告｜版權所有</title>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 01 / 網頁樣式 CSS：所有樣式都留在本檔，不需外部 CSS -->
+<!-- ////////////////////////////////////////////////////////////// -->
 <style>
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 A / 全站色彩、字體與基本版面
+   更新本區：全站色彩變數、字體、頁面背景、基本容器
+   ////////////////////////////////////////////////////////////// */
 :root{--navy:#0b416a;--ink:#17233b;--muted:#68778a;--line:#c9dce9;--red:#e62f3b;--mirror:#299bd9;--matrix:#439b67;--flow:#f28a18;--safe:#8950a0}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -16,6 +31,10 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 .report{max-width:1200px;margin:auto;position:relative;background:#fff;border:1px solid #d2e0eb;box-shadow:0 6px 25px #143b5517;overflow:hidden;isolation:isolate}
 .report:before{content:"MMTF｜許銘祥版權所有 ©";position:absolute;z-index:3;pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:clamp(34px,6vw,76px);font-weight:900;letter-spacing:3px;white-space:nowrap;color:rgba(9,61,99,.075);text-shadow:0 1px 0 rgba(255,255,255,.12)}
 .report:after{content:"MMTF © ALL RIGHTS RESERVED";position:absolute;z-index:3;pointer-events:none;top:19%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:clamp(15px,2vw,27px);font-weight:800;letter-spacing:2px;white-space:nowrap;color:rgba(9,61,99,.055)}
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 B / 報告抬頭與整體分數卡
+   更新本區：標題、風險卡、整體定義區
+   ////////////////////////////////////////////////////////////// */
 .hero{margin:8px 10px 0;padding:14px 20px 13px;background:linear-gradient(105deg,#0a355c,#07517b 65%,#0b416a);color:#fff;border-radius:5px;position:relative;z-index:1}
 .eyebrow{font-size:9px;letter-spacing:1.3px;opacity:.85}
 .hero h1{font-size:clamp(21px,2.5vw,34px);margin:3px 0 0;line-height:1.25}
@@ -30,6 +49,10 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 .definition h2{font-size:14px;margin:2px 0 7px;color:#163c65}
 .section-heading{position:relative;z-index:1;margin:4px 12px 7px;padding-left:10px;border-left:5px solid #1474a5;font-size:16px;color:#123c69}
 .dimensions{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:0 12px 9px}
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 C / 四構面卡片與診斷文字
+   更新本區：構面卡片、標籤、診斷分析區
+   ////////////////////////////////////////////////////////////// */
 .dimension{border:1px solid #d7e5ef;border-top:5px solid var(--c);border-radius:9px;padding:9px 10px;min-width:0;background:#fff}
 .dimension h3{font-size:13px;color:#102f5f;margin:0 0 5px;line-height:1.3}
 .dimension .tag{float:right;background:#ffe1e4;color:#cb1e2a;font-size:9px;padding:3px 5px;border-radius:4px}
@@ -59,6 +82,10 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 .footer .copyright{font-weight:800;letter-spacing:.4px}
 @media(max-width:850px){.top{grid-template-columns:1fr}.dimensions{grid-template-columns:repeat(2,minmax(0,1fr))}.below{grid-template-columns:1fr 1fr}.below .card:last-child{grid-column:1/-1}}
 @media(max-width:540px){body{padding:3px}.hero{margin:4px 4px 0;padding:12px}.top,.dimensions,.dashboard-image,.below{padding-left:6px;padding-right:6px}.dimensions{gap:5px}.dimension{padding:7px}.dimension h3{font-size:11px}.dimension p,.dimension ul{font-size:9px}.below{grid-template-columns:1fr}.below .card:last-child{grid-column:auto}.risk{gap:8px}.ring{width:56px;height:56px;flex-basis:56px}.ring span{width:43px;height:43px;font-size:18px}.report:before{font-size:34px}}
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 E / 手機與窄螢幕響應式版面
+   更新本區：手機顯示時的欄位排列與字級
+   ////////////////////////////////////////////////////////////// */
 @media print{body{padding:0;background:#fff}.toolbar{display:none}.report{border:0;box-shadow:none;max-width:none}.report:before,.report:after{position:fixed}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.dimension,.risk,.definition{break-inside:avoid}}
 
 /* 文獻實證區：橫向加寬並向右延伸 */
@@ -78,6 +105,10 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 .service-line a{color:#17466d;font-weight:800;text-decoration:underline;text-underline-offset:2px}
 
 
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 D / 象限圖、數據摘要、雷達圖與長條圖
+   更新本區：儀表板及圖表顯示樣式
+   ////////////////////////////////////////////////////////////// */
 .live-dashboard{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.85fr);gap:9px;padding:0 12px 9px}
 .live-side{display:flex;flex-direction:column;gap:9px;min-width:0}
 .panel-live{border:1px solid #d4e3ed;border-radius:8px;background:#fff;overflow:hidden;min-width:0}
@@ -155,6 +186,9 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 </style>
 </head>
 <body>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 02 / 報告 HTML 主架構：抬頭、總分卡、四構面區 -->
+<!-- ////////////////////////////////////////////////////////////// -->
 
 <main class="report" id="report">
 <header class="hero">
@@ -169,6 +203,9 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 <h2 class="section-heading">四構面綜合分析</h2>
 <section class="dimensions" id="dimensions"></section>
 
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 03 / 動態儀表板 HTML：象限圖與本次數據摘要 -->
+<!-- ////////////////////////////////////////////////////////////// -->
 <section class="live-dashboard">
   <div class="live-main panel-live">
     <h2>四象限動態定位｜組織效能理論參考圖</h2>
@@ -193,6 +230,9 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
     </section>
   </div>
 </section>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 04 / 圖表 HTML：雷達圖與長條圖 -->
+<!-- ////////////////////////////////////////////////////////////// -->
 <section class="live-visuals">
   <section class="panel-live">
     <h2>四構面雷達圖（依數據更新）</h2>
@@ -203,6 +243,9 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
     <svg id="liveBars" viewBox="0 0 420 235" role="img" aria-label="四構面動態長條圖"></svg>
   </section>
 </section>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 05 / 診斷與顧問資訊 HTML -->
+<!-- ////////////////////////////////////////////////////////////// -->
 <section class="live-bottom">
   <article class="panel-live" style="grid-column:1 / -1">
     <h2>延伸分析（依使用者需求提供）</h2>
@@ -242,18 +285,31 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 <footer class="footer">
 <strong>MMTF 組織診斷與顧問分析報告</strong><br>
 <span class="copyright">版權所有 © MMTF許銘祥｜未經授權，請勿複製、散布、轉售或移除版權標示。</span><br>
-浮水印與版權標示為報告識別用途；MMTF 專業診斷模組 v2.0 (邏輯引擎版) |<br>
+浮水印與版權標示為報告識別用途；正式發布前請填入實際權利人名稱、聯絡方式與年份。<br>
+本報告為管理診斷參考；分級門檻、座標映射及理論最佳組態應依研究設計與實證資料持續檢驗。
 </footer>
 </main>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 06 / JavaScript 計分與報告更新引擎（本檔內） -->
+<!-- ////////////////////////////////////////////////////////////// -->
 <script>
 (function(){
 'use strict';
+/* //////////////////////////////////////////////////////////////
+   JS 模組 A / 四構面設定資料
+   只要修改構面名稱、顏色、描述或行動建議，請改這一區。
+   ////////////////////////////////////////////////////////////// */
 const dims=[
  {key:'mirror',name:'Mirror',zh:'鏡像構面',color:'#299bd9',icon:'◉',theory:'資訊透明、問題覺察與回饋',desc:'檢視組織是否能辨識問題、揭露資訊並讓回饋被看見。',actions:['建立領導回應與透明機制','強化問題揭露、回饋回應與主管言行一致性']},
  {key:'matrix',name:'Matrix',zh:'結構構面',color:'#439b67',icon:'▦',theory:'權責配置、制度支持與協作',desc:'檢視制度、責任分工、資源配置是否支持問題處理。',actions:['釐清權責與決策邊界','確認制度是否真正支持跨部門協作']},
  {key:'flow',name:'Flow',zh:'流動構面',color:'#f28a18',icon:'●',theory:'資訊傳遞、異常回報與流程',desc:'檢視資訊是否能及時傳遞，並轉化為協作及行動。',actions:['盤點資訊交接與異常回報流程','建立跨部門回覆時限與追蹤回應']},
  {key:'safe',name:'Safety',zh:'心理安全',color:'#8950a0',icon:'⬟',theory:'發聲安全、異議表達與團隊學習',desc:'檢視成員是否能提出疑慮、承認錯誤及表達不同意見。',actions:['建立保密且反報復的發聲管道','訓練主管以非懲罰方式回應問題與錯誤']}
 ];
+/* //////////////////////////////////////////////////////////////
+   JS 模組 B / 網址參數與分數計算
+   網址參數：mirror、matrix、flow、safe；每項有效分數 0–25。
+   修改計分公式時，請同步檢查總分、平均與象限座標。
+   ////////////////////////////////////////////////////////////// */
 const params=new URLSearchParams(location.search);
 const defaults={mirror:9,matrix:7,flow:7,safe:7};
 const scores={},means={};
@@ -287,6 +343,10 @@ document.getElementById('liveScoreRows').innerHTML=dims.map(d=>{
 document.getElementById('liveTotal').textContent=String(total);
 document.getElementById('liveMean').textContent=overall.toFixed(2);
 
+/* //////////////////////////////////////////////////////////////
+   JS 模組 C / 四象限定位圖
+   只修改象限圖的 SVG、座標、色彩與標籤時，編輯此函式。
+   ////////////////////////////////////////////////////////////// */
 function drawQuadrant(){
  const svg=document.getElementById('quadrantChart');
  const L=88,R=700,T=24,B=430,W=R-L,H=B-T;
@@ -335,6 +395,10 @@ function drawQuadrant(){
  s+=`<text x="${L}" y="${B+20}" font-size="10.5" fill="#263746">低</text><text x="${R}" y="${B+20}" text-anchor="end" font-size="10.5" fill="#263746">高</text><text x="${L-12}" y="${T+5}" text-anchor="end" font-size="10.5" fill="#263746">高</text><text x="${L-12}" y="${B}" text-anchor="end" font-size="10.5" fill="#263746">低</text>`;
  svg.innerHTML=s;
 }
+/* //////////////////////////////////////////////////////////////
+   JS 模組 D / 雷達圖
+   只修改雷達圖 SVG、刻度、標籤與配色時，編輯此函式。
+   ////////////////////////////////////////////////////////////// */
 function drawRadar(){
  const svg=document.getElementById('liveRadar'),cx=160,cy=116,r=75,angles=[-90,0,90,180];
  const pt=(rr,a)=>[cx+Math.cos(a*Math.PI/180)*rr,cy+Math.sin(a*Math.PI/180)*rr];
@@ -347,6 +411,10 @@ function drawRadar(){
  s+=`<text x="${cx}" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#18365c">Mirror ${means.mirror.toFixed(1)}</text><text x="250" y="${cy+4}" font-size="11" font-weight="700" fill="#18365c">Matrix ${means.matrix.toFixed(1)}</text><text x="${cx}" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#18365c">Flow ${means.flow.toFixed(1)}</text><text x="68" y="${cy+4}" text-anchor="end" font-size="11" font-weight="700" fill="#18365c">Safety ${means.safe.toFixed(1)}</text>`;
  svg.innerHTML=s;
 }
+/* //////////////////////////////////////////////////////////////
+   JS 模組 E / 分數長條圖
+   只修改長條、數值標籤與刻度時，編輯此函式。
+   ////////////////////////////////////////////////////////////// */
 function drawBars(){
  const svg=document.getElementById('liveBars'),x0=90,w=285,y0=34,row=44;let s='';
  for(let t=0;t<=5;t++){const xx=x0+w*t/5;s+=`<line x1="${xx}" y1="23" x2="${xx}" y2="211" stroke="#d2dbe3"/><text x="${xx}" y="228" text-anchor="middle" font-size="10" fill="#41566b">${t}</text>`;}
@@ -354,6 +422,10 @@ function drawBars(){
  dims.forEach((d,i)=>{const v=means[d.key],yy=y0+i*row,bw=w*v/5;s+=`<text x="${x0-8}" y="${yy+15}" text-anchor="end" font-size="11" fill="#18365c">${d.name}</text><rect x="${x0}" y="${yy}" width="${bw}" height="22" rx="2" fill="${d.color}"/><text x="${x0+bw+5}" y="${yy+15}" font-size="11" font-weight="700" fill="${v<2.5?'#d32635':v<3.5?'#9b5b10':'#176b35'}">${v.toFixed(1)}</text>`;});
  svg.innerHTML=s;
 }
+/* //////////////////////////////////////////////////////////////
+   JS 模組 F / 數據導向診斷文字
+   更新警訊、組合判讀、反思問題與判讀界線，請改此函式。
+   ////////////////////////////////////////////////////////////// */
 function renderText(){
   // 僅呈現三項內容：高優先警訊、依分數組合的犀利判讀、判讀界線。
   // 本次只修改「數據導向診斷分析」文字區，其他版面、圖表、分數與公式不變。
@@ -405,6 +477,10 @@ function renderText(){
   const output = `${highPriority}<p>${sharp}</p><p><b>請對照自己的經驗：</b>${reflection.join(' ') } 若上述描述與你的經驗不一致，也可能表示目前的平均分數未呈現題項或情境差異。</p><p><b>判讀界線：</b>本分析依四構面自評分數提供可能的解讀方向，不會單獨證明組織中某種問題必然存在，也不能據此推斷因果或統計顯著性。實際情況仍需由使用者經驗、題項回答及其他資料確認。</p>`;
   document.getElementById('dynamicInterpretation').innerHTML = output;
 }
+/* //////////////////////////////////////////////////////////////
+   JS 模組 G / 啟動區
+   一般只需呼叫各模組，不建議在此加入診斷內容。
+   ////////////////////////////////////////////////////////////// */
 drawQuadrant();drawRadar();drawBars();renderText();
 })();
 </script>
