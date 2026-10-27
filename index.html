@@ -242,7 +242,7 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 <footer class="footer">
 <strong>MMTF 組織診斷與顧問分析報告</strong><br>
 <span class="copyright">版權所有 © MMTF許銘祥｜未經授權，請勿複製、散布、轉售或移除版權標示。</span><br>
-浮水印與版權標示為報告識別用途，MMTF 專業診斷模組 v2.0 (邏輯引擎版)<br>
+浮水印與版權標示為報告識別用途；MMTF 專業診斷模組 v2.0 (邏輯引擎版) |。<br>
 </footer>
 </main>
 <script>
@@ -257,10 +257,14 @@ const dims=[
 const params=new URLSearchParams(location.search);
 const defaults={mirror:9,matrix:7,flow:7,safe:7};
 const scores={},means={};
+// 相容既有網址參數：Safety 同時接受 safe 與 safety，優先採用 safe。
+const parameterAliases={mirror:['mirror'],matrix:['matrix'],flow:['flow'],safe:['safe','safety']};
 dims.forEach(d=>{
- const raw=params.get(d.key);
+ const keys=parameterAliases[d.key]||[d.key];
+ let raw=null;
+ for(const key of keys){ if(params.has(key)){ raw=params.get(key); break; } }
  const n=raw===null?defaults[d.key]:Number(raw);
- scores[d.key]=(Number.isFinite(n)&&Number.isInteger(n)&&n>=0&&n<=25)?n:defaults[d.key];
+ scores[d.key]=(raw!==null&&Number.isFinite(n)&&Number.isInteger(n)&&n>=0&&n<=25)?n:defaults[d.key];
  means[d.key]=scores[d.key]/5;
 });
 const total=dims.reduce((s,d)=>s+scores[d.key],0);
@@ -355,58 +359,89 @@ function drawBars(){
  svg.innerHTML=s;
 }
 function renderText(){
-  // 僅呈現三項內容：高優先警訊、依分數組合的犀利判讀、判讀界線。
-  // 本次只修改「數據導向診斷分析」文字區，其他版面、圖表、分數與公式不變。
-  const lowThreshold = 2.5;
-  const veryLowThreshold = 1.5;
+  // 僅呈現使用者指定的三項內容；其餘報告區塊不變。
+  // 分級採每構面總分：0–11低、12–17中、18–25高。分級是本報告操作規則，非已驗證常模。
   const scoreList = [
-    {key:'mirror', name:'Mirror', zh:'問題覺察／回饋', value:means.mirror},
-    {key:'matrix', name:'Matrix', zh:'組織結構／責任承接', value:means.matrix},
-    {key:'flow', name:'Flow', zh:'資訊流動／協作', value:means.flow},
-    {key:'safe', name:'Safety', zh:'心理安全／表達意見', value:means.safe}
+    {key:'mirror', name:'Mirror', zh:'問題覺察／回饋', value:scores.mirror, mean:means.mirror},
+    {key:'matrix', name:'Matrix', zh:'組織結構／責任承接', value:scores.matrix, mean:means.matrix},
+    {key:'flow', name:'Flow', zh:'資訊流動／協作', value:scores.flow, mean:means.flow},
+    {key:'safe', name:'Safety', zh:'心理安全／表達意見', value:scores.safe, mean:means.safe}
   ];
-  const veryLow = scoreList.filter(d => d.value < veryLowThreshold);
-  const low = scoreList.filter(d => d.value < lowThreshold);
-  const fmt = d => `${d.name}（${d.value.toFixed(1)}/5）`;
-  const highPriority = veryLow.length
-    ? `<p><b>高優先警訊｜${veryLow.map(d=>d.name).join('、')}明顯偏低：</b>這不是適合只用「還有改善空間」帶過的訊號。填答者在這些面向的評價非常低，應優先核對是否存在反覆發生、卻未被有效處理的工作經驗。分數本身仍不能證明問題的成因或普遍程度。</p>`
-    : low.length
-      ? `<p><b>高優先警訊｜${low.map(d=>d.name).join('、')}低於參考中點：</b>這些面向是本次自評中應優先核對的部分。請確認是否有反覆發生、卻未被有效處理的工作經驗；分數本身仍不能證明問題的成因或普遍程度。</p>`
-      : `<p><b>高優先警訊｜目前沒有構面低於本報告設定的參考中點：</b>這不代表組織沒有問題。仍應核對是否有個別題目、特定情境或部門經驗被平均分數掩蓋；分數本身不能證明問題的成因或普遍程度。</p>`;
-
-  let sharp = '';
-  if (means.mirror < lowThreshold && means.safe < lowThreshold) {
-    sharp = `<b>犀利判讀｜管理者可能看不到完整現場：</b>當問題覺察／回饋（${means.mirror.toFixed(1)}）與心理安全（${means.safe.toFixed(1)}）兩者都偏低，風險不只是「溝通不佳」，而可能是問題不容易浮現，或成員即使察覺問題，也不認為提出來會有用。若實際情境吻合，管理端收到的資訊可能不完整；但需要透過訪談或事件紀錄確認。`;
-  } else if (means.safe >= 3.5 && (means.matrix < lowThreshold || means.flow < lowThreshold)) {
-    const weak = [means.matrix < lowThreshold ? 'Matrix（組織結構／責任承接）' : '', means.flow < lowThreshold ? 'Flow（資訊流動／協作）' : ''].filter(Boolean).join('與');
-    sharp = `<b>犀利判讀｜員工說了，事情仍可能沒下文：</b>Safety 為 ${means.safe.toFixed(1)}/5，但${weak}偏低。值得直接檢查：員工提出問題後，是否有人接手、回覆、追蹤並完成處理？如果沒有，瓶頸可能不是「敢不敢說」，而是「說了之後有沒有人處理」。`;
-  } else if (means.matrix >= 3.5 && means.flow < lowThreshold) {
-    sharp = `<b>犀利判讀｜有制度，不等於事情能推動：</b>Matrix 為 ${means.matrix.toFixed(1)}/5，而 Flow 只有 ${means.flow.toFixed(1)}/5。分工或制度安排的自評相對較高，但資訊交接、跨部門協作或回覆機制可能沒有同步運作。請核對「責任寫在流程上」與「實際有人完成交接」是否是兩回事。`;
-  } else if (means.flow >= 3.5 && means.safe < lowThreshold) {
-    sharp = `<b>犀利判讀｜資訊在流動，真話未必在流動：</b>Flow 為 ${means.flow.toFixed(1)}/5，但 Safety 只有 ${means.safe.toFixed(1)}/5。例行訊息能傳遞，不代表成員敢提出異議、錯誤或壞消息；值得確認不受歡迎的訊息是否也能安全地往上傳。`;
-  } else if (means.mirror >= 3.5 && means.matrix < lowThreshold) {
-    sharp = `<b>犀利判讀｜問題看得見，責任卻可能接不住：</b>Mirror 為 ${means.mirror.toFixed(1)}/5，而 Matrix 只有 ${means.matrix.toFixed(1)}/5。成員可能已能辨識問題，但權責、決策權或處理流程仍不清楚。若問題一再被指出，卻總在「等決定、等指示、等別部門」中停住，應核對是否存在責任承接斷點。`;
-  } else if (means.mirror - means.safe >= 0.8) {
-    sharp = `<b>犀利判讀｜知道問題在哪裡，不代表敢把問題說出來：</b>Mirror 為 ${means.mirror.toFixed(1)}/5，高於 Safety 的 ${means.safe.toFixed(1)}/5。可核對團隊是否能辨識問題，但成員未必覺得提出異議或回報錯誤是安全的。`;
-  } else if (means.safe - means.mirror >= 0.8) {
-    sharp = `<b>犀利判讀｜願意表達，不代表問題已被共同理解：</b>Safety 為 ${means.safe.toFixed(1)}/5，高於 Mirror 的 ${means.mirror.toFixed(1)}/5。可核對成員是否願意發言，但回饋、資訊整理或問題辨識仍未形成共同理解。`;
+  const low = scoreList.filter(d=>d.value<12);
+  const mid = scoreList.filter(d=>d.value>=12&&d.value<18);
+  const high = scoreList.filter(d=>d.value>=18);
+  const fmt = d=>`${d.name}（${d.value}/25；${d.mean.toFixed(1)}/5）`;
+  const lowNames = low.map(d=>d.name).join('、');
+  let highPriority;
+  if(low.length===4){
+    highPriority=`<p><b>高優先警訊｜四構面皆落在低分區：</b>Mirror ${scores.mirror}/25、Matrix ${scores.matrix}/25、Flow ${scores.flow}/25、Safety ${scores.safe}/25，四個面向均需優先核對。這表示本次填答者對問題覺察／回饋、責任承接、資訊流動及心理安全的評價都偏低；不能僅憑這份分數推論所有員工或整個組織都有相同經驗。應先逐項確認是否有具體、反覆發生而未獲有效處理的工作事件。</p>`;
+  } else if(low.length>=2){
+    highPriority=`<p><b>高優先警訊｜${lowNames}明顯偏低：</b>${low.map(fmt).join('；')}。這些面向不宜以「還有改善空間」帶過，應優先核對是否有具體、反覆發生而未獲有效處理的工作經驗。${mid.length?`另有 ${mid.map(d=>d.name).join('、')} 落在中間區間，需留意其是否加重低分面向的影響。`:''}分數不能單獨證明問題成因或普遍程度。</p>`;
+  } else if(low.length===1){
+    highPriority=`<p><b>高優先警訊｜${low[0].name}明顯偏低：</b>${fmt(low[0])}，是本次最需要優先核對的面向。應確認是否對應到具體、反覆發生而未獲有效處理的工作經驗；其他構面分數較高也不能抵銷此面向的風險。</p>`;
   } else {
-    const lowest = [...scoreList].sort((a,b)=>a.value-b.value)[0];
-    sharp = `<b>犀利判讀｜優先核對最低分面向：</b>${fmt(lowest)} 是本次相對最弱的構面。這不代表其他面向沒有問題，而是應先確認此分數是否對應到具體、反覆出現的工作經驗，避免只看總分而忽略局部情境。`;
+    highPriority=`<p><b>高優先警訊｜目前沒有構面落在低分區：</b>這不代表沒有問題。${mid.length?`${mid.map(fmt).join('；')}仍需核對。`:''}平均分數可能掩蓋特定題項、部門或事件的差異，仍應對照實際經驗。</p>`;
   }
 
-  const reflection = [];
-  if (means.mirror < lowThreshold) reflection.push('最近一次遇到問題時，問題是否容易被看見、被承認？');
-  if (means.matrix < lowThreshold) reflection.push('當問題出現時，責任人、決策權與後續處理方式是否清楚？');
-  if (means.flow < lowThreshold) reflection.push('需要的資訊是否完整傳到正確的人，交接後是否有回覆？');
-  if (means.safe < lowThreshold) reflection.push('提出疑慮、承認錯誤或表達不同意見時，對方如何回應？');
-  if (!reflection.length) reflection.push('最近一次遇到工作問題時，問題是否被看見、責任是否清楚、資訊是否完整傳遞，以及提出疑慮後是否得到有效回應？');
+  // 使用多條件組合，而不是只輸出第一個符合條件的固定標籤，避免其他低分構面被忽略。
+  const findings=[];
+  const isLow=k=>scores[k]<12;
+  const isHigh=k=>scores[k]>=18;
+  if(isLow('mirror')&&isLow('safe')){
+    findings.push(`<b>管理者可能看不到完整現場：</b>Mirror（${scores.mirror}/25）與 Safety（${scores.safe}/25）同時偏低，可能代表問題不容易被辨識／回饋，或成員即使察覺問題，也不確定提出來是否有用。應核對壞消息是否能被看見、提出疑慮後如何被回應；這不是單憑分數就能確認的事實。`);
+  }
+  if(isLow('matrix')&&isLow('flow')){
+    findings.push(`<b>問題可能卡在責任承接與資訊交接：</b>Matrix（${scores.matrix}/25）與 Flow（${scores.flow}/25）同時偏低，需確認誰負責接手、資訊是否完整交接、處理進度是否回覆，以及跨部門問題是否反覆停滯。`);
+  }
+  if(isHigh('safe')&&(isLow('matrix')||isLow('flow'))){
+    const weak=[isLow('matrix')?'Matrix 責任承接':'',isLow('flow')?'Flow 資訊流動':''].filter(Boolean).join('、');
+    findings.push(`<b>願意表達，不代表問題有被處理：</b>Safety 為 ${scores.safe}/25（相對較高），但${weak}偏低。可核對成員提出問題後是否有人負責、回覆、追蹤並結案；若沒有，瓶頸可能在處理機制，而不一定是發聲意願。`);
+  }
+  if(isHigh('matrix')&&isLow('flow')){
+    findings.push(`<b>制度或分工較清楚，資訊仍可能卡住：</b>Matrix 為 ${scores.matrix}/25、Flow 為 ${scores.flow}/25。應核對正式流程、責任表與實際交接是否一致，避免把「制度存在」誤當成「資訊確實到位」。`);
+  }
+  if(isHigh('flow')&&isLow('safe')){
+    findings.push(`<b>例行資訊能流動，不代表疑慮也能安全表達：</b>Flow 為 ${scores.flow}/25，而 Safety 為 ${scores.safe}/25。可核對一般工作訊息是否順暢，但錯誤、異議或不受歡迎的消息是否仍難以向上反映。`);
+  }
+  if(isHigh('mirror')&&isLow('matrix')){
+    findings.push(`<b>問題可能看得見，責任卻接不住：</b>Mirror 為 ${scores.mirror}/25、Matrix 為 ${scores.matrix}/25。需確認問題被指出後，是否有明確的決策權、責任人與處理期限，避免問題停在「大家都知道」卻沒有後續。`);
+  }
+  if(isHigh('mirror')&&isLow('safe')){
+    findings.push(`<b>看得見問題，不代表敢把問題說出來：</b>Mirror 為 ${scores.mirror}/25、Safety 為 ${scores.safe}/25。可核對問題是否被私下察覺，卻未在正式會議、回報或決策流程中被提出。`);
+  }
+  if(isHigh('safe')&&isLow('mirror')){
+    findings.push(`<b>願意表達，不代表已形成共同理解：</b>Safety 為 ${scores.safe}/25、Mirror 為 ${scores.mirror}/25。可核對雖然成員願意發言，但問題是否被整理、確認、回饋並形成一致的問題認知。`);
+  }
+  if(isHigh('matrix')&&isLow('safe')){
+    findings.push(`<b>制度明確，不代表成員感到可以提出異議：</b>Matrix 為 ${scores.matrix}/25、Safety 為 ${scores.safe}/25。可核對正式制度是否提供安全的提問、錯誤回報與不同意見表達空間。`);
+  }
+  if(isHigh('flow')&&isLow('matrix')){
+    findings.push(`<b>資訊有傳遞，責任未必明確：</b>Flow 為 ${scores.flow}/25、Matrix 為 ${scores.matrix}/25。需確認訊息傳到相關人員後，是否有明確的決策者、執行者與結案責任。`);
+  }
+  if(!findings.length){
+    const minVal=Math.min(...scoreList.map(d=>d.value));
+    const weakest=scoreList.filter(d=>d.value===minVal);
+    findings.push(`<b>優先核對相對弱項：</b>${weakest.map(fmt).join('、')}為本次最低分。若構面分數接近，避免過度解讀細微差距；應回到題項與具體事件，確認哪一種工作情境最能解釋填答者的評價。`);
+  }
+  const gaps=[];
+  for(let i=0;i<scoreList.length;i++) for(let j=i+1;j<scoreList.length;j++){
+    const a=scoreList[i],b=scoreList[j];
+    if(Math.abs(a.value-b.value)>=6) gaps.push(`${a.name} ${a.value}分與 ${b.name} ${b.value}分相差 ${Math.abs(a.value-b.value)} 分`);
+  }
+  if(gaps.length) findings.push(`<b>構面落差提醒：</b>${gaps.join('；')}。分差可提示不同面向的體驗不一致，但不能單憑差距推斷原因或統計顯著性。`);
 
-  const output = `${highPriority}<p>${sharp}</p><p><b>請對照自己的經驗：</b>${reflection.join(' ') } 若上述描述與你的經驗不一致，也可能表示目前的平均分數未呈現題項或情境差異。</p><p><b>判讀界線：</b>本分析依四構面自評分數提供可能的解讀方向，不會單獨證明組織中某種問題必然存在，也不能據此推斷因果或統計顯著性。實際情況仍需由使用者經驗、題項回答及其他資料確認。</p>`;
-  document.getElementById('dynamicInterpretation').innerHTML = output;
+  const reflection=[];
+  if(isLow('mirror')) reflection.push('最近一次遇到問題時，問題是否容易被看見、承認並獲得回饋？');
+  if(isLow('matrix')) reflection.push('責任人、決策權與後續處理方式是否清楚？');
+  if(isLow('flow')) reflection.push('資訊是否完整傳到正確的人，交接後是否有人回覆？');
+  if(isLow('safe')) reflection.push('提出疑慮、承認錯誤或表達不同意見時，對方如何回應？');
+  if(!reflection.length) reflection.push('最近一次工作問題是否被看見、責任是否清楚、資訊是否完整傳遞，以及提出疑慮後是否得到有效回應？');
+  const lowDetail=`<p><b>數據焦點：</b>四構面總分 ${total}/100，整體平均 ${overall.toFixed(2)}/5；各構面分數為 ${scoreList.map(fmt).join('；')}。本報告分級為低分 0–11、中間 12–17、相對較高 18–25（每構面滿分 25），屬目前的操作化規則，尚不能視為經常模驗證的診斷標準。</p>`;
+  const output=`${highPriority}<p><b>犀利判讀｜依本次分數組合：</b>${findings.join('<br><br>')}</p>${lowDetail}<p><b>請對照自己的經驗：</b>${reflection.join(' ')}若描述與你的經驗不一致，應進一步檢視題項回答、填答情境或部門差異，不宜勉強套用判讀。</p><p><b>判讀界線：</b>本分析依四構面自評分數提供可能的核對方向，不會單獨證明組織中某種問題必然存在，也不能據此推斷因果或統計顯著性。實際情況仍需由使用者經驗、題項回答及其他資料確認。</p>`;
+  document.getElementById('dynamicInterpretation').innerHTML=output;
 }
 drawQuadrant();drawRadar();drawBars();renderText();
-})(); 
+})();
 </script>
 </body>
 </html>
