@@ -346,11 +346,13 @@ document.getElementById('liveMean').textContent=overall.toFixed(2);
    JS 模組 C / 四象限定位圖
    只修改象限圖的 SVG、座標、色彩與標籤時，編輯此函式。
    ////////////////////////////////////////////////////////////// */
+
 function drawQuadrant(){
  const svg=document.getElementById('quadrantChart');
  const L=88,R=700,T=24,B=430,W=R-L,H=B-T;
  const x=v=>L+(v/5)*W, y=v=>B-(v/5)*H;
- const tx=x(3.65),ty=y(4.05),px=x(quadrantX),py=y(quadrantY);
+ const px=x(quadrantX),py=y(quadrantY);
+
  let s=`<defs>
  <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe59a"/><stop offset="1" stop-color="#fff7dc"/></linearGradient>
  <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9f3ad"/><stop offset="1" stop-color="#e8ffe8"/></linearGradient>
@@ -359,39 +361,53 @@ function drawQuadrant(){
  <radialGradient id="qpeak"><stop offset="0" stop-color="#19e56b" stop-opacity=".92"/><stop offset=".55" stop-color="#54e6ad" stop-opacity=".48"/><stop offset="1" stop-color="#35c9ff" stop-opacity="0"/></radialGradient>
  <clipPath id="qclip"><rect x="${L}" y="${T}" width="${W}" height="${H}" rx="2"/></clipPath>
  </defs>`;
+
  const midX=x(2.5),midY=y(2.5);
+
  s+=`<rect x="${L}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q2bg)"/><rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/><rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/><rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>`;
- s+=`<g clip-path="url(#qclip)"><ellipse cx="${tx}" cy="${ty}" rx="190" ry="155" fill="url(#qpeak)"/>`;
- // soft efficiency contours flowing through the theoretical high-high region
+
+ s+=`<g clip-path="url(#qclip)"><ellipse cx="${x(3.65)}" cy="${y(4.05)}" rx="190" ry="155" fill="url(#qpeak)"/>`;
+
+ // 柔和組織效能曲面線條
  for(let i=0;i<9;i++){
-   const yy=365-i*29, bend=tx-70+i*5, endY=yy-150+i*8;
+   const yy=365-i*29, bend=x(3.65)-70+i*5, endY=yy-150+i*8;
    s+=`<path d="M ${L-8} ${yy} C ${L+100} ${yy-75}, ${bend-80} ${endY+80}, ${bend} ${endY} S ${R-100} ${endY+42}, ${R+15} ${yy-120+i*9}" fill="none" stroke="#fff" stroke-width="1.2" opacity=".64"/>`;
  }
+
+ // 組織效能曲線：保留原有曲線，不顯示理論最佳點
  s+=`<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.65)} ${y(4.05)}" fill="none" stroke="#172b24" stroke-width="2.3" stroke-dasharray="7 5"/>`;
+
  s+=`</g>`;
+
+ // 中央十字虛線：保留
  s+=`<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.5"/>`;
- // quadrant heading pills
+
+ // 象限標題標籤
  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="29" rx="7" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+19}" text-anchor="middle" font-size="13" font-weight="800" fill="#182a27">${label}</text>`;
+
  s+=pill(L+18,T+16,176,'Ⅱ 潛能未釋放區','#fff8e8','#c98237');
  s+=pill(R-194,T+16,176,'Ⅰ 最佳運作區','#e5ffe5','#4a9c55');
  s+=pill(L+18,midY+16,176,'Ⅲ 失衡風險區','#fff0ee','#d75b54');
  s+=pill(R-194,midY+16,176,'Ⅳ 看見未轉化區','#eef8ff','#5485d9');
- // compact, consistent 12px body text inside each quadrant
+
+ // 四象限說明文字
  s+=`<g font-size="12" fill="#26332f">
  <text x="${L+23}" y="${T+69}"><tspan x="${L+23}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+23}" dy="17">• 但資訊基礎與問題覺察不足</tspan><tspan x="${L+23}" dy="17">• 需補足透明回饋機制</tspan></text>
  <text x="${R-22}" y="${T+69}" text-anchor="end"><tspan x="${R-22}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${R-22}" dy="17">• 流程順暢、發聲安全</tspan><tspan x="${R-22}" dy="17">• 支持協作與持續學習</tspan></text>
  <text x="${L+23}" y="${midY+69}"><tspan x="${L+23}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+23}" dy="17">• 流動受阻、發聲不足</tspan><tspan x="${L+23}" dy="17">• 優先建立回報與支持</tspan></text>
  <text x="${R-22}" y="${midY+69}" text-anchor="end"><tspan x="${R-22}" dy="0">• 能看見問題與風險</tspan><tspan x="${R-22}" dy="17">• 但未有效轉化為行動</tspan><tspan x="${R-22}" dy="17">• 強化資源配置與追蹤</tspan></text></g>`;
- // fixed theoretical optimum marker and callout
- const starPoints=Array.from({length:10},(_,i)=>{const a=-Math.PI/2+i*Math.PI/5;const rr=i%2===0?12:5.5;return `${tx+Math.cos(a)*rr},${ty+Math.sin(a)*rr}`}).join(' ');
- const labelX=Math.min(tx+25,R-152),labelY=Math.max(T+58,ty-55);
- s+=`<polygon points="${starPoints}" fill="#e11d2e" stroke="#fff" stroke-width="2"/><path d="M ${tx+8} ${ty+6} L ${labelX+3} ${labelY+26}" stroke="#e11d2e" stroke-width="2.2"/><rect x="${labelX}" y="${labelY}" width="145" height="54" rx="6" fill="#fff" stroke="#e11d2e" stroke-width="1.4"/><rect x="${labelX}" y="${labelY}" width="145" height="20" rx="5" fill="#d7192d"/><text x="${labelX+72.5}" y="${labelY+14}" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="800">MMTF 理論最佳組態</text><text x="${labelX+72.5}" y="${labelY+34}" text-anchor="middle" font-size="9.5" fill="#b91c1c">四構面皆高</text>`;
- // actual score point remains data-driven
- const resultLabelX=Math.min(Math.max(px+12,L+8),R-128),resultLabelY=Math.min(Math.max(py-48,T+8),B-43);
+
+ // 本次結果定位點：保留動態座標
+ const resultLabelX=Math.min(Math.max(px+12,L+8),R-128);
+ const resultLabelY=Math.min(Math.max(py-48,T+8),B-43);
+
  s+=`<line x1="${px}" y1="${py}" x2="${px+13}" y2="${py-20}" stroke="#b31324" stroke-width="2"/><circle cx="${px}" cy="${py}" r="8" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="122" height="37" rx="5" fill="#b80c20" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+61}" y="${resultLabelY+14}" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="800">本次結果位置</text><text x="${resultLabelX+61}" y="${resultLabelY+28}" text-anchor="middle" font-size="9.5" fill="#fff">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
- // axes and scale cues
+
+ // 座標軸與高低提示
  s+=`<path d="M ${L} ${B+1} L ${R+8} ${B+1} l -8 -5 m 8 5 l -8 5" fill="none" stroke="#111827" stroke-width="2.2"/><path d="M ${L} ${B} L ${L} ${T-8} l -5 8 m 5 -8 l 5 8" fill="none" stroke="#111827" stroke-width="2.2"/>`;
+
  s+=`<text x="${L}" y="${B+20}" font-size="10.5" fill="#263746">低</text><text x="${R}" y="${B+20}" text-anchor="end" font-size="10.5" fill="#263746">高</text><text x="${L-12}" y="${T+5}" text-anchor="end" font-size="10.5" fill="#263746">高</text><text x="${L-12}" y="${B}" text-anchor="end" font-size="10.5" fill="#263746">低</text>`;
+
  svg.innerHTML=s;
 }
 /* //////////////////////////////////////////////////////////////
