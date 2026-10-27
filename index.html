@@ -421,12 +421,6 @@ for (let i = 0; i < 18; i++) {
     stroke-opacity="${i%3===0 ? .78 : .43}"/>
   `;
 }
- // 柔和組織效能曲面線條
- for(let i=0;i<9;i++){
-   const yy=365-i*29, bend=x(3.65)-70+i*5, endY=yy-150+i*8;
-   s+=`<path d="M ${L-8} ${yy} C ${L+100} ${yy-75}, ${bend-80} ${endY+80}, ${bend} ${endY} S ${R-100} ${endY+42}, ${R+15} ${yy-120+i*9}" fill="none" stroke="#fff" stroke-width="1.2" opacity=".64"/>`;
- }
-
  // 組織效能曲線：保留原有曲線，不顯示理論最佳點
  s+=`<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.65)} ${y(4.05)}" fill="none" stroke="#172b24" stroke-width="2.3" stroke-dasharray="7 5"/>`;
 
