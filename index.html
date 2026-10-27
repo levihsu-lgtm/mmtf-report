@@ -346,216 +346,274 @@ document.getElementById('liveMean').textContent=overall.toFixed(2);
    JS 模組 C / 四象限定位圖
    只修改象限圖的 SVG、座標、色彩與標籤時，編輯此函式。
    ////////////////////////////////////////////////////////////// */
-<!-- MMTF 四象限圖模組：保留中央十字虛線；不顯示理論最佳點 -->
-<section id="mmtfQuadrantModule" class="mmtf-quadrant-wrap">
-  <svg id="mmtfQuadrantSvg" viewBox="0 0 1000 650" role="img" aria-label="MMTF 四象限組織效能圖">
-    <defs>
-      <linearGradient id="mmtfBg" x1="0" y1="1" x2="1" y2="0">
-        <stop offset="0%" stop-color="#ff555d"/>
-        <stop offset="27%" stop-color="#ffb15d"/>
-        <stop offset="50%" stop-color="#fff17b"/>
-        <stop offset="70%" stop-color="#38d978"/>
-        <stop offset="100%" stop-color="#63d9f2"/>
-      </linearGradient>
-      <linearGradient id="mmtfBlue" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#c9f4ff" stop-opacity=".45"/>
-        <stop offset="100%" stop-color="#149ef4" stop-opacity=".78"/>
-      </linearGradient>
-      <linearGradient id="mmtfRed" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#ff7b7b" stop-opacity=".42"/>
-        <stop offset="100%" stop-color="#f3263c" stop-opacity=".75"/>
-      </linearGradient>
-      <linearGradient id="mmtfGreen" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#e4ffac" stop-opacity=".7"/>
-        <stop offset="100%" stop-color="#19c86b" stop-opacity=".68"/>
-      </linearGradient>
-      <linearGradient id="mmtfOrange" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#fff1a2" stop-opacity=".85"/>
-        <stop offset="100%" stop-color="#ff9b36" stop-opacity=".62"/>
-      </linearGradient>
-      <clipPath id="mmtfPlotClip"><rect x="90" y="55" width="850" height="500" rx="4"/></clipPath>
-      <filter id="mmtfShadow" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#17365d" flood-opacity=".18"/>
-      </filter>
-    </defs>
+/* //////////////////////////////////////////////////////////////
+   JS 模組 C / 四象限定位圖
+   只修改象限圖的 SVG、座標、色彩與標籤時，編輯此函式。
 
-    <text x="515" y="28" text-anchor="middle" class="q-title">MMTF 整合四構面之組織效能曲線與四象限結果</text>
-    <text x="515" y="49" text-anchor="middle" class="q-subtitle">（從資訊揭露到組織學習的動態回饋機制）</text>
+   功能：
+   1. 保留中央水平、垂直十字虛線
+   2. 移除理論最佳點
+   3. 保留四象限漸層與組織效能曲線
+   4. 依四構面分數動態計算本次結果座標
+   5. 更新象限標題、說明與定位標籤
+   ////////////////////////////////////////////////////////////// */
+function renderQuadrant() {
+    const container = document.getElementById('quadrantChart');
+    if (!container) return;
 
-    <g clip-path="url(#mmtfPlotClip)">
-      <rect x="90" y="55" width="850" height="500" fill="url(#mmtfBg)"/>
-      <rect x="90" y="55" width="425" height="250" fill="url(#mmtfOrange)"/>
-      <rect x="515" y="55" width="425" height="250" fill="url(#mmtfGreen)"/>
-      <rect x="90" y="305" width="425" height="250" fill="url(#mmtfRed)"/>
-      <rect x="515" y="305" width="425" height="250" fill="url(#mmtfBlue)"/>
+    // 四構面平均分數：原始分數 0–25，換算為 0–5
+    const mirror = Number(scores.mirror) / 5;
+    const matrix = Number(scores.matrix) / 5;
+    const flow   = Number(scores.flow) / 5;
+    const safe   = Number(scores.safe) / 5;
 
-      <!-- 柔和效能曲面等高線 -->
-      <g fill="none" stroke="#ffffff" stroke-width="1.1" opacity=".55">
-        <path d="M90 490 C230 465 300 380 420 310 S610 130 700 210 S840 360 940 375"/>
-        <path d="M90 455 C230 435 330 360 445 285 S620 150 705 225 S845 340 940 350"/>
-        <path d="M90 420 C245 405 340 335 465 265 S630 175 715 240 S850 320 940 325"/>
-        <path d="M90 385 C250 375 365 310 485 250 S650 200 730 255 S860 300 940 300"/>
-        <path d="M90 350 C260 345 385 290 510 240 S665 220 745 270 S870 280 940 275"/>
-        <path d="M90 520 C240 495 350 420 470 350 S645 260 740 305 S850 410 940 430"/>
-        <path d="M90 535 C245 515 360 445 485 380 S660 290 755 335 S865 440 940 455"/>
-        <path d="M150 555 C250 500 360 470 490 420 S675 350 780 390 S875 475 940 485"/>
-        <path d="M120 250 C245 250 365 205 485 160 S675 105 760 145 S865 195 940 185"/>
-        <path d="M120 210 C255 215 370 175 500 130 S680 85 775 125 S875 165 940 155"/>
-      </g>
+    // X 軸：組織資訊與感知基礎
+    // Y 軸：組織回應與行動能力
+    const awareness = (mirror + safe) / 2;
+    const action = (matrix + flow) / 2;
 
-      <!-- 組織效能曲線：保留曲線，不設理論最佳點 -->
-      <path d="M265 390 C340 335 395 280 465 245 S560 175 610 170"
-            fill="none" stroke="#102a43" stroke-width="3" stroke-linecap="round"
-            stroke-dasharray="none"/>
-      <text x="395" y="270" transform="rotate(-29 395 270)" class="q-curve-label">
-        組織效能曲線
-      </text>
+    // SVG 畫布尺寸與繪圖區域
+    const W = 1000;
+    const H = 680;
+    const L = 100;
+    const T = 35;
+    const R = 25;
+    const B = 85;
+    const PW = W - L - R;
+    const PH = H - T - B;
+    const MID_X = L + PW / 2;
+    const MID_Y = T + PH / 2;
 
-      <!-- 象限說明 -->
-      <g filter="url(#mmtfShadow)">
-        <rect x="115" y="75" width="245" height="68" rx="12" fill="#fffaf0" fill-opacity=".9" stroke="#e68a17"/>
-        <rect x="675" y="75" width="240" height="68" rx="12" fill="#f0fff3" fill-opacity=".9" stroke="#138a49"/>
-        <rect x="115" y="365" width="245" height="68" rx="12" fill="#fff2f2" fill-opacity=".92" stroke="#e52436"/>
-        <rect x="675" y="365" width="240" height="68" rx="12" fill="#effaff" fill-opacity=".92" stroke="#087be0"/>
-      </g>
-      <g class="q-label">
-        <text x="237" y="103" text-anchor="middle">Ⅱ 潛能未釋放區</text>
-        <text x="237" y="128" text-anchor="middle" class="q-label-sub">（高行動 × 低感知）</text>
-        <text x="795" y="103" text-anchor="middle">Ⅰ 最佳運作區</text>
-        <text x="795" y="128" text-anchor="middle" class="q-label-sub">（高行動 × 高感知）</text>
-        <text x="237" y="393" text-anchor="middle">Ⅲ 失衡風險區</text>
-        <text x="237" y="418" text-anchor="middle" class="q-label-sub">（低行動 × 低感知）</text>
-        <text x="795" y="393" text-anchor="middle">Ⅳ 看見未轉化區</text>
-        <text x="795" y="418" text-anchor="middle" class="q-label-sub">（高感知 × 低行動）</text>
-      </g>
+    // 將 0–5 分轉成 SVG 座標
+    const x = value => L + (value / 5) * PW;
+    const y = value => T + ((5 - value) / 5) * PH;
 
-      <g class="q-bullets">
-        <text x="130" y="170">● 具備回應與執行能力，</text>
-        <text x="151" y="195">但資訊基礎不足。</text>
-        <text x="130" y="222">● 問題不易被看見，可能</text>
-        <text x="151" y="247">僅處理已知問題。</text>
-        <text x="130" y="274">● 績效中等，存在盲點風險。</text>
+    const px = x(awareness);
+    const py = y(action);
 
-        <text x="690" y="170">● 資訊透明、權責明確、</text>
-        <text x="711" y="195">流動順暢、發聲安全。</text>
-        <text x="690" y="222">● 能快速回應並形成組織學習。</text>
-        <text x="690" y="249">● 具持續改善的基礎。</text>
+    // 四象限標題與說明
+    const quadrants = [
+        {
+            title: 'Ⅱ 潛能未釋放區',
+            subtitle: '高行動 × 低感知',
+            color: '#e58a00',
+            x: L + 28,
+            y: T + 24,
+            lines: [
+                '具備回應與執行能力，',
+                '但資訊基礎不足。',
+                '問題不易被看見，可能',
+                '僅處理已知問題。',
+                '績效中等，存在盲點風險。'
+            ]
+        },
+        {
+            title: 'Ⅰ 最佳運作區',
+            subtitle: '高行動 × 高感知',
+            color: '#087b36',
+            x: MID_X + 28,
+            y: T + 24,
+            lines: [
+                '資訊透明、權責明確、',
+                '流動順暢、發聲安全。',
+                '能快速回應並形成組織學習。',
+                '具備持續改善的條件。'
+            ]
+        },
+        {
+            title: 'Ⅲ 失衡風險區',
+            subtitle: '低行動 × 低感知',
+            color: '#cf2027',
+            x: L + 28,
+            y: MID_Y + 24,
+            lines: [
+                '資訊不透明、權責不清、',
+                '流動受阻、發聲不足。',
+                '問題難以揭露且難以處理。',
+                '需進一步核對工作風險。'
+            ]
+        },
+        {
+            title: 'Ⅳ 看見未轉化區',
+            subtitle: '高感知 × 低行動',
+            color: '#0873d1',
+            x: MID_X + 28,
+            y: MID_Y + 24,
+            lines: [
+                '資訊看得見、問題能揭露，',
+                '但仍需確認回應、資源與協作。',
+                '可能出現看見問題卻未改善的落差。',
+                '需核對後續處理與追蹤。'
+            ]
+        }
+    ];
 
-        <text x="130" y="462">● 資訊不透明、權責不清、</text>
-        <text x="151" y="487">流動受阻、發聲不足。</text>
-        <text x="130" y="514">● 問題難以揭露與處理。</text>
-        <text x="130" y="541">● 需優先核對工作風險。</text>
+    // 曲線使用平滑曲線，不包含理論最佳點標記
+    const curve = `
+        M ${x(1.2)} ${y(1.0)}
+        C ${x(1.8)} ${y(1.8)},
+          ${x(2.3)} ${y(3.3)},
+          ${x(3.0)} ${y(3.7)}
+        S ${x(4.0)} ${y(3.2)},
+          ${x(4.7)} ${y(2.7)}
+    `;
 
-        <text x="690" y="462">● 資訊看得見、問題能揭露，</text>
-        <text x="711" y="487">但缺乏有效回應、資源或協作。</text>
-        <text x="690" y="514">● 容易形成「看見卻不改變」。</text>
-        <text x="690" y="541">● 需核對責任承接與後續行動。</text>
-      </g>
+    // 四象限標籤卡
+    function quadrantLabel(q) {
+        const lines = q.lines.map((line, i) => `
+            <text x="${q.x + 16}"
+                  y="${q.y + 102 + i * 27}"
+                  font-size="17"
+                  fill="#17233d">${line}</text>
+        `).join('');
 
-      <!-- 中央十字虛線：明確保留 -->
-      <line x1="515" y1="55" x2="515" y2="555" stroke="#263746" stroke-width="1.5" stroke-dasharray="7 5" opacity=".85"/>
-      <line x1="90" y1="305" x2="940" y2="305" stroke="#263746" stroke-width="1.5" stroke-dasharray="7 5" opacity=".85"/>
-    </g>
+        return `
+            <g>
+                <rect x="${q.x}" y="${q.y}"
+                      width="${PW / 2 - 50}" height="65"
+                      rx="12"
+                      fill="#ffffff"
+                      fill-opacity="0.82"
+                      stroke="${q.color}"
+                      stroke-width="1.4"/>
+                <text x="${q.x + (PW / 2 - 50) / 2}"
+                      y="${q.y + 28}"
+                      text-anchor="middle"
+                      font-size="22"
+                      font-weight="700"
+                      fill="#14213d">${q.title}</text>
+                <text x="${q.x + (PW / 2 - 50) / 2}"
+                      y="${q.y + 51}"
+                      text-anchor="middle"
+                      font-size="15"
+                      fill="#14213d">${q.subtitle}</text>
+                ${lines}
+            </g>
+        `;
+    }
 
-    <!-- 座標軸 -->
-    <rect x="90" y="55" width="850" height="500" fill="none" stroke="#152b45" stroke-width="2" rx="4"/>
-    <path d="M90 555 L90 48 M90 555 L950 555" fill="none" stroke="#102a43" stroke-width="4" stroke-linecap="round"/>
-    <path d="M90 43 L81 60 L99 60 Z" fill="#102a43"/>
-    <path d="M955 555 L938 546 L938 564 Z" fill="#102a43"/>
-    <text x="62" y="75" text-anchor="middle" class="q-axis-small">高</text>
-    <text x="62" y="550" text-anchor="middle" class="q-axis-small">低</text>
-    <text x="90" y="585" text-anchor="middle" class="q-axis-small">低</text>
-    <text x="940" y="585" text-anchor="middle" class="q-axis-small">高</text>
-    <text x="515" y="622" text-anchor="middle" class="q-axis-title">組織資訊與感知基礎（Awareness）</text>
-    <text x="22" y="300" text-anchor="middle" transform="rotate(-90 22 300)" class="q-axis-title">組織回應與行動能力（Action）</text>
+    container.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}"
+         width="100%"
+         role="img"
+         aria-label="MMTF 四象限定位圖"
+         xmlns="http://www.w3.org/2000/svg">
 
-    <!-- 動態結果定位 -->
-    <g id="mmtfCurrentMarker">
-      <line id="mmtfMarkerLeader" x1="0" y1="0" x2="0" y2="0" stroke="#d71920" stroke-width="3"/>
-      <circle id="mmtfMarkerDot" cx="0" cy="0" r="13" fill="#d71920" stroke="#fff" stroke-width="4" filter="url(#mmtfShadow)"/>
-      <rect id="mmtfMarkerBox" x="0" y="0" width="170" height="58" rx="10" fill="#b5121b" stroke="#fff" stroke-width="1.5"/>
-      <text id="mmtfMarkerTitle" x="0" y="0" text-anchor="middle" class="q-marker-text">本次結果位置</text>
-      <text id="mmtfMarkerValue" x="0" y="0" text-anchor="middle" class="q-marker-text">（3.0，2.6）</text>
-    </g>
-  </svg>
-</section>
+        <defs>
+            <linearGradient id="mmtfGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffd66b"/>
+                <stop offset="28%" stop-color="#ffef9e"/>
+                <stop offset="52%" stop-color="#55df7a"/>
+                <stop offset="73%" stop-color="#20bce8"/>
+                <stop offset="100%" stop-color="#a8e5ff"/>
+            </linearGradient>
 
-<style>
-.mmtf-quadrant-wrap{width:100%;max-width:1200px;margin:0 auto;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif}
-#mmtfQuadrantSvg{display:block;width:100%;height:auto;background:#fff}
-#mmtfQuadrantSvg text{font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;fill:#10233f}
-#mmtfQuadrantSvg .q-title{font-size:23px;font-weight:800}
-#mmtfQuadrantSvg .q-subtitle{font-size:14px;font-weight:600}
-#mmtfQuadrantSvg .q-label{font-size:23px;font-weight:800}
-#mmtfQuadrantSvg .q-label-sub{font-size:17px;font-weight:600}
-#mmtfQuadrantSvg .q-bullets{font-size:17px;font-weight:600}
-#mmtfQuadrantSvg .q-curve-label{font-size:17px;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
-#mmtfQuadrantSvg .q-axis-small{font-size:18px;font-weight:800}
-#mmtfQuadrantSvg .q-axis-title{font-size:21px;font-weight:800}
-#mmtfQuadrantSvg .q-marker-text{fill:#fff;font-size:17px;font-weight:800}
-@media(max-width:700px){#mmtfQuadrantSvg .q-title{font-size:25px}#mmtfQuadrantSvg .q-label{font-size:25px}#mmtfQuadrantSvg .q-bullets{font-size:19px}}
-</style>
+            <linearGradient id="mmtfLowerGradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#ff5a62" stop-opacity="0.8"/>
+                <stop offset="50%" stop-color="#f5a0c0" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#20bce8" stop-opacity="0.5"/>
+            </linearGradient>
 
-<script>
-(function initMMTFQuadrant(){
-  const svg = document.getElementById('mmtfQuadrantSvg');
-  if (!svg) return;
+            <clipPath id="mmtfPlotClip">
+                <rect x="${L}" y="${T}" width="${PW}" height="${PH}" rx="5"/>
+            </clipPath>
+        </defs>
 
-  const params = new URLSearchParams(window.location.search);
-  const getScore = (key, fallback=0) => {
-    const n = Number(params.get(key));
-    return Number.isFinite(n) && n >= 0 && n <= 25 ? n : fallback;
-  };
+        <!-- 圖面背景 -->
+        <rect x="${L}" y="${T}" width="${PW}" height="${PH}"
+              rx="5" fill="url(#mmtfGradient)"/>
 
-  // 依 MMTF 四構面分數計算兩軸，平均值均為 0–5。
-  const mirror = getScore('mirror', 7) / 5;
-  const matrix = getScore('matrix', 7) / 5;
-  const flow = getScore('flow', 7) / 5;
-  const safe = getScore('safe', 7) / 5;
-  const awareness = (mirror + safe) / 2;
-  const action = (matrix + flow) / 2;
+        <!-- 左下風險區色彩 -->
+        <rect x="${L}" y="${MID_Y}" width="${PW / 2}" height="${PH / 2}"
+              fill="#ff5a62" fill-opacity="0.45"/>
 
-  // 繪圖區座標：X 由 90 到 940；Y 由 555（低）到 55（高）。
-  const plot = {left:90, right:940, top:55, bottom:555};
-  const x = plot.left + (awareness / 5) * (plot.right - plot.left);
-  const y = plot.bottom - (action / 5) * (plot.bottom - plot.top);
+        <!-- 右下看見未轉化區 -->
+        <rect x="${MID_X}" y="${MID_Y}" width="${PW / 2}" height="${PH / 2}"
+              fill="#36bafa" fill-opacity="0.48"/>
 
-  const dot = document.getElementById('mmtfMarkerDot');
-  const leader = document.getElementById('mmtfMarkerLeader');
-  const box = document.getElementById('mmtfMarkerBox');
-  const title = document.getElementById('mmtfMarkerTitle');
-  const value = document.getElementById('mmtfMarkerValue');
+        <!-- 裝飾性效能曲面等高線 -->
+        <g clip-path="url(#mmtfPlotClip)"
+           fill="none" stroke="#ffffff" stroke-opacity="0.48"
+           stroke-width="1.1">
+            <path d="M ${L} ${T + PH * 0.75} C ${L + PW * .18} ${T + PH * .67}, ${L + PW * .32} ${T + PH * .38}, ${L + PW * .52} ${T + PH * .26} S ${L + PW * .79} ${T + PH * .55}, ${L + PW} ${T + PH * .58}"/>
+            <path d="M ${L} ${T + PH * 0.82} C ${L + PW * .18} ${T + PH * .74}, ${L + PW * .35} ${T + PH * .45}, ${L + PW * .53} ${T + PH * .33} S ${L + PW * .82} ${T + PH * .61}, ${L + PW} ${T + PH * .65}"/>
+            <path d="M ${L} ${T + PH * 0.88} C ${L + PW * .20} ${T + PH * .80}, ${L + PW * .37} ${T + PH * .52}, ${L + PW * .54} ${T + PH * .40} S ${L + PW * .84} ${T + PH * .68}, ${L + PW} ${T + PH * .72}"/>
+            <path d="M ${L} ${T + PH * 0.62} C ${L + PW * .20} ${T + PH * .56}, ${L + PW * .35} ${T + PH * .22}, ${L + PW * .54} ${T + PH * .18} S ${L + PW * .80} ${T + PH * .44}, ${L + PW} ${T + PH * .47}"/>
+        </g>
 
-  dot.setAttribute('cx', x);
-  dot.setAttribute('cy', y);
+        <!-- 中央十字虛線：依要求保留 -->
+        <g stroke="#27364b" stroke-width="1.3"
+           stroke-dasharray="7 5" opacity="0.8">
+            <line x1="${MID_X}" y1="${T}" x2="${MID_X}" y2="${T + PH}"/>
+            <line x1="${L}" y1="${MID_Y}" x2="${L + PW}" y2="${MID_Y}"/>
+        </g>
 
-  // 標籤盡量放在點的右下方；靠近邊緣時自動改到左側。
-  const boxW = 170, boxH = 58;
-  let bx = x + 18;
-  if (bx + boxW > plot.right) bx = x - boxW - 18;
-  let by = y + 28;
-  if (by + boxH > plot.bottom) by = y - boxH - 28;
-  bx = Math.max(plot.left + 4, Math.min(bx, plot.right - boxW - 4));
-  by = Math.max(plot.top + 4, Math.min(by, plot.bottom - boxH - 4));
+        <!-- 組織效能曲線：不顯示理論最佳點 -->
+        <path d="${curve}" fill="none"
+              stroke="#17233d" stroke-width="3"
+              stroke-linecap="round"/>
 
-  box.setAttribute('x', bx);
-  box.setAttribute('y', by);
-  title.setAttribute('x', bx + boxW/2);
-  title.setAttribute('y', by + 23);
-  value.setAttribute('x', bx + boxW/2);
-  value.setAttribute('y', by + 45);
+        <!-- 象限內容 -->
+        ${quadrants.map(quadrantLabel).join('')}
 
-  const leadX = bx > x ? bx + 8 : bx + boxW - 8;
-  const leadY = by > y ? by + 5 : by + boxH - 5;
-  leader.setAttribute('x1', x);
-  leader.setAttribute('y1', y);
-  leader.setAttribute('x2', leadX);
-  leader.setAttribute('y2', leadY);
+        <!-- 本次結果定位點 -->
+        <g>
+            <circle cx="${px}" cy="${py}" r="12"
+                    fill="#d40000" stroke="#ffffff" stroke-width="3.5"/>
 
-  value.textContent = `（${awareness.toFixed(1)}，${action.toFixed(1)}）`;
-})();
-</script>
+            <line x1="${px + 7}" y1="${py + 7}"
+                  x2="${px + 28}" y2="${py + 28}"
+                  stroke="#d40000" stroke-width="2.5"/>
 
+            <rect x="${px + 25}" y="${py + 22}"
+                  width="165" height="56" rx="8"
+                  fill="#b80000" stroke="#ffffff" stroke-width="1.2"/>
+
+            <text x="${px + 107}" y="${py + 44}"
+                  text-anchor="middle" font-size="16"
+                  font-weight="700" fill="#ffffff">本次結果位置</text>
+
+            <text x="${px + 107}" y="${py + 66}"
+                  text-anchor="middle" font-size="16"
+                  fill="#ffffff">(${awareness.toFixed(1)}, ${action.toFixed(1)})</text>
+        </g>
+
+        <!-- 座標軸 -->
+        <g stroke="#14213d" stroke-width="4" fill="none">
+            <line x1="${L}" y1="${T + PH}" x2="${L}" y2="${T - 8}"/>
+            <line x1="${L}" y1="${T + PH}" x2="${L + PW + 8}" y2="${T + PH}"/>
+        </g>
+
+        <path d="M ${L} ${T - 12} l -9 17 h 18 z" fill="#14213d"/>
+        <path d="M ${L + PW + 14} ${T + PH} l -17 -9 v 18 z" fill="#14213d"/>
+
+        <text x="${L - 28}" y="${T + 12}"
+              font-size="18" fill="#14213d">高</text>
+        <text x="${L - 28}" y="${T + PH}"
+              font-size="18" fill="#14213d">低</text>
+        <text x="${L}" y="${T + PH + 36}"
+              font-size="18" fill="#14213d">低</text>
+        <text x="${L + PW}" y="${T + PH + 36}"
+              text-anchor="end" font-size="18" fill="#14213d">高</text>
+
+        <text x="${L + PW / 2}" y="${H - 18}"
+              text-anchor="middle" font-size="22"
+              font-weight="700" fill="#14213d">
+            組織資訊與感知基礎（Awareness）
+        </text>
+
+        <text x="25" y="${T + PH / 2}"
+              transform="rotate(-90 25 ${T + PH / 2})"
+              text-anchor="middle" font-size="21"
+              font-weight="700" fill="#14213d">
+            組織回應與行動能力（Action）
+        </text>
+
+        <!-- 外框 -->
+        <rect x="${L}" y="${T}" width="${PW}" height="${PH}"
+              fill="none" stroke="#14213d" stroke-width="1.5"/>
+    </svg>`;
+}
 /* //////////////////////////////////////////////////////////////
    JS 模組 D / 雷達圖
    只修改雷達圖 SVG、刻度、標籤與配色時，編輯此函式。
