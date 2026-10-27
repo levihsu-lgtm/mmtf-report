@@ -354,20 +354,73 @@ function drawQuadrant(){
  const px=x(quadrantX),py=y(quadrantY);
 
  let s=`<defs>
- <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe59a"/><stop offset="1" stop-color="#fff7dc"/></linearGradient>
- <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9f3ad"/><stop offset="1" stop-color="#e8ffe8"/></linearGradient>
- <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffaaa5"/><stop offset="1" stop-color="#ffe0dc"/></linearGradient>
- <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9f1ff"/><stop offset="1" stop-color="#a9dfff"/></linearGradient>
- <radialGradient id="qpeak"><stop offset="0" stop-color="#19e56b" stop-opacity=".92"/><stop offset=".55" stop-color="#54e6ad" stop-opacity=".48"/><stop offset="1" stop-color="#35c9ff" stop-opacity="0"/></radialGradient>
- <clipPath id="qclip"><rect x="${L}" y="${T}" width="${W}" height="${H}" rx="2"/></clipPath>
+  <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#ffd65c"/>
+    <stop offset="55%" stop-color="#fff18d"/>
+    <stop offset="100%" stop-color="#ffb16a"/>
+  </linearGradient>
+  <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#9af59d"/>
+    <stop offset="50%" stop-color="#23dc83"/>
+    <stop offset="100%" stop-color="#a4f4df"/>
+  </linearGradient>
+  <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#ff555d"/>
+    <stop offset="45%" stop-color="#ff8877"/>
+    <stop offset="100%" stop-color="#ffd3db"/>
+  </linearGradient>
+  <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#d4eaff"/>
+    <stop offset="45%" stop-color="#12b8f4"/>
+    <stop offset="100%" stop-color="#a6e7ff"/>
+  </linearGradient>
+  <radialGradient id="qpeak">
+    <stop offset="0%" stop-color="#13e878" stop-opacity=".95"/>
+    <stop offset="38%" stop-color="#31e9a6" stop-opacity=".75"/>
+    <stop offset="70%" stop-color="#12c9ef" stop-opacity=".38"/>
+    <stop offset="100%" stop-color="#12c9ef" stop-opacity="0"/>
+  </radialGradient>
+  <clipPath id="qclip">
+    <rect x="${L}" y="${T}" width="${W}" height="${H}"/>
+  </clipPath>
  </defs>`;
 
- const midX=x(2.5),midY=y(2.5);
+const midX = x(2.5), midY = y(2.5);
 
- s+=`<rect x="${L}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q2bg)"/><rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/><rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/><rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>`;
+s += `
+<rect x="${L}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q2bg)"/>
+<rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/>
+<rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/>
+<rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>
 
- s+=`<g clip-path="url(#qclip)"><ellipse cx="${x(3.65)}" cy="${y(4.05)}" rx="190" ry="155" fill="url(#qpeak)"/>`;
+<g clip-path="url(#qclip)">
+  <ellipse cx="${x(3.65)}" cy="${y(4.05)}"
+    rx="235" ry="190" fill="url(#qpeak)"/>
+`;
 
+ // 多層流線：產生有起伏的組織效能曲面
+for (let i = 0; i < 18; i++) {
+  const yy = T + 90 + i * 18;
+  const rise = 175 - i * 4.5;
+  const peakX = x(3.25) + i * 1.8;
+  const peakY = yy - rise;
+
+  s += `
+  <path
+    d="M ${L-15} ${yy+45}
+       C ${L+100} ${yy-30},
+         ${x(1.6)} ${yy-15},
+         ${x(2.35)} ${peakY+60}
+       S ${peakX-25} ${peakY-30},
+         ${peakX} ${peakY}
+       S ${x(4.2)} ${peakY+45},
+         ${R+20} ${yy-70}"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="${i%3===0 ? 1.7 : 1.05}"
+    stroke-opacity="${i%3===0 ? .78 : .43}"/>
+  `;
+}
  // 柔和組織效能曲面線條
  for(let i=0;i<9;i++){
    const yy=365-i*29, bend=x(3.65)-70+i*5, endY=yy-150+i*8;
