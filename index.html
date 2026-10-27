@@ -257,10 +257,39 @@ body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Micr
 
 <section class="below">
 <article class="card"><h3>🚀 下一步行動指南</h3><div class="body">
-<div class="step"><span class="n">1</span><div><strong>問題確認</strong>針對低分構面，釐清核心問題與實際情境。</div></div>
-<div class="step"><span class="n">2</span><div><strong>原因分析</strong>透過訪談、數據與流程回顧，找出結構性與行為性原因。</div></div>
-<div class="step"><span class="n">3</span><div><strong>改善計畫</strong>設定短中期行動方案，並指派負責單位與完成期限。</div></div>
-<div class="step"><span class="n">4</span><div><strong>追蹤評估</strong>定期檢視改善進度，持續優化管理策略。</div></div>
+<article class="card">
+  <h3>🚀 下一步行動指南</h3>
+  <div class="body" id="actionGuideContent">
+    <div class="step">
+      <span class="n">1</span>
+      <div>
+        <strong>問題確認</strong>
+        正在依據本次 MMTF 四構面分數產生行動建議。
+      </div>
+    </div>
+    <div class="step">
+      <span class="n">2</span>
+      <div>
+        <strong>原因分析</strong>
+        透過具體事件、訪談與流程紀錄，核對問題成因。
+      </div>
+    </div>
+    <div class="step">
+      <span class="n">3</span>
+      <div>
+        <strong>改善計畫</strong>
+        設定改善措施、負責單位及完成期限。
+      </div>
+    </div>
+    <div class="step">
+      <span class="n">4</span>
+      <div>
+        <strong>追蹤評估</strong>
+        定期檢視執行進度與改善成果。
+      </div>
+    </div>
+  </div>
+</article>
 </div></article>
 <article class="card warning"><h3>⚠ 危害提醒與管理注意事項</h3><div class="body"><ul>
 <li>本報告屬組織管理診斷參考，不是個人心理疾病診斷。</li>
@@ -699,6 +728,115 @@ function renderText() {
 
   document.getElementById('dynamicInterpretation').innerHTML = output;
 }
+
+/* //////////////////////////////////////////////////////////////
+   JS 模組 H / 下一步行動指南
+   僅更新行動指南，不修改其他模組。
+   使用既有的 means、dims 資料。
+   ////////////////////////////////////////////////////////////// */
+
+function renderActionGuide() {
+  const target = document.getElementById('actionGuideContent');
+  if (!target) return;
+
+  const LOW = 2.5;
+
+  const actions = {
+    mirror: {
+      name: 'Mirror｜問題覺察與回饋',
+      problem: '確認問題是否被發現、提出，以及回饋後是否獲得回應。',
+      cause: '檢查問題回報紀錄、主管回應情形及改善事項是否結案。',
+      plan: '建立問題清單，指定回覆人、處理期限與追蹤方式。',
+      metric: '回報回覆率、改善事項結案率。'
+    },
+    matrix: {
+      name: 'Matrix｜制度、權責與資源',
+      problem: '確認工作分工、決策權限及資源配置是否清楚。',
+      cause: '檢查案件延誤、責任不明、等待核准及跨部門協調紀錄。',
+      plan: '明確指定執行人、決策者、協調窗口及完成期限。',
+      metric: '責任明確率、逾期案件數、待決事項數。'
+    },
+    flow: {
+      name: 'Flow｜資訊流動與協作',
+      problem: '確認資訊是否完整、及時地傳遞給需要處理的人。',
+      cause: '檢查資訊延遲、交接遺漏、版本不一致及回覆紀錄。',
+      plan: '建立資訊交接確認、回覆時限與異常升級流程。',
+      metric: '交接完成率、平均回覆時間、重複確認次數。'
+    },
+    safe: {
+      name: 'Safety｜心理安全與表達意見',
+      problem: '確認成員是否能提出疑慮、承認錯誤及表達不同意見。',
+      cause: '核對問題提出後的實際回應、處理過程與保密機制。',
+      plan: '建立保密及反報復的回報機制，並明確回覆處理結果。',
+      metric: '問題回覆率、處理時效、後續回饋。'
+    }
+  };
+
+  const ordered = dims
+    .map(d => ({
+      ...d,
+      score: Number(means[d.key])
+    }))
+    .sort((a, b) => a.score - b.score);
+
+  const lowItems = ordered.filter(d => d.score < LOW);
+
+  // 若有低分構面，優先呈現；否則以最低分構面作為檢核起點。
+  const priorityItems = lowItems.length
+    ? lowItems
+    : ordered.filter(d => d.score === ordered[0].score);
+
+  const selected = priorityItems[0];
+  const action = actions[selected.key];
+
+  // 第一步：依本次分數確認優先問題。
+  const step1 = lowItems.length
+    ? `優先確認 ${priorityItems.map(d =>
+        `${d.name}（${d.score.toFixed(1)}/5）`
+      ).join('、')} 的實際工作情境。`
+    : `目前沒有構面低於 2.5/5，先檢核相對最低的 ${selected.name}（${selected.score.toFixed(1)}/5），確認是否存在未被平均分數呈現的問題。`;
+
+  // 第二步：針對優先構面分析原因。
+  const step2 = `${action.name}：${action.cause}`;
+
+  // 第三步：形成具體改善方案。
+  const step3 = `${action.plan} 建議追蹤指標：${action.metric}`;
+
+  // 第四步：以固定週期檢查改善成果。
+  const step4 = lowItems.length
+    ? `建議於 30 天內檢視改善進度，核對指標是否改善；若未改善，重新確認原因與措施。`
+    : `建議於 30 天內重新檢視工作事件與追蹤指標，確認現有做法是否有效，並持續改善。`;
+
+  const steps = [
+    ['問題確認', step1],
+    ['原因分析', step2],
+    ['改善計畫', step3],
+    ['追蹤評估', step4]
+  ];
+
+  // 將動態文字安全地插入 HTML。
+  const escapeHTML = text => String(text).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+
+  target.innerHTML = steps.map((step, index) => `
+    <div class="step">
+      <span class="n">${index + 1}</span>
+      <div>
+        <strong>${escapeHTML(step[0])}</strong>
+        ${escapeHTML(step[1])}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* //////////////////////////////////////////////////////////////
+   JS 模組 H 結束
+   ////////////////////////////////////////////////////////////// */
 
 /* //////////////////////////////////////////////////////////////
    JS 模組 G / 啟動區
