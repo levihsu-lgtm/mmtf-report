@@ -56,6 +56,76 @@ main{max-width:1800px;margin:auto;padding:9px 12px}.band{border:1px solid #9bd6f
 
 @media print{.band,.panel,.panelhead,.smalltable th,.stage article{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
 
+
+/* Compact reading layout: tighter spacing without removing content */
+main{max-width:1900px;padding:6px 8px}
+.top{padding:9px 16px;gap:14px}
+.top h1{font-size:clamp(21px,2.4vw,30px)}
+.tagline{line-height:1.45;font-size:12px}
+.band{margin-bottom:7px;padding:8px;border-radius:9px}
+.bandtitle{font-size:19px;gap:8px;margin:0 0 6px;padding:5px 8px}
+.num{width:34px;height:34px;font-size:21px}
+.inputs{gap:6px}
+.inputcard{padding:7px 8px;gap:7px;min-height:54px}
+.inputcard .sym{font-size:22px}
+.inputcard b{font-size:15px}
+.generate{padding:11px;font-size:16px;min-height:52px}
+.grid{gap:7px;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.12fr)}
+.panel{border-radius:8px}
+.panelhead{padding:6px 8px;gap:6px;font-size:13px}
+.panelhead .num{width:25px;height:25px;font-size:15px}
+.pad{padding:7px}
+.summarytop{grid-template-columns:94px 1fr;gap:8px}
+.ring{width:88px;height:88px}
+.ring:before{inset:8px}
+.ring strong{font-size:29px}
+.risk{font-size:15px}
+.twostat{gap:5px;margin:6px 0}
+.stat{padding:6px}
+.stat strong{font-size:19px}
+.dimension{grid-template-columns:108px 60px 57px minmax(0,1fr);gap:5px;padding:5px 4px;margin-bottom:2px}
+.dname{padding:6px;font-size:12px}
+.dscore{font-size:16px}
+.pill{padding:5px 3px;font-size:10px}
+.quadwrap{gap:7px}
+.quad{min-height:215px}
+.q{padding:6px 4px;font-size:9px}
+.q b{font-size:11px}
+.formula{padding:6px;line-height:1.5}
+.coord{padding:6px}
+.coord b{font-size:18px}
+.lowergrid{gap:7px;margin-top:7px;grid-template-columns:minmax(0,1.15fr) minmax(0,.9fr) minmax(0,1fr)}
+.smalltable{font-size:10px;line-height:1.4}
+.smalltable th,.smalltable td{padding:4px}
+.evidence-row{gap:5px;padding:5px;margin:3px 0}
+.stage{gap:5px}
+.stage article{padding:6px}
+.footer{padding:7px}
+.insight-grid{gap:7px}
+.insight-card{padding:9px;border-radius:9px}
+.insight-title{margin-bottom:7px;font-size:13px}
+.profile-row{grid-template-columns:68px minmax(0,1fr) 35px;gap:6px;margin:7px 0}
+.profile-track{height:11px}
+.spread-number{margin:5px 0}
+.spread-number strong{font-size:32px}
+.readout-cards{gap:5px}
+.readout-card{padding:6px;gap:5px}
+.interpret-strip{gap:6px;margin-top:7px}
+.interpret-strip>div{padding:7px}
+.decision-brief{margin-top:7px;padding:10px;border-radius:10px}
+.decision-heading{margin-bottom:8px;gap:8px}
+.decision-heading h3{font-size:18px}
+.brief-kpis{gap:6px}
+.brief-kpi{padding:8px;gap:3px}
+.brief-kpi b{font-size:19px}
+.brief-columns{gap:6px;margin-top:7px}
+.brief-columns section{padding:7px}
+.brief-columns p{line-height:1.5}
+.decision-flow{gap:5px;margin-top:7px;padding:7px}
+@media(max-width:1100px){main{padding:5px}.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.grid>.panel:last-child{grid-column:1/-1}.lowergrid{grid-template-columns:repeat(2,minmax(0,1fr))}.insight-grid{grid-template-columns:1fr 1fr}.insight-grid>.insight-card:last-child{grid-column:1/-1}}
+@media(max-width:680px){.top{padding:9px 10px}.tagline{flex-basis:100%}.grid,.lowergrid,.insight-grid{grid-template-columns:minmax(0,1fr)}.grid>.panel:last-child,.insight-grid>.insight-card:last-child{grid-column:auto}.inputs{grid-template-columns:1fr 1fr}.brief-kpis{grid-template-columns:1fr 1fr}.brief-columns{grid-template-columns:1fr}.interpret-strip{grid-template-columns:1fr}.decision-flow{flex-wrap:wrap}.decision-flow div{flex-basis:42%}.dimension{grid-template-columns:95px 52px 50px minmax(0,1fr)}}
+@media print{main{padding:3px}.band{margin-bottom:5px;padding:6px}.panelhead{padding:5px 7px}.pad{padding:5px}.lowergrid{gap:5px;margin-top:5px}.top{padding:7px 12px}}
+
 </style></head><body>
 <header class="top"><h1>MMTF 2.0 專業顧問報告</h1><div class="tagline">以參與者容易理解、顧問可以執行、研究可以分析為設計原則<br>學術理論 × 文獻實證 × 工具驗證 × 顧問診斷 × 行動方案</div><div class="tools"><button onclick="resetScores()">▤ 清除重填</button><button onclick="preset()">⟳ 預設範例</button><button onclick="window.print()">▣ 列印／另存 PDF</button></div></header>
 <main>
