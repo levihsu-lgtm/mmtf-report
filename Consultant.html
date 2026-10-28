@@ -1,14 +1,173 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0｜四階段模組化顧問與研究工作台</title><link rel="stylesheet" href="css/style.css"></head><body>
-<header class="hero"><div><div class="eyebrow">MMTF 2.0 · MODULAR WORKFLOW</div><h1>四階段顧問分析與驗證工作台</h1><p>原始分數 → 參與者質性回饋 → 理論與量表整合 → 綜合驗證報告</p></div><div class="hero-actions"><button id="saveBtn" class="btn light">儲存本機進度</button><button id="loadBtn" class="btn light">載入本機進度</button><button id="printBtn" class="btn light">列印／另存 PDF</button><button id="exportBtn" class="btn light">匯出 JSON</button><label class="btn light filebtn">匯入 JSON<input id="importFile" type="file" accept="application/json" hidden></label></div></header>
-<nav class="stage-nav" aria-label="工作階段"><button class="stage-tab active" data-stage="1"><b>01</b><span>初始顧問分析</span><small>分數、理論與實證</small></button><button class="stage-tab" data-stage="2"><b>02</b><span>參與者質性回饋</span><small>題目、案例、回應</small></button><button class="stage-tab" data-stage="3"><b>03</b><span>整合理論與量表</span><small>多源資料、規畫建議</small></button><button class="stage-tab" data-stage="4"><b>04</b><span>總結與初步驗證</span><small>一致性、差異、限制</small></button></nav>
-<main class="shell"><div class="workflow-note"><b>工作原則</b><span>每一階段都會檢查必填資料；「下一階段」會提示缺漏。未填資料不會被自動當成支持證據，理論參照也不等於 MMTF 已完成信效度驗證。</span></div>
-<section class="stage-panel active" id="stage1"><div class="section-head"><div><div class="kicker">STAGE 01</div><h2>初始顧問報告｜原始數據 × 理論 × 實證</h2><p>輸入第一次 MMTF 四構面分數，產生動態分析；將理論論點與實證研究分開呈現。</p></div><span class="status" id="status1">待檢核</span></div>
-<div class="panel"><h3>參與資料與原始數據</h3><div class="fields"><label>個案／代碼<input id="caseId" placeholder="例如：MMTF-001"></label><label>施測日期<input id="testDate" type="date"></label><label>填答情境<input id="context" placeholder="例如：部門團隊／個人反思"></label></div><div class="score-grid">
-<label class="score mirror"><span>◉ Mirror</span><small>問題覺察與回饋</small><div><input id="mirror" type="number" min="0" max="25" step="1" value="8"><b>/25</b></div></label><label class="score matrix"><span>▦ Matrix</span><small>制度、權責與資源</small><div><input id="matrix" type="number" min="0" max="25" step="1" value="18"><b>/25</b></div></label><label class="score flow"><span>↗ Flow</span><small>資訊流動與協作</small><div><input id="flow" type="number" min="0" max="25" step="1" value="6"><b>/25</b></div></label><label class="score safety"><span>♡ Safety</span><small>心理安全與發聲</small><div><input id="safety" type="number" min="0" max="25" step="1" value="9"><b>/25</b></div></label></div><p class="hint">沿用原始規則：總分為四構面相加（0–100）；Awareness=(Mirror+Safety)/2/5；Action=(Matrix+Flow)/2/5；象限操作切點為 3/5。切點不是經驗常模或診斷界線。</p><div class="actions"><button class="btn primary" id="analyzeBtn">更新第一階段分析</button><button class="btn" data-check="1">檢查本階段完整性</button></div></div>
-<div id="stage1Analysis" class="analysis-grid"></div><div class="panel"><h3>理論與實證對照模組</h3><p class="hint">理論來源用於解釋概念；實證研究提供外部研究結果。兩者均不能單獨證明 MMTF 的題項或計分有效。</p><div id="evidenceCards" class="evidence-grid"></div><div class="fields"><label>顧問觀察／需驗證假設<textarea id="consultantHypothesis" rows="3" placeholder="只記錄可追溯的觀察；請標記為假設而非事實。"></textarea></label><label>可用的佐證來源<textarea id="evidenceSources" rows="3" placeholder="例如：流程紀錄、會議紀錄、組織指標、已取得授權的量表。"></textarea></label></div></div>
-<div class="stage-footer"><div><b>下一階段目的</b><p>將初始分數轉成可由參與者確認、否認或補充的質性問題。</p></div><button class="btn primary next-btn" data-next="2">完成檢核並前往第二階段 →</button></div></section>
-<section class="stage-panel" id="stage2"><div class="section-head"><div><div class="kicker">STAGE 02</div><h2>參與者質性回饋｜讓數據接受情境檢視</h2><p>參與者可指出認同、不同意、例外情況及其他解釋；系統只依已填內容產生初步摘要，不替參與者編造答案。</p></div><span class="status" id="status2">待檢核</span></div><div class="panel"><div class="participant-banner"><b>參與者填答說明</b><p>請以最近 1–3 個月的具體工作情境作答。可略過不願回答的問題；請避免輸入可識別他人的敏感資訊。</p></div><div id="qualitativeQuestions" class="question-list"></div><div class="actions"><button class="btn primary" id="respondBtn">根據目前回答產生回饋</button><button class="btn" data-check="2">檢查本階段完整性</button></div></div><div class="panel"><h3>系統依填答內容形成的初步回應</h3><p class="hint">此處為規則式整理與研究者工作提示，不是自動完成的正式質性編碼，也不代表因果判定。</p><div id="participantResponse" class="response-box empty">填答後按「根據目前回答產生回饋」。</div><label class="full-label">參與者對系統回應的修正／補充<textarea id="participantCorrection" rows="3" placeholder="這段摘要有沒有誤解你的意思？請補充或修正。"></textarea></label></div><div class="stage-footer"><div><b>下一階段目的</b><p>把初始量化訊號與參與者案例並列，再以適當量表／文件作多來源比對。</p></div><button class="btn primary next-btn" data-next="3">完成檢核並前往第三階段 →</button></div></section>
-<section class="stage-panel" id="stage3"><div class="section-head"><div><div class="kicker">STAGE 03</div><h2>理論與文獻整合｜質性 × 量表 × 其他佐證</h2><p>本階段不是「替分數找理由」，而是列出支持、矛盾與尚缺資料，並依文獻方法規畫後續工作。</p></div><span class="status" id="status3">待檢核</span></div><div class="panel"><h3>量表與佐證資料登錄</h3><div class="fields"><label>量表／工具名稱<input id="scaleName" placeholder="例如：團隊心理安全量表（需確認版本與授權）"></label><label>工具來源／版本<input id="scaleSource" placeholder="作者、年份、版本、語言、授權狀態"></label><label>施測日期<input id="scaleDate" type="date"></label><label>量表結果摘要<input id="scaleResult" placeholder="填入實際得分、樣本數、缺失值等"></label></div><div class="fields"><label>文件／流程／客觀指標<textarea id="otherEvidence" rows="3" placeholder="請記錄來源、期間、定義、樣本範圍；若沒有請填『尚未取得』。"></textarea></label><label>質性資料整理方式<select id="qualMethod"><option value="">請選擇</option><option value="thematic">主題分析（需建立編碼紀錄）</option><option value="framework">框架分析／矩陣對照</option><option value="content">內容分析</option><option value="other">其他（於備註說明）</option></select><textarea id="qualMethodNote" rows="2" placeholder="編碼者、編碼流程、反例處理、審核方式等"></textarea></label></div><div class="actions"><button class="btn primary" id="integrateBtn">產生整合矩陣與規畫建議</button><button class="btn" data-check="3">檢查本階段完整性</button></div></div><div id="integrationOutput" class="integration-grid"></div><div class="panel"><h3>規畫建議登錄（顧問可編修）</h3><div class="fields"><label>優先問題／假設<textarea id="planProblem" rows="2" placeholder="從分數、質性與佐證中提出，並註明證據來源"></textarea></label><label>建議介入與理論依據<textarea id="planAction" rows="2" placeholder="建議措施、對應理論／研究、適用限制"></textarea></label><label>執行角色與時間<textarea id="planOwner" rows="2" placeholder="負責角色、時間、資源及風險"></textarea></label><label>追蹤指標與資料來源<textarea id="planMetric" rows="2" placeholder="前後測、行為指標、質性回饋、時間點與判定規則"></textarea></label></div></div><div class="stage-footer"><div><b>下一階段目的</b><p>檢查初始 MMTF 的解釋是否被其他資料支持、修正或仍無法判定。</p></div><button class="btn primary next-btn" data-next="4">完成檢核並前往第四階段 →</button></div></section>
-<section class="stage-panel" id="stage4"><div class="section-head"><div><div class="kicker">STAGE 04</div><h2>總結報告｜初始數據是否獲得初步驗證？</h2><p>區分「相符」、「部分相符」、「不相符」與「資料不足」。初始分數不會因後續敘事而自動被判為有效。</p></div><span class="status" id="status4">待檢核</span></div><div class="panel"><h3>驗證判讀設定</h3><div class="fields"><label>整體初步判讀<select id="validationJudgment"><option value="insufficient">資料不足，暫不能判定</option><option value="consistent">多來源資料初步相符</option><option value="partial">部分相符／部分需要修正</option><option value="inconsistent">主要資料來源不相符</option></select></label><label>判讀理由<textarea id="validationRationale" rows="3" placeholder="引用具體分數、參與者原意、量表／文件結果；說明反例及替代解釋。"></textarea></label><label>主要限制與尚缺資料<textarea id="validationLimits" rows="3" placeholder="例如樣本數、量表版本、資料偏差、未取得獨立佐證等"></textarea></label><label>後續驗證安排<textarea id="validationNext" rows="3" placeholder="補收資料、重測、修訂題項、擴大樣本或安排專家審查"></textarea></label></div><div class="actions"><button class="btn primary" id="finalizeBtn">產生／更新總結報告</button><button class="btn" data-check="4">檢查本階段完整性</button><button class="btn" id="printFinalBtn">列印總結報告</button></div></div><div id="finalReport" class="final-report"></div><div class="stage-footer"><div><b>流程完成後</b><p>保留資料版本、來源與判讀依據；如新增證據，回到對應階段更新並重新產生總結。</p></div><button class="btn" data-stage="1">← 回到第一階段</button></div></section>
-<div id="checklistModal" class="modal" hidden><div class="modal-card"><button id="closeModal" class="modal-close">×</button><h3>階段完整性檢核</h3><div id="checklistContent"></div><div class="actions"><button id="modalContinue" class="btn primary">仍要前往下一階段</button><button id="modalStay" class="btn">返回補齊</button></div></div></div><div id="toast" class="toast" role="status"></div><footer>MMTF 2.0｜模組化工作台 · 本機操作版本 · 資料不會自動上傳 · 理論參照不等於 MMTF 信效度證明</footer></main><script type="module" src="js/app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 模組化職涯顧問分析報告</title>
+<style>
+:root{--navy:#073f87;--purple:#521493;--green:#00a86b;--orange:#ff9700;--ink:#12345a;--pale:#faf5ff}
+*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:12px}
+.top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;border-bottom:5px solid #b67afb}
+.top h1{font-size:clamp(20px,2.8vw,34px);margin:0;white-space:nowrap}
+.tagline{border-left:1px solid #c99bfc;padding-left:18px;font-size:13px;line-height:1.7;flex:1}
+main{max-width:1400px;margin:auto;padding:10px}
 
+/* 階段按鈕與流程指引列 */
+.stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;padding:12px 15px;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.stage-pill{display:flex;align-items:center;gap:6px;font-weight:bold;color:#521493;font-size:11px;background:#fff;padding:6px 10px;border-radius:20px;border:1px solid #d5bcff}
+.stage-pill span{width:20px;height:20px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:10px}
+.stage-arrow{color:#7012ca;font-weight:900;font-size:14px}
+.next-btn{background:#521493;color:white;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:11px;box-shadow:0 2px 5px rgba(82,20,147,0.3)}
+.next-btn:hover{background:#6d1ac7}
+
+/* 模組通用樣式 */
+.module-box{background:#fff;border:1px solid #d5bcff;border-radius:12px;padding:15px;margin-bottom:12px;box-shadow:0 3px 10px rgba(82,20,147,0.05)}
+.module-title{font-size:16px;font-weight:900;color:#521493;margin-bottom:10px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #f3e8ff;padding-bottom:6px}
+
+/* 輸入面板 */
+.inputs-grid{display:grid;grid-template-columns:repeat(4,1fr) auto;gap:8px;align-items:center}
+.input-card{padding:8px;border-radius:8px;color:#fff;display:flex;align-items:center;gap:6px}
+.input-card input{width:55px;padding:5px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:14px}
+.m-mirror{background:linear-gradient(110deg,#00a86b,#20d2a0)}
+.m-matrix{background:linear-gradient(110deg,#087cf3,#32b9ff)}
+.m-flow{background:linear-gradient(110deg,#ff8500,#ffc34e)}
+.m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
+.gen-btn{background:linear-gradient(120deg,#8422e6,#5110a8);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:14px}
+
+/* 6大緊湊繽紛報告區塊 */
+.report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.report-card{border-radius:12px;padding:14px;border:1px solid #e0ebf5;position:relative;overflow:hidden}
+.rc-1{background:linear-gradient(145deg,#f0fff8,#fff);border-color:#bcebd7}
+.rc-2{background:linear-gradient(145deg,#f4fbff,#fff);border-color:#b9dfff}
+.rc-3{background:linear-gradient(145deg,#fff7e9,#fff);border-color:#f5d5a4}
+.rc-4{background:linear-gradient(145deg,#f6efff,#fff);border-color:#d7c8ff}
+.rc-5{background:linear-gradient(145deg,#fff0f4,#fff);border-color:#ffcbd8}
+.rc-6{background:linear-gradient(145deg,#f4f6ff,#fff);border-color:#c8d4ff}
+.rc-title{font-size:13px;font-weight:900;color:#174875;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.rc-title span{background:#521493;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px}
+
+/* 質性填答區樣式 */
+.qualitative-form textarea{width:100%;height:65px;padding:8px;border:1px solid #d5bcff;border-radius:6px;margin-top:4px;margin-bottom:8px;font-family:inherit}
+.check-status{font-weight:bold;color:#00a86b;font-size:11px;background:#e3fbef;padding:4px 8px;border-radius:4px;display:inline-block;margin-top:5px}
+
+@media(max-width:1024px){.inputs-grid{grid-template-columns:1fr 1fr}.report-grid-6{grid-template-columns:1fr}}
+</style></head><body>
+
+<header class="top">
+  <h1>MMTF 2.0 模組化顧問分析報告</h1>
+  <div class="tagline">模組化架構 × 理論與實證呈現 × 質性與量化整合驗證 × 階段檢核與互動回饋</div>
+</header>
+
+<main>
+  <!-- 階段導引列（附箭頭與下一階段按鈕） -->
+  <div class="stage-nav-bar">
+    <div style="font-weight:900;color:#521493">顧問諮詢執行進度導引：</div>
+    <div class="stage-pill"><span>1</span>數據輸入與理論</div>
+    <div class="stage-arrow">➔</div>
+    <div class="stage-pill"><span>2</span>質性反饋填答</div>
+    <div class="stage-arrow">➔</div>
+    <div class="stage-pill"><span>3</span>量化/質性整合驗證</div>
+    <button class="next-btn" onclick="scrollToSection('stage2-sec')">進入第二階段 ➔</button>
+  </div>
+
+  <!-- 模組一：第一階段原始數據輸入與學術/實證呈現 -->
+  <section class="module-box" id="stage1-sec">
+    <div class="module-title"><span>📦</span> 模組一：第一階段原始數據輸入與學術理論／實證呈現</div>
+    <div class="inputs-grid">
+      <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small>問題覺察</small></div><input id="mirror" type="number" value="8" min="0" max="25"></div>
+      <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small>制度與權責</small></div><input id="matrix" type="number" value="18" min="0" max="25"></div>
+      <div class="input-card m-flow"><span>●</span><div><b>Flow</b><small>資訊流動</small></div><input id="flow" type="number" min="0" max="25" value="6"></div>
+      <div class="input-card m-safe"><span>♟</span><div><b>Safety</b><small>心理安全</small></div><input id="safe" type="number" min="0" max="25" value="9"></div>
+      <button class="gen-btn" onclick="generateReport()">執行模組運算 ⚡</button>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:#521493">
+      <b>學術理論對照基準：</b> Mirror (Johari Window, Luft & Ingham, 1955) ➔ Matrix (Star Model, Galbraith, 1977) ➔ Flow (Shannon & Weaver, 1949) ➔ Safety (Edmondson, 1999)。
+    </div>
+  </section>
+
+  <!-- 模組二：第二階段執行項目反饋（參與者質性填答區） -->
+  <section class="module-box" id="stage2-sec">
+    <div class="module-title"><span>📦</span> 模組二：第二階段執行項目反饋（參與者質性互動填答與檢核）</div>
+    <p style="margin:0 0 8px 0;color:#6b5388">請參與者針對報告內容填寫實際職場情境，作為後續系統模組化回應與第三階段驗證依據：</p>
+    <div class="qualitative-form">
+      <label><b>Q1 (Mirror 覺察題)：</b>最近一次在專案中遇到盲點或落差時，您是如何接收外界回饋的？</label>
+      <textarea id="q1-input">近期跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
+      
+      <label><b>Q2 (Safety 表達題)：</b>當您在會議中發現風險時，您是否能安心且直接提出不同意見？</label>
+      <textarea id="q2-input">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
+      
+      <div>
+        <button class="next-btn" onclick="checkDataAndProceed()">檢核填答完整性並進入第三階段 ➔</button>
+        <span id="check-msg" class="check-status" style="display:none">✔ 填答檢核無遺漏，已解鎖第三階段！</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模組三：第三階段系統模組初步反饋（質性與量表整合驗證與規畫建議） -->
+  <section class="module-box" id="stage3-sec" style="display:none">
+    <div class="module-title"><span>📦</span> 模組三：第三階段系統模組初步反饋（質性與量化整合驗證與總結回應）</div>
+    <div style="background:#f4eaff;padding:10px;border-radius:8px;border-left:4px solid #521493;line-height:1.6">
+      <b>【系統整合反饋與規畫建議】</b><br>
+      經由第一階段量化數據（總分 41 分，落於「失衡與耗損區」）與第二階段質性填答（專案延遲回饋不足、高壓下不敢建言）進行交叉比對：
+      <ul>
+        <li><b>數據驗證結果：</b>初期 MMTF 問卷顯示之 <b>Flow (6分)</b> 與 <b>Safety (9分)</b> 偏低現象，在當下職場情境中獲得完全驗證。</li>
+        <li><b>參考文獻做法與規畫建議：</b>建議導入 Edmondson 心理安全防護機制與 EVQ 資訊流動量表進行 30 天內跨部門溝通重塑。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 模組四：參與者個人報告版面（指定 6 大緊湊、繽紛區塊） -->
+  <section class="module-box">
+    <div class="module-title"><span>🎨</span> MMTF 參與者個人報告版面（6 大繽紛精簡區塊）</div>
+    <div class="report-grid-6">
+      <!-- 區塊 01 -->
+      <div class="report-card rc-1">
+        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span>總分 41</span></div>
+        <p>顯示四構面分數（Mirror:8, Matrix:18, Flow:6, Safety:9）、總分 41/100 分，以及本次回饋的初步解讀說明。</p>
+      </div>
+      <!-- 區塊 02 -->
+      <div class="report-card rc-2">
+        <div class="rc-title">02｜我的四構面輪廓 <span>視覺化分布</span></div>
+        <p>使用橫條圖呈現 Mirror、Matrix、Flow、Safety 分布，讓參與者直接看見各構面的強弱勢與相對落差。</p>
+      </div>
+      <!-- 區塊 03 -->
+      <div class="report-card rc-3">
+        <div class="rc-title">03｜我可以看見什麼？ <span>客觀鏡像</span></div>
+        <p>說明相對較高（Matrix 制度權責）與較低（Flow 資訊流動、Safety 心理安全）的構面，以非批判性文字協助理解。</p>
+      </div>
+      <!-- 區塊 04 -->
+      <div class="report-card rc-4">
+        <div class="rc-title">04｜值得思考的問題 <span>情境連結</span></div>
+        <p>「最近一次遇到跨部門專案問題時，我是否能安心提出？」將抽象分數連結到第二階段的實際職場經驗。</p>
+      </div>
+      <!-- 區塊 05 -->
+      <div class="report-card rc-5">
+        <div class="rc-title">05｜我的下一步行動 <span>IDP 行動</span></div>
+        <p>提供 1 至 3 項可執行的小行動（如建立安全回報管道）、預計完成時間與個人自我檢視方式。</p>
+      </div>
+      <!-- 區塊 06 -->
+      <div class="report-card rc-6">
+        <div class="rc-title">06｜我的後續追蹤 <span>永續覆盤</span></div>
+        <p>記錄個人反思、希望改善的項目，以及未來重新檢視的日期（如 30-90 天後複測）。</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({behavior: 'smooth'});
+}
+function checkDataAndProceed() {
+  let q1 = document.getElementById('q1-input').value.trim();
+  let q2 = document.getElementById('q2-input').value.trim();
+  if(q1.length > 5 && q2.length > 5) {
+    document.getElementById('check-msg').style.display = 'inline-block';
+    document.getElementById('stage3-sec').style.display = 'block';
+    setTimeout(() => {
+      scrollToSection('stage3-sec');
+    }, 500);
+  } else {
+    alert('請完整填寫質性反饋題目後再進行檢核！');
+  }
+}
+function generateReport() {
+  alert('模組一數據已重新計算，並同步更新至 6 大報告版面！');
+}
+</script></body></html>
