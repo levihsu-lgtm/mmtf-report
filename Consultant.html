@@ -6,7 +6,7 @@
 .top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;border-bottom:5px solid #b67afb}
 .top h1{font-size:clamp(20px,2.8vw,34px);margin:0;white-space:nowrap}
 .tagline{border-left:1px solid #c99bfc;padding-left:18px;font-size:13px;line-height:1.7;flex:1}
-main{max-width:1400px;margin:auto;padding:10px}
+main{max-width:1500px;margin:auto;padding:10px}
 
 /* 階段按鈕與流程指引列 */
 .stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;padding:12px 15px;margin-bottom:12px;gap:8px;flex-wrap:wrap}
@@ -21,14 +21,30 @@ main{max-width:1400px;margin:auto;padding:10px}
 .module-title{font-size:16px;font-weight:900;color:#521493;margin-bottom:10px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #f3e8ff;padding-bottom:6px}
 
 /* 輸入面板 */
-.inputs-grid{display:grid;grid-template-columns:repeat(4,1fr) auto;gap:8px;align-items:center}
+.inputs-grid{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr)) auto;gap:8px;align-items:center}
 .input-card{padding:8px;border-radius:8px;color:#fff;display:flex;align-items:center;gap:6px}
-.input-card input{width:55px;padding:5px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:14px}
+.input-card input{width:55px;padding:5px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:14px;color:#15365d}
 .m-mirror{background:linear-gradient(110deg,#00a86b,#20d2a0)}
 .m-matrix{background:linear-gradient(110deg,#087cf3,#32b9ff)}
 .m-flow{background:linear-gradient(110deg,#ff8500,#ffc34e)}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
 .gen-btn{background:linear-gradient(120deg,#8422e6,#5110a8);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:14px}
+
+/* 圖形分析網格區 */
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.analysis-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:12px}
+.analysis-card h4{margin:0 0 8px 0;color:#521493;font-size:13px}
+
+/* 象限圖設計 */
+.quad{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;aspect-ratio:1.1;border:2px solid #bda3fc;background:white;margin-bottom:6px}
+.q{padding:6px;font-size:9px;border:1px solid #eee;position:relative}
+.q b{display:block;text-align:center;font-size:11px;margin-bottom:2px}
+.q1{background:linear-gradient(135deg,#d9fff0,#6de9bd)}
+.q2{background:linear-gradient(135deg,#fff6bd,#ffdc63)}
+.q3{background:linear-gradient(135deg,#ffe2e2,#ff8e8e)}
+.q4{background:linear-gradient(135deg,#f2e1ff,#d09fff)}
+.point{position:absolute;width:15px;height:15px;background:#7012ca;border:2px solid white;border-radius:50%;box-shadow:0 0 0 2px #7012ca;left:34%;bottom:24%;transform:translate(-50%,50%)}
+.pointlabel{position:absolute;left:38%;bottom:23%;background:#7012ca;color:white;padding:2px 4px;border-radius:3px;font-weight:bold;font-size:9px}
 
 /* 6大緊湊繽紛報告區塊 */
 .report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -46,19 +62,19 @@ main{max-width:1400px;margin:auto;padding:10px}
 .qualitative-form textarea{width:100%;height:65px;padding:8px;border:1px solid #d5bcff;border-radius:6px;margin-top:4px;margin-bottom:8px;font-family:inherit}
 .check-status{font-weight:bold;color:#00a86b;font-size:11px;background:#e3fbef;padding:4px 8px;border-radius:4px;display:inline-block;margin-top:5px}
 
-@media(max-width:1024px){.inputs-grid{grid-template-columns:1fr 1fr}.report-grid-6{grid-template-columns:1fr}}
+@media(max-width:1100px){.inputs-grid{grid-template-columns:1fr 1fr}.analysis-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
 </style></head><body>
 
 <header class="top">
-  <h1>MMTF 2.0 模組化顧問分析報告</h1>
-  <div class="tagline">模組化架構 × 理論與實證呈現 × 質性與量化整合驗證 × 階段檢核與互動回饋</div>
+  <h1>MMTF 2.0 模組化職涯顧問分析報告</h1>
+  <div class="tagline">模組化架構 × 圖形化分析呈現 × 質性與量化整合驗證 × 階段檢核與互動回饋</div>
 </header>
 
 <main>
   <!-- 階段導引列（附箭頭與下一階段按鈕） -->
   <div class="stage-nav-bar">
     <div style="font-weight:900;color:#521493">顧問諮詢執行進度導引：</div>
-    <div class="stage-pill"><span>1</span>數據輸入與理論</div>
+    <div class="stage-pill"><span>1</span>數據輸入與圖形分析</div>
     <div class="stage-arrow">➔</div>
     <div class="stage-pill"><span>2</span>質性反饋填答</div>
     <div class="stage-arrow">➔</div>
@@ -66,16 +82,52 @@ main{max-width:1400px;margin:auto;padding:10px}
     <button class="next-btn" onclick="scrollToSection('stage2-sec')">進入第二階段 ➔</button>
   </div>
 
-  <!-- 模組一：第一階段原始數據輸入與學術/實證呈現 -->
+  <!-- 模組一：第一階段原始數據輸入、圖形化分析與學術理論呈現 -->
   <section class="module-box" id="stage1-sec">
-    <div class="module-title"><span>📦</span> 模組一：第一階段原始數據輸入與學術理論／實證呈現</div>
+    <div class="module-title"><span>📦</span> 模組一：第一階段原始數據輸入、圖形化分析與學術理論</div>
     <div class="inputs-grid">
       <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small>問題覺察</small></div><input id="mirror" type="number" value="8" min="0" max="25"></div>
       <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small>制度與權責</small></div><input id="matrix" type="number" value="18" min="0" max="25"></div>
       <div class="input-card m-flow"><span>●</span><div><b>Flow</b><small>資訊流動</small></div><input id="flow" type="number" min="0" max="25" value="6"></div>
       <div class="input-card m-safe"><span>♟</span><div><b>Safety</b><small>心理安全</small></div><input id="safe" type="number" min="0" max="25" value="9"></div>
-      <button class="gen-btn" onclick="generateReport()">執行模組運算 ⚡</button>
+      <button class="gen-btn" onclick="generateReport()">執行模組圖形運算 ⚡</button>
     </div>
+
+    <!-- 嵌入第一階段的圖形與分析結果 -->
+    <div class="analysis-grid">
+      <!-- 象限圖模組 -->
+      <div class="analysis-card">
+        <h4>🧭 組織效能四象限圖（Awareness × Action）</h4>
+        <div class="quad">
+          <div class="q q2"><b>II 潛能未釋放</b><ul><li>執行強、覺察不足</li></ul></div>
+          <div class="q q1"><b>I 最佳運作區</b><ul><li>資訊透明、協作順暢</li></ul></div>
+          <div class="q q3"><b>III 失衡風險區</b><ul><li>流動受阻、發聲不足</li></ul></div>
+          <div class="q q4"><b>IV 看見未轉化</b><ul><li>看見問題未落實行動</li></ul></div>
+          <div class="point" id="point"></div>
+          <div class="pointlabel" id="pointlabel">(1.7, 2.4)</div>
+        </div>
+        <div style="font-size:11px;color:#521493" id="quad-desc"><b>當前落點判讀：</b> 第三象限｜失衡風險區（Awareness: 1.7 | Action: 2.4）</div>
+      </div>
+
+      <!-- 四構面輪廓與差距分析 -->
+      <div class="analysis-card">
+        <h4>🎨 四構面分數輪廓與落差觀察</h4>
+        <div id="profile-bars" style="margin-bottom:10px">
+          <div style="font-size:11px;margin-bottom:4px">Mirror (問題覺察): <b>8/25</b></div>
+          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div style="background:#00a86b;width:32%;height:100%"></div></div>
+          <div style="font-size:11px;margin:6px 0 4px">Matrix (制度權責): <b>18/25</b></div>
+          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div style="background:#087cf3;width:72%;height:100%"></div></div>
+          <div style="font-size:11px;margin:6px 0 4px">Flow (資訊流動): <b>6/25</b></div>
+          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div style="background:#ff8500;width:24%;height:100%"></div></div>
+          <div style="font-size:11px;margin:6px 0 4px">Safety (心理安全): <b>9/25</b></div>
+          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div style="background:#8a0bfa;width:36%;height:100%"></div></div>
+        </div>
+        <div style="font-size:11px;color:#c66a00;background:#fff8ed;padding:6px;border-radius:6px">
+          <b>構面差距觀察：</b> 最高分與最低分相差 <b>12 分</b>，顯示制度設計與日常資訊流動存在顯著落差。
+        </div>
+      </div>
+    </div>
+
     <div style="margin-top:10px;font-size:11px;color:#521493">
       <b>學術理論對照基準：</b> Mirror (Johari Window, Luft & Ingham, 1955) ➔ Matrix (Star Model, Galbraith, 1977) ➔ Flow (Shannon & Weaver, 1949) ➔ Safety (Edmondson, 1999)。
     </div>
@@ -84,7 +136,7 @@ main{max-width:1400px;margin:auto;padding:10px}
   <!-- 模組二：第二階段執行項目反饋（參與者質性填答區） -->
   <section class="module-box" id="stage2-sec">
     <div class="module-title"><span>📦</span> 模組二：第二階段執行項目反饋（參與者質性互動填答與檢核）</div>
-    <p style="margin:0 0 8px 0;color:#6b5388">請參與者針對報告內容填寫實際職場情境，作為後續系統模組化回應與第三階段驗證依據：</p>
+    <p style="margin:0 0 8px 0;color:#6b5388">請參與者針對上述圖形與報告內容填寫實際職場情境，作為後續系統模組化回應與第三階段驗證依據：</p>
     <div class="qualitative-form">
       <label><b>Q1 (Mirror 覺察題)：</b>最近一次在專案中遇到盲點或落差時，您是如何接收外界回饋的？</label>
       <textarea id="q1-input">近期跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
@@ -112,36 +164,30 @@ main{max-width:1400px;margin:auto;padding:10px}
     </div>
   </section>
 
-  <!-- 模組四：參與者個人報告版面（指定 6 大緊湊、繽紛區塊） -->
+  <!-- 模組四：參與者個人報告版面（指定 6 大緊湊繽紛區塊） -->
   <section class="module-box">
     <div class="module-title"><span>🎨</span> MMTF 參與者個人報告版面（6 大繽紛精簡區塊）</div>
     <div class="report-grid-6">
-      <!-- 區塊 01 -->
       <div class="report-card rc-1">
         <div class="rc-title">01｜我的 MMTF 回饋總覽 <span>總分 41</span></div>
         <p>顯示四構面分數（Mirror:8, Matrix:18, Flow:6, Safety:9）、總分 41/100 分，以及本次回饋的初步解讀說明。</p>
       </div>
-      <!-- 區塊 02 -->
       <div class="report-card rc-2">
         <div class="rc-title">02｜我的四構面輪廓 <span>視覺化分布</span></div>
         <p>使用橫條圖呈現 Mirror、Matrix、Flow、Safety 分布，讓參與者直接看見各構面的強弱勢與相對落差。</p>
       </div>
-      <!-- 區塊 03 -->
       <div class="report-card rc-3">
         <div class="rc-title">03｜我可以看見什麼？ <span>客觀鏡像</span></div>
         <p>說明相對較高（Matrix 制度權責）與較低（Flow 資訊流動、Safety 心理安全）的構面，以非批判性文字協助理解。</p>
       </div>
-      <!-- 區塊 04 -->
       <div class="report-card rc-4">
         <div class="rc-title">04｜值得思考的問題 <span>情境連結</span></div>
         <p>「最近一次遇到跨部門專案問題時，我是否能安心提出？」將抽象分數連結到第二階段的實際職場經驗。</p>
       </div>
-      <!-- 區塊 05 -->
       <div class="report-card rc-5">
         <div class="rc-title">05｜我的下一步行動 <span>IDP 行動</span></div>
         <p>提供 1 至 3 項可執行的小行動（如建立安全回報管道）、預計完成時間與個人自我檢視方式。</p>
       </div>
-      <!-- 區塊 06 -->
       <div class="report-card rc-6">
         <div class="rc-title">06｜我的後續追蹤 <span>永續覆盤</span></div>
         <p>記錄個人反思、希望改善的項目，以及未來重新檢視的日期（如 30-90 天後複測）。</p>
@@ -160,14 +206,32 @@ function checkDataAndProceed() {
   if(q1.length > 5 && q2.length > 5) {
     document.getElementById('check-msg').style.display = 'inline-block';
     document.getElementById('stage3-sec').style.display = 'block';
-    setTimeout(() => {
-      scrollToSection('stage3-sec');
-    }, 500);
+    setTimeout(() => { scrollToSection('stage3-sec'); }, 500);
   } else {
     alert('請完整填寫質性反饋題目後再進行檢核！');
   }
 }
 function generateReport() {
-  alert('模組一數據已重新計算，並同步更新至 6 大報告版面！');
+  let m = Number(document.getElementById('mirror').value)||0;
+  let mx = Number(document.getElementById('matrix').value)||0;
+  let f = Number(document.getElementById('flow').value)||0;
+  let s = Number(document.getElementById('safe').value)||0;
+  
+  let aw = ((m + s) / 2 / 5).toFixed(1);
+  let ac = ((mx + f) / 2 / 5).toFixed(1);
+  
+  let leftPct = (aw / 5) * 100;
+  let bottomPct = (ac / 5) * 100;
+  
+  let pt = document.getElementById('point');
+  let pl = document.getElementById('pointlabel');
+  pt.style.left = leftPct + '%';
+  pt.style.bottom = bottomPct + '%';
+  pl.style.left = Math.min(85, Math.max(10, leftPct)) + '%';
+  pl.style.bottom = Math.min(85, Math.max(10, bottomPct - 8)) + '%';
+  pl.innerText = `(${aw}, ${ac})`;
+  
+  document.getElementById('quad-desc').innerHTML = `<b>當前落點計算：</b> Awareness: ${aw} | Action: ${ac}`;
+  alert('模組一圖形與數據已根據您的輸入重新運算更新！');
 }
 </script></body></html>
