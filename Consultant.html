@@ -124,9 +124,12 @@ main{max-width:1900px;margin:auto;padding:6px 8px}
 .interpret-strip span{font-size:10px;line-height:1.5;color:#4f657a}
 
 .sample-tag{display:inline-block;background:#f3dfff;color:#521493;border:1px solid #d5bcff;border-radius:99px;padding:3px 8px;font-size:11px!important;font-weight:800;vertical-align:middle}
-.consultant-flow-banner{margin-bottom:10px;padding:10px;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+
+/* 顧問步驟流程橫幅（已加清楚箭頭指引） */
+.consultant-flow-banner{margin-bottom:10px;padding:10px;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .consultant-step{display:flex;align-items:center;gap:6px;font-weight:bold;color:#521493;font-size:11px}
 .consultant-step span{width:22px;height:22px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:10px}
+.consultant-arrow{color:#7012ca;font-weight:900;font-size:14px}
 
 .decision-brief{margin-top:7px;border:1px solid #d5bcff;border-radius:10px;padding:10px;background:linear-gradient(135deg,#fcf8ff 0%,#fff 54%,#f3e8ff 100%);box-shadow:0 5px 18px #52149310}
 .decision-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
@@ -165,12 +168,16 @@ main{max-width:1900px;margin:auto;padding:6px 8px}
 <header class="top"><h1>MMTF 2.0 職涯顧問分析報告</h1><div class="tagline">專為高階客戶打造的三階段深度教練與諮詢分析模板<br>階段一：數據鏡像與覺察 ➔ 階段二：卡點解構與回饋紀錄 ➔ 階段三：IDP行動方案與成效追蹤</div><div class="tools"><button onclick="resetScores()">▤ 清除重填</button><button onclick="preset()">⟳ 預設範例</button><button onclick="window.print()">▣ 列印／另存 PDF</button></div></header>
 <main>
 
+<!-- 顧問諮詢步驟流程橫幅（加上了清楚明瞭的 ➔ 箭頭指引） -->
 <div class="consultant-flow-banner">
   <div style="font-weight:900;color:#521493;font-size:12px">顧問諮詢執行路徑：</div>
-  <div class="consultant-step"><span>1</span>輸入量化分數與自我評估</div>
-  <div class="consultant-step"><span>2</span>檢視四構面盲點與象限判讀</div>
-  <div class="consultant-step"><span>3</span>對談回饋紀錄與深度突破</div>
-  <div class="consultant-step"><span>4</span>落實階段性 IDP 行動計畫</div>
+  <div class="consultant-step"><span>1</span>輸入量化分數</div>
+  <div class="consultant-arrow">➔</div>
+  <div class="consultant-step"><span>2</span>檢視盲點與象限</div>
+  <div class="consultant-arrow">➔</div>
+  <div class="consultant-step"><span>3</span>對談回饋與突破</div>
+  <div class="consultant-arrow">➔</div>
+  <div class="consultant-step"><span>4</span>落實 IDP 計畫</div>
 </div>
 
 <section class="band"><h2 class="bandtitle"><span class="num">1</span>輸入四構面得分 <small style="font-size:14px">(每項 0–25 分)</small> <small class="sample-tag">目前為示範分數，請依客戶實際測評輸入</small></h2><div class="inputs">
@@ -199,7 +206,6 @@ main{max-width:1900px;margin:auto;padding:6px 8px}
 
 <article class="panel"><div class="panelhead"><span class="num">6</span>顧問與客戶對談回饋紀錄 <small>包含認同、防衛異議、補充情境與顧問洞察</small></div><div class="pad"><table class="smalltable"><thead><tr><th>紀錄類型</th><th>內容摘要</th><th>顧問解析與下一步策略</th></tr></thead><tbody><tr><td>✓ 客戶認同</td><td>架構與權責大致清楚，但跨部門溝通與追蹤常卡關</td><td>與數據呈現的 Flow 偏低高度一致</td></tr><tr><td>✕ 防衛／不同意</td><td>認為自身資訊極為透明，不認同心理安全感不足</td><td>可能因部門小圈子差異，需引導深層訪談</td></tr><tr><td>● 補充情境</td><td>重大專案常因跨部門協調延遲；基層不敢直言真相</td><td>提供真實職場場景作為突破切入點</td></tr><tr><td>◆ 顧問洞察</td><td>受近期組織變革與高壓工作量影響，導致能量耗損</td><td>須納入個人永續與精力管理討論</td></tr></tbody></table><p class="note">此處為顧問訪談紀錄範例，正式會談應替換為客戶真實反饋。</p></div></article>
 
-<!-- 第 7 區塊：已將 MMTF 四構面與佐證量表做深度串接 -->
 <article class="panel"><div class="panelhead"><span class="num">7</span>顧問工具與佐證量表建議 <small>對應 MMTF 構面之專業驗證量表、目的與執行方法</small></div><div class="pad"><table class="smalltable"><thead><tr><th>MMTF 構面</th><th>建議採用佐證量表／工具</th><th>核心測評目的與使用時機</th><th>顧問執行方法與預期產出</th></tr></thead><tbody>
 <tr><td class="swatch" style="background:#00a96b">Mirror<br>自我覺察</td><td><b>360度領導力回饋量表</b><br><small>（含 Johari 盲點視窗問卷）</small></td><td>佐證 MMTF <b>Mirror</b> 分數，對比自我認知與外界評價的落差。</td><td>進行 360 度匿名回饋訪談；產出個人盲點分析報告與回饋改善清單。</td></tr>
 <tr><td class="swatch" style="background:#087cf3">Matrix<br>定位系統</td><td><b>OCAI 組織文化與角色定位量表</b><br><small>（Competing Values Framework）</small></td><td>佐證 MMTF <b>Matrix</b> 權責與制度對齊度，釐清文化適配性。</td><td>填寫 OCAI 量表＋深度教練對談；釐清個人角色邊界與組織體制槓桿。</td></tr>
@@ -221,7 +227,13 @@ main{max-width:1900px;margin:auto;padding:6px 8px}
 <div class="brief-kpi kpi-green"><span>兩軸落點</span><b id="briefAxes">—</b><small id="briefAxesSub">Awareness × Action</small></div>
 </div>
 <div class="brief-columns"><section><h4>🔎 優先突破方向</h4><p id="briefFocus">輸入分數後，系統會依最低分構面提出顧問引導方向。</p></section><section><h4>📂 建議探索證據</h4><p id="briefEvidence">實際管理情境、重大決策事件、跨部門衝突與團隊回饋。</p></section><section><h4>✅ 會談前確認</h4><p id="briefConfirm">數據反映當下狀態而非全貌；需結合客戶真實心態與情境解讀。</p></section></div>
-<div class="decision-flow"><div><span>01</span><b>看見鏡像</b><small>分數輪廓／象限落點</small></div><i>→</i><div><span>02</span><b>深度對話</b><small>解構卡點／盲點覺察</small></div><i>→</i><div><span>03</span><b>行動實驗</b><small>IDP 規劃／行為調整</small></div><i>→</i><div><span>04</span><b>覆盤成長</b><small>成效追蹤／持續迭代</small></div></div>
+<!-- 決策流程導引列（加上了清楚的 ➔ 箭頭） -->
+<div class="decision-flow">
+  <div><span>01</span><b>看見鏡像</b><small>分數輪廓／象限落點</small></div><i>➔</i>
+  <div><span>02</span><b>深度對話</b><small>解構卡點／盲點覺察</small></div><i>➔</i>
+  <div><span>03</span><b>行動實驗</b><small>IDP 規劃／行為調整</small></div><i>➔</i>
+  <div><span>04</span><b>覆盤成長</b><small>成效追蹤／持續迭代</small></div>
+</div>
 </div>
 <div class="interpret-strip"><div><b>目前能說什麼？</b><span>各構面相對高低、分數落差、依設定規則落在哪個顧問象限。</span></div><div><b>目前不能直接說什麼？</b><span>不能單憑分數斷定領導能力高低、人格特質或成敗責任。</span></div><div><b>下一步怎麼對話？</b><span>回到具體職場場景與真實案例，共同探討突破點與行動方案。</span></div></div></div></article>
 
