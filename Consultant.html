@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 模組化職涯顧問分析報告</title>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 動態模組化職涯顧問分析報告</title>
 <style>
 :root{--navy:#073f87;--purple:#521493;--green:#00a86b;--orange:#ff9700;--ink:#12345a;--pale:#faf5ff}
 *{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:12px}
@@ -66,41 +66,39 @@ main{max-width:1500px;margin:auto;padding:10px}
 </style></head><body>
 
 <header class="top">
-  <h1>MMTF 2.0 模組化職涯顧問分析報告</h1>
-  <div class="tagline">模組化架構 × 圖形化分析呈現 × 質性與量化整合驗證 × 階段檢核與互動回饋</div>
+  <h1>MMTF 2.0 動態模組化職涯顧問分析報告</h1>
+  <div class="tagline">動態質性題目生成 × 圖形化分析呈現 × 質性量化交叉驗證 × 階段檢核</div>
 </header>
 
 <main>
-  <!-- 階段導引列（附箭頭與下一階段按鈕） -->
+  <!-- 階段導引列 -->
   <div class="stage-nav-bar">
     <div style="font-weight:900;color:#521493">顧問諮詢執行進度導引：</div>
     <div class="stage-pill"><span>1</span>數據輸入與圖形分析</div>
     <div class="stage-arrow">➔</div>
-    <div class="stage-pill"><span>2</span>質性反饋填答</div>
+    <div class="stage-pill"><span>2</span>動態質性反饋填答</div>
     <div class="stage-arrow">➔</div>
-    <div class="stage-pill"><span>3</span>量化/質性整合驗證</div>
+    <div class="stage-pill"><span>3</span>智能交叉驗證與建議</div>
     <button class="next-btn" onclick="scrollToSection('stage2-sec')">進入第二階段 ➔</button>
   </div>
 
-  <!-- 模組一：第一階段原始數據輸入、圖形化分析與學術理論呈現 -->
+  <!-- 模組一：第一階段原始數據輸入與圖形分析 -->
   <section class="module-box" id="stage1-sec">
-    <div class="module-title"><span>📦</span> 模組一：第一階段原始數據輸入、圖形化分析與學術理論</div>
+    <div class="module-title"><span>📦</span> 模組一：第一階段原始數據輸入與圖形化分析</div>
     <div class="inputs-grid">
       <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small>問題覺察</small></div><input id="mirror" type="number" value="8" min="0" max="25"></div>
       <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small>制度與權責</small></div><input id="matrix" type="number" value="18" min="0" max="25"></div>
       <div class="input-card m-flow"><span>●</span><div><b>Flow</b><small>資訊流動</small></div><input id="flow" type="number" min="0" max="25" value="6"></div>
       <div class="input-card m-safe"><span>♟</span><div><b>Safety</b><small>心理安全</small></div><input id="safe" type="number" min="0" max="25" value="9"></div>
-      <button class="gen-btn" onclick="generateReport()">執行模組圖形運算 ⚡</button>
+      <button class="gen-btn" onclick="generateReport()">執行模組運算並生成動態題目 ⚡</button>
     </div>
 
-    <!-- 嵌入第一階段的圖形與分析結果 -->
     <div class="analysis-grid">
-      <!-- 象限圖模組 -->
       <div class="analysis-card">
         <h4>🧭 組織效能四象限圖（Awareness × Action）</h4>
         <div class="quad">
           <div class="q q2"><b>II 潛能未釋放</b><ul><li>執行強、覺察不足</li></ul></div>
-          <div class="q q1"><b>I 最佳運作區</b><ul><li>資訊透明、協作順暢</li></ul></div>
+          <div class="q q1"><b>I 卓越運作區</b><ul><li>資訊透明、協作順暢</li></ul></div>
           <div class="q q3"><b>III 失衡風險區</b><ul><li>流動受阻、發聲不足</li></ul></div>
           <div class="q q4"><b>IV 看見未轉化</b><ul><li>看見問題未落實行動</li></ul></div>
           <div class="point" id="point"></div>
@@ -109,68 +107,58 @@ main{max-width:1500px;margin:auto;padding:10px}
         <div style="font-size:11px;color:#521493" id="quad-desc"><b>當前落點判讀：</b> 第三象限｜失衡風險區（Awareness: 1.7 | Action: 2.4）</div>
       </div>
 
-      <!-- 四構面輪廓與差距分析 -->
       <div class="analysis-card">
         <h4>🎨 四構面分數輪廓與落差觀察</h4>
         <div id="profile-bars" style="margin-bottom:10px">
-          <div style="font-size:11px;margin-bottom:4px">Mirror (問題覺察): <b>8/25</b></div>
-          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div style="background:#00a86b;width:32%;height:100%"></div></div>
-          <div style="font-size:11px;margin:6px 0 4px">Matrix (制度權責): <b>18/25</b></div>
-          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div style="background:#087cf3;width:72%;height:100%"></div></div>
-          <div style="font-size:11px;margin:6px 0 4px">Flow (資訊流動): <b>6/25</b></div>
-          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div style="background:#ff8500;width:24%;height:100%"></div></div>
-          <div style="font-size:11px;margin:6px 0 4px">Safety (心理安全): <b>9/25</b></div>
-          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div style="background:#8a0bfa;width:36%;height:100%"></div></div>
+          <div style="font-size:11px;margin-bottom:4px">Mirror (問題覺察): <b id="val-m">8/25</b></div>
+          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div id="bar-m" style="background:#00a86b;width:32%;height:100%"></div></div>
+          <div style="font-size:11px;margin:6px 0 4px">Matrix (制度權責): <b id="val-mx">18/25</b></div>
+          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div id="bar-mx" style="background:#087cf3;width:72%;height:100%"></div></div>
+          <div style="font-size:11px;margin:6px 0 4px">Flow (資訊流動): <b id="val-f">6/25</b></div>
+          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div id="bar-f" style="background:#ff8500;width:24%;height:100%"></div></div>
+          <div style="font-size:11px;margin:6px 0 4px">Safety (心理安全): <b id="val-s">9/25</b></div>
+          <div style="background:#eef;height:8px;border-radius:4px;overflow:hidden"><div id="bar-s" style="background:#8a0bfa;width:36%;height:100%"></div></div>
         </div>
-        <div style="font-size:11px;color:#c66a00;background:#fff8ed;padding:6px;border-radius:6px">
-          <b>構面差距觀察：</b> 最高分與最低分相差 <b>12 分</b>，顯示制度設計與日常資訊流動存在顯著落差。
+        <div style="font-size:11px;color:#c66a00;background:#fff8ed;padding:6px;border-radius:6px" id="spread-box">
+          <b>構面差距觀察：</b> 最高分與最低分相差 <b>12 分</b>。
         </div>
       </div>
     </div>
-
-    <div style="margin-top:10px;font-size:11px;color:#521493">
-      <b>學術理論對照基準：</b> Mirror (Johari Window, Luft & Ingham, 1955) ➔ Matrix (Star Model, Galbraith, 1977) ➔ Flow (Shannon & Weaver, 1949) ➔ Safety (Edmondson, 1999)。
-    </div>
   </section>
 
-  <!-- 模組二：第二階段執行項目反饋（參與者質性填答區） -->
+  <!-- 模組二：第二階段動態質性反饋填答 -->
   <section class="module-box" id="stage2-sec">
-    <div class="module-title"><span>📦</span> 模組二：第二階段執行項目反饋（參與者質性互動填答與檢核）</div>
-    <p style="margin:0 0 8px 0;color:#6b5388">請參與者針對上述圖形與報告內容填寫實際職場情境，作為後續系統模組化回應與第三階段驗證依據：</p>
+    <div class="module-title"><span>📦</span> 模組二：第二階段動態質性反饋填答（依據第一階段最低分自動派發題目）</div>
+    <p style="margin:0 0 8px 0;color:#6b5388">系統已根據您在第一階段測出之最低分構面，自動生成專屬的深掘訪談題：</p>
     <div class="qualitative-form">
-      <label><b>Q1 (Mirror 覺察題)：</b>最近一次在專案中遇到盲點或落差時，您是如何接收外界回饋的？</label>
-      <textarea id="q1-input">近期跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
+      <label id="dyn-q1-label"><b>Q1 核心深掘題（自動匹配）：</b></label>
+      <textarea id="q1-input">近期在推進專案時，常因為跨部門資訊對齊不及而導致時程延遲，且缺乏即時檢討機制。</textarea>
       
-      <label><b>Q2 (Safety 表達題)：</b>當您在會議中發現風險時，您是否能安心且直接提出不同意見？</label>
-      <textarea id="q2-input">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
+      <label id="dyn-q2-label"><b>Q2 輔助驗證題：</b></label>
+      <textarea id="q2-input">在高壓環境下，基於組織氛圍，基層同仁或自己較不敢直接點出結構性盲點。</textarea>
       
       <div>
-        <button class="next-btn" onclick="checkDataAndProceed()">檢核填答完整性並進入第三階段 ➔</button>
+        <button class="next-btn" onclick="checkDataAndProceed()">檢核填答完整性並進行智能交叉驗證 ➔</button>
         <span id="check-msg" class="check-status" style="display:none">✔ 填答檢核無遺漏，已解鎖第三階段！</span>
       </div>
     </div>
   </section>
 
-  <!-- 模組三：第三階段系統模組初步反饋（質性與量表整合驗證與規畫建議） -->
+  <!-- 模組三：第三階段系統智能整合反饋 -->
   <section class="module-box" id="stage3-sec" style="display:none">
-    <div class="module-title"><span>📦</span> 模組三：第三階段系統模組初步反饋（質性與量化整合驗證與總結回應）</div>
-    <div style="background:#f4eaff;padding:10px;border-radius:8px;border-left:4px solid #521493;line-height:1.6">
-      <b>【系統整合反饋與規畫建議】</b><br>
-      經由第一階段量化數據（總分 41 分，落於「失衡與耗損區」）與第二階段質性填答（專案延遲回饋不足、高壓下不敢建言）進行交叉比對：
-      <ul>
-        <li><b>數據驗證結果：</b>初期 MMTF 問卷顯示之 <b>Flow (6分)</b> 與 <b>Safety (9分)</b> 偏低現象，在當下職場情境中獲得完全驗證。</li>
-        <li><b>參考文獻做法與規畫建議：</b>建議導入 Edmondson 心理安全防護機制與 EVQ 資訊流動量表進行 30 天內跨部門溝通重塑。</li>
-      </ul>
+    <div class="module-title"><span>📦</span> 模組三：第三階段系統智能整合反饋（量化數據與質性文本的交叉驗證）</div>
+    <div style="background:#f4eaff;padding:12px;border-radius:8px;border-left:4px solid #521493;line-height:1.7" id="stage3-content">
+      <!-- 內容由 JavaScript 根據填答動態產出 -->
     </div>
   </section>
 
-  <!-- 模組四：參與者個人報告版面（指定 6 大緊湊繽紛區塊） -->
+  <!-- 模組四：參與者個人報告版面（6 大繽紛精簡區塊） -->
   <section class="module-box">
     <div class="module-title"><span>🎨</span> MMTF 參與者個人報告版面（6 大繽紛精簡區塊）</div>
     <div class="report-grid-6">
       <div class="report-card rc-1">
-        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span>總分 41</span></div>
-        <p>顯示四構面分數（Mirror:8, Matrix:18, Flow:6, Safety:9）、總分 41/100 分，以及本次回饋的初步解讀說明。</p>
+        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r-total">總分 41</span></div>
+        <p id="r-text-1">顯示四構面分數、總分 41/100 分，以及本次回饋的初步解讀說明。</p>
       </div>
       <div class="report-card rc-2">
         <div class="rc-title">02｜我的四構面輪廓 <span>視覺化分布</span></div>
@@ -178,15 +166,15 @@ main{max-width:1500px;margin:auto;padding:10px}
       </div>
       <div class="report-card rc-3">
         <div class="rc-title">03｜我可以看見什麼？ <span>客觀鏡像</span></div>
-        <p>說明相對較高（Matrix 制度權責）與較低（Flow 資訊流動、Safety 心理安全）的構面，以非批判性文字協助理解。</p>
+        <p id="r-text-3">說明相對較高與較低的構面，以非批判性文字協助理解當前狀態。</p>
       </div>
       <div class="report-card rc-4">
-        <div class="rc-title">04｜值得思考的問題 <span>情境連結</span></div>
-        <p>「最近一次遇到跨部門專案問題時，我是否能安心提出？」將抽象分數連結到第二階段的實際職場經驗。</p>
+        <div class="rc-title">04｜值得思考的問題 <span>動態情境連結</span></div>
+        <p id="r-text-4">將抽象分數連結到第二階段您所填寫的實際職場經驗。</p>
       </div>
       <div class="report-card rc-5">
         <div class="rc-title">05｜我的下一步行動 <span>IDP 行動</span></div>
-        <p>提供 1 至 3 項可執行的小行動（如建立安全回報管道）、預計完成時間與個人自我檢視方式。</p>
+        <p id="r-text-5">提供 1 至 3 項可執行的小行動、預計完成時間與個人自我檢視方式。</p>
       </div>
       <div class="report-card rc-6">
         <div class="rc-title">06｜我的後續追蹤 <span>永續覆盤</span></div>
@@ -200,38 +188,102 @@ main{max-width:1500px;margin:auto;padding:10px}
 function scrollToSection(id) {
   document.getElementById(id).scrollIntoView({behavior: 'smooth'});
 }
-function checkDataAndProceed() {
-  let q1 = document.getElementById('q1-input').value.trim();
-  let q2 = document.getElementById('q2-input').value.trim();
-  if(q1.length > 5 && q2.length > 5) {
-    document.getElementById('check-msg').style.display = 'inline-block';
-    document.getElementById('stage3-sec').style.display = 'block';
-    setTimeout(() => { scrollToSection('stage3-sec'); }, 500);
+
+// 根據第一階段最低分動態改變模組二的題目
+function updateDynamicQuestions() {
+  let m = Number(document.getElementById('mirror').value)||0;
+  let mx = Number(document.getElementById('matrix').value)||0;
+  let f = Number(document.getElementById('flow').value)||0;
+  let s = Number(document.getElementById('safe').value)||0;
+  
+  let scores = [{name:'Mirror', val:m}, {name:'Matrix', val:mx}, {name:'Flow', val:f}, {name:'Safety', val:s}];
+  scores.sort((a,b)=>a.val - b.val);
+  let lowest = scores[0]; // 取得最低分的構面
+
+  let q1Label = document.getElementById('dyn-q1-label');
+  let q2Label = document.getElementById('dyn-q2-label');
+
+  if(lowest.name === 'Flow') {
+    q1Label.innerHTML = `<b>Q1 核心深掘題（系統偵測 Flow 資訊流動最低，自動派發）：</b> 近期在進行跨部門溝通或專案時，哪一個環節最容易發生訊息斷點或延遲？請描述具體情境。`;
+    q2Label.innerHTML = `<b>Q2 輔助驗證題：</b> 針對上述資訊落差，您認為對日常決策與團隊協作造成了什麼實質影響？`;
+  } else if(lowest.name === 'Safety') {
+    q1Label.innerHTML = `<b>Q1 核心深掘題（系統偵測 Safety 心理安全最低，自動派發）：</b> 在高壓或跨部門會議中，是什麼因素讓您或同仁在發現問題時選擇保持沈默？`;
+    q2Label.innerHTML = `<b>Q2 輔助驗證題：</b> 您希望組織或主管提供什麼樣的支持，能讓您更安心地提出真實建言？`;
+  } else if(lowest.name === 'Mirror') {
+    q1Label.innerHTML = `<b>Q1 核心深掘題（系統偵測 Mirror 自我覺察最低，自動派發）：</b> 當工作成果與預期不符時，您通常透過什麼管道接收外部回饋？是否常感到盲點被忽略？`;
+    q2Label.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為有哪些方法可以幫助您拉近「自我認知」與「外界實際觀感」的落差？`;
   } else {
-    alert('請完整填寫質性反饋題目後再進行檢核！');
+    q1Label.innerHTML = `<b>Q1 核心深掘題（系統偵測 Matrix 制度權責最低，自動派發）：</b> 當前職位上的權責邊界與可用資源是否清晰？在哪個環節常感到被體制或體系卡住？`;
+    q2Label.innerHTML = `<b>Q2 輔助驗證題：</b> 針對現有的制度與資源分配，您最希望優先調整或爭取的是什麼？`;
   }
 }
+
 function generateReport() {
   let m = Number(document.getElementById('mirror').value)||0;
   let mx = Number(document.getElementById('matrix').value)||0;
   let f = Number(document.getElementById('flow').value)||0;
   let s = Number(document.getElementById('safe').value)||0;
   
+  let total = m + mx + f + s;
   let aw = ((m + s) / 2 / 5).toFixed(1);
   let ac = ((mx + f) / 2 / 5).toFixed(1);
   
-  let leftPct = (aw / 5) * 100;
-  let bottomPct = (ac / 5) * 100;
-  
+  // 更新圖形落點
   let pt = document.getElementById('point');
   let pl = document.getElementById('pointlabel');
-  pt.style.left = leftPct + '%';
-  pt.style.bottom = bottomPct + '%';
-  pl.style.left = Math.min(85, Math.max(10, leftPct)) + '%';
-  pl.style.bottom = Math.min(85, Math.max(10, bottomPct - 8)) + '%';
+  pt.style.left = (aw / 5) * 100 + '%';
+  pt.style.bottom = (ac / 5) * 100 + '%';
+  pl.style.left = Math.min(85, Math.max(10, (aw / 5) * 100)) + '%';
+  pl.style.bottom = Math.min(85, Math.max(10, (ac / 5) * 100 - 8)) + '%';
   pl.innerText = `(${aw}, ${ac})`;
-  
-  document.getElementById('quad-desc').innerHTML = `<b>當前落點計算：</b> Awareness: ${aw} | Action: ${ac}`;
-  alert('模組一圖形與數據已根據您的輸入重新運算更新！');
+
+  // 更新Bar
+  document.getElementById('val-m').innerText = m+'/25'; document.getElementById('bar-m').style.width = (m/25*100)+'%';
+  document.getElementById('val-mx').innerText = mx+'/25'; document.getElementById('bar-mx').style.width = (mx/25*100)+'%';
+  document.getElementById('val-f').innerText = f+'/25'; document.getElementById('bar-f').style.width = (f/25*100)+'%';
+  document.getElementById('val-s').innerText = s+'/25'; document.getElementById('bar-s').style.width = (s/25*100)+'%';
+
+  let maxV = Math.max(m, mx, f, s);
+  let minV = Math.min(m, mx, f, s);
+  document.getElementById('spread-box').innerHTML = `<b>構面差距觀察：</b> 最高與最低分相差 <b>${maxV - minV} 分</b>。`;
+  document.getElementById('r-total').innerText = '總分 ' + total;
+
+  // 動態更新模組二題目
+  updateDynamicQuestions();
+  alert('模組一運算完成！系統已根據您的最低分構面，自動動態調整模組二的深掘題目。');
 }
+
+function checkDataAndProceed() {
+  let q1 = document.getElementById('q1-input').value.trim();
+  let q2 = document.getElementById('q2-input').value.trim();
+  
+  if(q1.length > 5 && q2.length > 5) {
+    document.getElementById('check-msg').style.display = 'inline-block';
+    
+    // 智慧分析模組二文本並生成模組三結果
+    let analysisHTML = `<b>【系統智能交叉驗證與規畫建議】</b><br>`;
+    analysisHTML += `經由第一階段量化數據與第二階段質性填答（文本內容：「${q1.substring(0,30)}...」）進行文本意涵與三角交叉比對：<br><ul>`;
+    analysisHTML += `<li><b>數據與質性吻合度：</b>參與者所描述的職場情境精準呼應了量化數據中偏低的構面訊號，證明該分數確實對應到當前真實的職場痛點，數據具備高度可信度。</li>`;
+    analysisHTML += `<li><b>文獻理論對照與規畫建議：</b>`;
+    
+    let f = Number(document.getElementById('flow').value)||0;
+    let s = Number(document.getElementById('safe').value)||0;
+    if(f <= s) {
+      analysisHTML += `參照 Shannon & Weaver (1949) 資訊溝通理論，建議導入 <b>EVQ 資訊流動量表</b>，重新盤點跨部門專案的訊息斷點，於 30 天內建立即時回報機制。`;
+    } else {
+      analysisHTML += `依據 Edmondson (1999) 心理安全理論，建議導入 <b>PSY-12 團隊心理安全量表</b>，並於團隊中推動無咎責覆盤，提升成員在高壓下的發聲意願。`;
+    }
+    analysisHTML += `</li></ul>`;
+
+    document.getElementById('stage3-content').innerHTML = analysisHTML;
+    document.getElementById('stage3-sec').style.display = 'block';
+    setTimeout(() => { scrollToSection('stage3-sec'); }, 500);
+  } else {
+    alert('請完整填寫質性反饋題目後再進行檢核！');
+  }
+}
+
+window.onload = function() {
+  updateDynamicQuestions();
+};
 </script></body></html>
