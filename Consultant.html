@@ -42,7 +42,7 @@ main{max-width:1800px;margin:auto;padding:9px 12px}.band{border:1px solid #9bd6f
 const $=id=>document.getElementById(id);
 function generate(){let s={};for(let k of ["mirror","matrix","flow","safe"]){s[k]=Number($(k).value);if(!Number.isFinite(s[k])||s[k]<0||s[k]>25){alert(k+" 分數必須介於 0–25");return}}
 let total=s.mirror+s.matrix+s.flow+s.safe,avg=total/20,aw=(s.mirror+s.safe)/10,ac=(s.matrix+s.flow)/10;
-$("total").textContent=total;$("total2").textContent=total+" / 100";$("avg").textContent=avg.toFixed(2)+" / 5";
+$("total").textContent=total;$("total2").textContent=total+" / 100";$("avg").textContent=avg.toFixed(2)+" / 5";document.querySelector(".ring").style.background=`conic-gradient(#f22 0 ${total}%,#ffb2a8 ${total}% 100%)`;
 let dims=[["mirror","Mirror","#00a96b","問題覺察不足","回饋與問題辨識"],["matrix","Matrix","#087cf3","制度結構較清晰","權責與資源"],["flow","Flow","#ff9700","資訊傳遞受阻","跨部門協作"],["safe","Safety","#9218ef","發聲安全可能不足","心理安全"]];
 $("dimensions").innerHTML=dims.map(d=>`<div class="dimension"><div class="dname" style="background:${d[2]}">${d[1]}<small>${d[4]}</small></div><div class="dscore">${s[d[0]]}<small>/25 (${(s[d[0]]/5).toFixed(1)}/5)</small></div><div class="pill ${s[d[0]]>=15?"high":"low"}">${s[d[0]]>=15?"相對偏高":"偏低"}</div><ul class="dnotes"><li>${s[d[0]]>=15?"相對具備一定基礎":"需進一步查證："+d[3]}</li><li>建議結合題項與實際事件核對</li></ul></div>`).join("");
 let q=aw>=3?(ac>=3?"I":"IV"):(ac>=3?"II":"III"),titles={I:"第一象限｜最佳運作區",II:"第二象限｜潛能未釋放區",III:"第三象限｜失衡風險區",IV:"第四象限｜看見未轉化區"};
@@ -51,9 +51,40 @@ $("pointread").innerHTML=({I:["兩軸皆達操作切點；仍需以實際證據�
 $("riskTitle").innerHTML=(total<50?"高風險失能型":"需持續查證型")+"<br><span style='font-size:13px'>"+(total<50?"Fragile":"Under Review")+"</span>";$("riskDesc").textContent="本次總分 "+total+"/100，平均 "+avg.toFixed(2)+"/5；Awareness "+aw.toFixed(1)+"、Action "+ac.toFixed(1)+"。此為依操作規則產生的初步訊號，不代表已驗證的組織類型。";
 let sorted=[...dims].map(d=>({n:d[1],v:s[d[0]]})).sort((a,b)=>b.v-a.v);$("observations").innerHTML=`<li>${sorted[0].n} 為相對最高構面（${sorted[0].v}/25）。</li><li>${sorted[3].n} 為相對最低構面（${sorted[3].v}/25）。</li><li>應將構面差距與部門、職務及具體事件交叉查證。</li>`;
 let rows=[];if(s.matrix-s.flow>=8)rows.push(["制度與資訊流動落差","Matrix 明顯高於 Flow；查核制度文件與日常執行是否一致。","Matrix "+s.matrix+" / 25"]);if(s.mirror-s.safe>=8)rows.push(["問題可見但發聲安全不足","Mirror 高於 Safety；查核提出疑慮是否有風險。","Mirror "+s.mirror+" / Safety "+s.safe]);if(s.flow-s.safe>=8)rows.push(["資訊流動與發聲安全落差","Flow 高於 Safety；查核壞消息與異議能否安全回報。","Flow "+s.flow+" / Safety "+s.safe]);if(s.flow-s.matrix>=8)rows.push(["資訊流動高於制度清晰度","查核決策權、責任歸屬及流程追蹤。","Flow "+s.flow+" / Matrix "+s.matrix]);if(!rows.length)rows.push(["初步分數訊號","未觸發預設構面差距提示；仍需檢視低分題項與具體情境。","分數差距規則尚待驗證"]);
-$("evidence").innerHTML=rows.map(r=>`<div class="evidence-row"><b>⚠ ${r[0]}</b><span>${r[1]}</span><span>${r[2]}</span></div>`).join("");
+const lowDims=dims.filter(d=>s[d[0]]<15).sort((a,b)=>s[a[0]]-s[b[0]]);
+const highDims=dims.filter(d=>s[d[0]]>=15).sort((a,b)=>s[b[0]]-s[a[0]]);
+const evidenceRows=[
+["✓ 具分數支持的優勢",highDims.length?`${highDims.map(d=>d[1]+" "+s[d[0]]+"/25").join("、")}；僅表示相對分數較高，仍須核對實際流程。`:"目前沒有構面達到 15/25 的操作參考值。",highDims.length?"分數支持":"分數描述"],
+["! 具分數支持的待查證弱點",lowDims.length?`${lowDims.map(d=>d[1]+" "+s[d[0]]+"/25").join("、")}；建議逐項回看題目與最近一次具體事件。`:"目前各構面均達 15/25 以上，仍需查核是否有部門差異。","分數支持，非因果結論"],
+...rows.map(r=>[r[0],r[1],r[2]]),
+["⌕ 待查證問題","由誰接收問題、多久回覆、如何追蹤？制度文件與現場實際做法是否一致？","訪談／文件／流程紀錄"]
+];
+$("evidence").innerHTML=evidenceRows.map(r=>`<div class="evidence-row"><b>${r[0]}</b><span>${r[1]}</span><span>${r[2]}</span></div>`).join("");
+// Replace illustrative participant claims with a structured, empty capture template.
+// Do not fabricate participant interview results from numeric scores.
+const discussionBody=document.querySelectorAll(".lowergrid .panel")[2]?.querySelector("tbody");
+if(discussionBody) discussionBody.innerHTML=`<tr><td>✓ 認同</td><td contenteditable="true">請填入參與者認同的具體描述或事件</td><td>待實際討論紀錄</td></tr><tr><td>✕ 不同意</td><td contenteditable="true">請填入不同意之處及理由</td><td>保留不同觀點</td></tr><tr><td>● 補充案例</td><td contenteditable="true">請填入時間、情境、角色與實際事件</td><td>供後續分析</td></tr><tr><td>◆ 其他解釋</td><td contenteditable="true">請填入其他可能原因或背景因素</td><td>待交叉查證</td></tr>`;
+// Generate action plan priorities from the lowest-scoring dimensions.
+const actionMap={
+mirror:["建立問題回報與回饋閉環","定義問題分類、回覆責任人與回覆期限","回報案件有負責人與結案紀錄"],
+matrix:["盤點權責、制度與資源配置","釐清決策權、執行責任及升級路徑","高優先流程完成 RACI／責任表"],
+flow:["追蹤跨部門資訊交接與延誤點","設定交接標準、回覆時限及追蹤表","跨部門案件回覆率與處理時間改善"],
+safe:["建立低風險建言與異常通報機制","主管練習非責備回應、定期回顧異議案例","建言回覆率提升且無報復事件"]
+};
+const prioritized=[...dims].sort((a,b)=>s[a[0]]-s[b[0]]);
+const planBody=document.querySelectorAll(".lowergrid .panel")[4]?.querySelector("tbody");
+if(planBody) planBody.innerHTML=prioritized.slice(0,3).map((d,i)=>`<tr><td>${["第一階段","第二階段","第三階段"][i]}<br>${["0–30 天","30–90 天","90–180 天"][i]}</td><td>${["0–30 天","30–90 天","90–180 天"][i]}</td><td><b>${d[1]}（${s[d[0]]}/25）</b><br>${actionMap[d[0]][0]}；${actionMap[d[0]][1]}</td><td>${i===0?"部門主管／人資":i===1?"流程負責人／跨部門主管":"高階主管／顧問"}</td><td>${actionMap[d[0]][2]}</td></tr>`).join("");
+// Recommend tools according to current low-scoring dimensions, rather than fixed generic rows.
+const toolMap={
+safe:["心理安全／建言工具","Safety","檢視發聲安全與主管回應","匿名問卷＋焦點訪談；確認建言回覆與追蹤"],
+mirror:["回饋與問題覺察工具","Mirror","檢視問題是否被看見並得到回饋","事件回顧＋回饋流程盤點；辨識盲點"],
+matrix:["組織權責／流程盤點","Matrix","檢視權責、決策與資源是否清楚","文件審查＋RACI 工作坊；釐清責任邊界"],
+flow:["跨部門資訊流動盤點","Flow","檢視資訊傳遞、交接與回覆延遲","流程追蹤＋跨部門訪談；辨識資訊斷點"]
+};
+const toolBody=document.querySelectorAll(".lowergrid .panel")[3]?.querySelector("tbody");
+if(toolBody) toolBody.innerHTML=prioritized.slice(0,4).map(d=>`<tr><td>${toolMap[d[0]][0]}</td><td>${toolMap[d[0]][1]}</td><td>${toolMap[d[0]][2]}</td><td>${toolMap[d[0]][3]}</td></tr>`).join("");
 }
 function preset(){ $("mirror").value=8;$("matrix").value=18;$("flow").value=6;$("safe").value=9;generate()}
-function resetScores(){["mirror","matrix","flow","safe"].forEach(k=>$(k).value="");$("total").textContent="—";$("dimensions").innerHTML="";$("quadrant").textContent="";$("quadresult").textContent="請輸入分數後產生報告"}
+function resetScores(){["mirror","matrix","flow","safe"].forEach(k=>$(k).value="");$("total").textContent="—";$("total2").textContent="—";$("avg").textContent="—";$("dimensions").innerHTML="";$("evidence").innerHTML="";$("quadresult").textContent="請輸入分數後產生報告";$("pointread").innerHTML="";$("observations").innerHTML=""}
 ["mirror","matrix","flow","safe"].forEach(k=>$(k).addEventListener("change",generate));generate();
 </script></body></html>
