@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 職涯顧問分析報告</title>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 顧問分析與參與者回饋報告</title>
 <style>
 :root{--navy:#073f87;--blue:#0879f9;--cyan:#11a8ee;--green:#00a96b;--orange:#ff9700;--purple:#9218ef;--ink:#12345a;--line:#b9dcf8;--pale:#eff9ff}
 *{box-sizing:border-box}body{margin:0;background:#faf5ff;font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:#12345a;font-size:12px}
@@ -161,11 +161,42 @@ main{max-width:1900px;margin:auto;padding:6px 8px}
 .decision-flow i{font-style:normal;color:#ebd4ff;font-weight:900}
 .note{background:#f9f3e3;border-left:4px solid #dcb532;border-radius:4px;padding:6px 8px;color:#705719;margin-top:6px;font-size:10px;line-height:1.4}
 
+
+/* 參與者個人回饋報告 */
+#participantReport{display:none;max-width:900px;margin:18px auto;padding:24px;background:#fff;color:#20334b;font-size:14px;line-height:1.65}
+#participantReport .pr-hero{padding:22px;border-radius:16px;background:linear-gradient(120deg,#40156d,#7841b6);color:#fff;margin-bottom:14px}
+#participantReport h1{font-size:27px;margin:0 0 5px}
+#participantReport h2{font-size:17px;color:#51218b;margin:18px 0 8px;border-left:5px solid #9a62db;padding-left:9px}
+#participantReport .pr-muted{color:#65758a;font-size:11px}
+#participantReport .pr-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+#participantReport .pr-kpi{border-radius:10px;padding:11px;background:#f4f0fb;border-top:4px solid #9060cc}
+#participantReport .pr-kpi b{display:block;font-size:21px}
+#participantReport .pr-kpi small{font-size:11px}
+#participantReport .pr-dimensions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#participantReport .pr-dim{border:1px solid #e2e8f0;border-radius:10px;padding:10px}
+#participantReport .pr-track{height:10px;background:#e8edf4;border-radius:99px;overflow:hidden;margin:7px 0}
+#participantReport .pr-fill{height:100%;border-radius:99px}
+#participantReport .pr-callout{padding:12px;border-radius:10px;background:#f4f8ff;border-left:4px solid #5387ce;margin:8px 0}
+#participantReport .pr-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#participantReport .pr-action{border-radius:10px;padding:10px;background:#effaf4;border:1px solid #c9ead6}
+#participantReport .pr-footer{margin-top:18px;padding-top:10px;border-top:1px solid #dbe3ed;font-size:10px;color:#68788b}
+#participantReport .pr-toolbar{display:flex;gap:8px;margin:0 0 12px}
+#participantReport .pr-toolbar button{padding:8px 12px;border:0;border-radius:8px;background:#5b238f;color:#fff;font-weight:bold;cursor:pointer}
+@media print{
+  body.print-participant{background:#fff!important}
+  body.print-participant>header,body.print-participant>main{display:none!important}
+  body.print-participant #participantReport{display:block!important;margin:0 auto;padding:8mm;max-width:none}
+  body.print-participant #participantReport .pr-toolbar{display:none!important}
+  body.print-participant #participantReport .pr-hero,#participantReport .pr-kpi,#participantReport .pr-callout,#participantReport .pr-action{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  body.print-participant #participantReport h2{break-after:avoid}
+  body.print-participant #participantReport .pr-dim,#participantReport .pr-action{break-inside:avoid}
+}
+
 @media print{body{background:white}.tools,.generate{display:none}.band,.panel,.panelhead,.smalltable th,.stage article{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
 @media(max-width:1100px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.grid>.panel:last-child{grid-column:1/-1}.lowergrid{grid-template-columns:repeat(2,minmax(0,1fr))}.insight-grid{grid-template-columns:1fr 1fr}.insight-grid>.insight-card:last-child{grid-column:1/-1}.consultant-flow-banner{flex-direction:column;align-items:flex-start}}
 @media(max-width:680px){.grid,.lowergrid,.insight-grid{grid-template-columns:minmax(0,1fr)}.inputs{grid-template-columns:1fr 1fr}.brief-kpis{grid-template-columns:1fr 1fr}.interpret-strip{grid-template-columns:1fr}.decision-flow{flex-wrap:wrap}.decision-flow div{flex-basis:42%}}
 </style></head><body>
-<header class="top"><h1>MMTF 2.0 職涯顧問分析報告</h1><div class="tagline">專為高階客戶打造的三階段深度教練與諮詢分析模板<br>階段一：數據鏡像與覺察 ➔ 階段二：卡點解構與回饋紀錄 ➔ 階段三：IDP行動方案與成效追蹤</div><div class="tools"><button onclick="resetScores()">▤ 清除重填</button><button onclick="preset()">⟳ 預設範例</button><button onclick="window.print()">▣ 列印／另存 PDF</button></div></header>
+<header class="top"><h1>MMTF 2.0 職涯顧問分析報告</h1><div class="tagline">專為高階客戶打造的三階段深度教練與諮詢分析模板<br>階段一：數據鏡像與覺察 ➔ 階段二：卡點解構與回饋紀錄 ➔ 階段三：IDP行動方案與成效追蹤</div><div class="tools"><button onclick="resetScores()">▤ 清除重填</button><button onclick="preset()">⟳ 預設範例</button><button onclick="window.print()">▣ 列印顧問版</button><button onclick="generateParticipantReport()">▧ 產生參與者版 PDF</button></div></header>
 <main>
 
 <!-- 顧問諮詢步驟流程橫幅（加上了清楚明瞭的 ➔ 箭頭指引） -->
@@ -240,6 +271,7 @@ main{max-width:1900px;margin:auto;padding:6px 8px}
 <article class="panel full"><div class="panelhead"><span class="num">11</span>顧問倫理與保密原則</div><div class="pad"><div class="stage"><article><h4>絕對保密</h4><p>所有會談數據與評估結果嚴格保密，確保心理安全。</p></article><article><h4>客戶自主</h4><p>諮詢過程以客戶為中心，賦能其自主決策與成長。</p></article><article><h4>專業界限</h4><p>本報告為職涯發展與顧問諮詢工具，非心理臨床診斷。</p></article></div><p class="note">MMTF 2.0 顧問報告之四構面映射與象限切點，旨在促進深度思辨與行動轉化，建議在專業職涯顧問引導下解讀。</p></div></article>
 </div><div class="footer">MMTF 2.0 職涯顧問分析報告｜領導力覺察 × 卡點解構 × 職涯躍升</div>
 </main>
+<section id="participantReport" aria-live="polite"></section>
 
 <script>
 const dims=[
@@ -383,5 +415,71 @@ function preset(){
   document.getElementById('safe').value=9;
   generate();
 }
+
+function escHTML(value){
+  return String(value).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function generateParticipantReport(){
+  const inputs=dims.map(d=>document.getElementById(d.id));
+  const invalid=inputs.find(el=>el.value.trim()==='' || !Number.isFinite(Number(el.value)) || Number(el.value)<0 || Number(el.value)>25);
+  if(invalid){
+    alert('請先確認四構面皆已輸入 0–25 的有效分數，再產生參與者報告。');
+    invalid.focus(); return;
+  }
+  const vals=inputs.map(el=>Number(el.value));
+  const total=vals.reduce((a,b)=>a+b,0);
+  const avg=(total/20).toFixed(2);
+  const awareness=((vals[0]+vals[3])/2/5);
+  const action=((vals[1]+vals[2])/2/5);
+  const minV=Math.min(...vals), maxV=Math.max(...vals), spread=maxV-minV;
+  const lowIndexes=vals.map((v,i)=>v===minV?i:-1).filter(i=>i>=0);
+  const highIndexes=vals.map((v,i)=>v===maxV?i:-1).filter(i=>i>=0);
+  let quadrant, quadrantText;
+  if(awareness>=3 && action>=3){quadrant='I｜最佳運作區';quadrantText='本次分數在覺察與行動兩軸皆達到目前設定的切點。可回顧哪些做法正在發揮作用，並思考如何穩定維持。';}
+  else if(awareness<3 && action>=3){quadrant='II｜潛能未釋放區';quadrantText='本次分數顯示行動軸達切點、覺察軸未達切點。可探索行動推進與回饋覺察之間，是否還有值得補充的經驗。';}
+  else if(awareness<3 && action<3){quadrant='III｜待探索與支持區';quadrantText='本次分數在兩軸皆未達目前設定的切點。這不是對個人能力的定論，可從近期情境、資源、角色與支持方式開始探索。';}
+  else {quadrant='IV｜看見未轉化區';quadrantText='本次分數顯示覺察軸達切點、行動軸未達切點。可探索有哪些資源、流程或優先順序，有助於把觀察轉成可執行的小步驟。';}
+  const names=['Mirror','Matrix','Flow','Safety'];
+  const plainNames=['自我覺察與回饋','角色定位與系統資源','溝通協作與推進','安全感與真實表達'];
+  const descriptions=[
+    '回想最近一次收到不同意見時，自己如何理解與回應？',
+    '遇到工作卡點時，是否清楚知道可用資源、決策權責與求助管道？',
+    '最近一次跨人員或跨部門合作，資訊與後續責任是否清楚？',
+    '在有疑慮或不同看法時，自己是否能找到適當、安全的表達方式？'
+  ];
+  const colors=['#00a86b','#087cf3','#ff8500','#9218ef'];
+  const dimensionCards=dims.map((d,i)=>`<div class="pr-dim"><b style="color:${colors[i]}">${names[i]}｜${plainNames[i]}</b><div class="pr-track"><div class="pr-fill" style="width:${vals[i]/25*100}%;background:${colors[i]}"></div></div><b>${vals[i]} <span class="pr-muted">/ 25 分</span></b><p class="pr-muted">${descriptions[i]}</p></div>`).join('');
+  const highText=highIndexes.map(i=>names[i]).join('、');
+  const lowText=lowIndexes.map(i=>names[i]).join('、');
+  const actionIdeas=lowIndexes.map(i=>`<div class="pr-action"><b>${names[i]}｜一個小行動</b><p>本週挑選一個真實情境，記錄遇到的狀況、自己採取的做法，以及希望獲得的支持。</p></div>`).join('');
+  const report=document.getElementById('participantReport');
+  report.innerHTML=`<div class="pr-toolbar"><button onclick="window.print()">列印／另存為 PDF</button><button onclick="exitParticipantPrint()">返回顧問版</button></div>
+  <div class="pr-hero"><h1>MMTF 2.0 個人回饋報告</h1><div>看見自己的回應輪廓，找到下一步可以嘗試的行動</div><p class="pr-muted" style="color:#eee4ff">本報告依據本次輸入的四構面分數自動產生；屬自我反思與發展用途，並非臨床診斷或個人能力定論。</p></div>
+  <div class="pr-kpis">
+    <div class="pr-kpi" style="border-color:#7850b5"><small>四構面合計</small><b>${total}/100</b></div>
+    <div class="pr-kpi" style="border-color:#2387d9"><small>平均換算</small><b>${avg}/5</b></div>
+    <div class="pr-kpi" style="border-color:#18a477"><small>Awareness 覺察軸</small><b>${awareness.toFixed(2)}/5</b></div>
+    <div class="pr-kpi" style="border-color:#ed9a2d"><small>Action 行動軸</small><b>${action.toFixed(2)}/5</b></div>
+  </div>
+  <h2>1｜我的四構面分數</h2><div class="pr-dimensions">${dimensionCards}</div>
+  <h2>2｜我的象限位置</h2><div class="pr-callout"><b>${quadrant}</b><p>${quadrantText}</p><p class="pr-muted">Awareness = (Mirror + Safety) ÷ 2 ÷ 5；Action = (Matrix + Flow) ÷ 2 ÷ 5。象限切點採 3/5，為目前設定的操作規則，尚非經驗驗證的常模。</p></div>
+  <h2>3｜這次分數可以提供哪些線索？</h2><div class="pr-callout"><b>相對較高的構面：${escHTML(highText)}</b><p>這些構面在本次回應中分數相對較高。你可以回想有哪些做法、經驗或支持，可能有助於這些面向的表現。</p></div>
+  <div class="pr-callout" style="background:#fff8eb;border-color:#e5a13a"><b>值得進一步探索的構面：${escHTML(lowText)}</b><p>這些構面在本次回應中分數相對較低。分數本身無法說明原因，可以從具體事件、工作情境、資源與支持方式著手了解。</p></div>
+  <p><b>本次最高與最低分差距：</b>${spread} 分。這表示四構面分數分布並不完全相同；不代表單一能力缺陷，也不能單靠分差判斷原因。</p>
+  <h2>4｜給自己的反思問題</h2><ol>${lowIndexes.map(i=>`<li>${descriptions[i]}</li>`).join('')}<li>如果只選一件小事在接下來一週嘗試改變，我想先做什麼？</li></ol>
+  <h2>5｜下一步：從一個小行動開始</h2><div class="pr-actions">${actionIdeas}<div class="pr-action"><b>一週後回顧</b><p>我嘗試了什麼？發生什麼變化？哪些支持有幫助？下一步要維持或調整什麼？</p></div></div>
+  <h2>6｜如何理解這份報告</h2><p>本報告描述的是本次輸入分數的相對分布，並非人格評定、醫療診斷或工作績效結論。分數高低不能單獨證明實際行為、工作環境或組織制度的原因；建議結合本人經驗與具體情境再行解讀。</p>
+  <div class="pr-footer">MMTF 2.0 個人回饋報告｜分數由使用者輸入後依既有公式計算｜請妥善保管個人回饋資料。</div>`;
+  document.body.classList.add('print-participant');
+  report.style.display='block';
+  window.print();
+}
+function exitParticipantPrint(){
+  document.body.classList.remove('print-participant');
+  const report=document.getElementById('participantReport');
+  report.style.display='none';
+}
+window.addEventListener('afterprint',()=>{ if(document.body.classList.contains('print-participant')) { /* 保留報告預覽，使用者可按返回顧問版 */ }});
+
 window.onload=generate;
 </script></body></html>
