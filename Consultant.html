@@ -220,10 +220,10 @@ main{max-width:1600px;margin:auto;padding:10px}
     </div>
   </section>
 
-  <!-- 模組三：顧問分析與後續操作步驟（動態判斷有無填寫回饋欄位） -->
+  <!-- 模組三：顧問分析與後續操作步驟 -->
   <section class="module-box" id="stage3-sec" style="display:none">
     <div class="module-title"><span>📦</span> 模組三：顧問分析與後續操作步驟（量化分數與質性回饋之個別欄位交叉對照）</div>
-    <p style="font-size:11px;color:#521493;margin:0 0 8px 0">下表根據您在<b>模組一的量化分數</b>與<b>模組二的填答狀況（支援未填寫時的系統預設導引）</b>進行對應分析：</p>
+    <p style="font-size:11px;color:#521493;margin:0 0 8px 0">下表根據您在<b>模組一的量化分數</b>與<b>模組二的填答狀況</b>進行對應分析：</p>
     
     <table class="analysis-table">
       <thead>
@@ -325,8 +325,6 @@ function runSimulation() {
     l1.innerHTML = `<b>Q1 核心深掘題（偵測 ${lowest.name} 最低）：</b> 請描述近期在該構面上遭遇的最具體卡點與感受。`;
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為突破此卡點最需要調整的資源或心態是什麼？`;
   }
-
-  alert('模組一數據與圖形已成功更新！');
 }
 
 function runConsultantAnalysis() {
@@ -342,7 +340,6 @@ function runConsultantAnalysis() {
 
   let tbody = document.getElementById('stage3-tbody');
   
-  // 檢查是否有填寫回饋欄位，若沒有則顯示友善提示與依量化分數的推論
   let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
   let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
 
@@ -371,7 +368,6 @@ function runConsultantAnalysis() {
   let nav3 = document.getElementById('nav-stage3');
   nav3.innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
   setTimeout(() => { scrollToSection('stage3-sec'); }, 400);
-  alert('模組三已完成分析（包含未填寫欄位的智慧對應處理）！');
 }
 
 function unlockStage4() {
@@ -380,7 +376,6 @@ function unlockStage4() {
   nav4.style.opacity = '1';
   nav4.innerHTML = '<span>4</span>總結與建議 (已解鎖)';
   setTimeout(() => { scrollToSection('stage4-sec'); }, 400);
-  alert('模組四總結與建議報告已成功解鎖！');
 }
 
 window.onload = function() {
