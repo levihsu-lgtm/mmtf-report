@@ -30,7 +30,7 @@ main{max-width:1600px;margin:auto;padding:10px}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:14px}
 
-/* 圖形分析呈現區 (完美復刻圖片版面) */
+/* 圖形分析呈現區 (模組一) */
 .report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:10px;margin-top:10px}
 .r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:12px}
 .r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:6px 8px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:6px;color:#521493;font-weight:900;font-size:12px;margin-bottom:8px;border-radius:6px}
@@ -116,9 +116,9 @@ main{max-width:1600px;margin:auto;padding:10px}
     <button class="next-btn" onclick="scrollToSection('stage2-sec')">進入第二階段 ➔</button>
   </div>
 
-  <!-- 模組一：原始數據輸入與精準復刻圖片分析呈現 -->
+  <!-- 模組一：原始數據輸入與圖像化分析呈現 -->
   <section class="module-box" id="stage1-sec">
-    <div class="module-title"><span>📦</span> 模組一：輸入四構面分數與 MMTF 2.0 顧問報告結果（復刻分析狀態）</div>
+    <div class="module-title"><span>📦</span> 模組一：輸入四構面分數與 MMTF 2.0 顧問報告結果</div>
     <div class="inputs-grid">
       <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small>問題覺察與回饋</small></div><input id="mirror" type="number" value="8" min="0" max="25"></div>
       <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small>制度與權責資源</small></div><input id="matrix" type="number" value="18" min="0" max="25"></div>
@@ -127,16 +127,14 @@ main{max-width:1600px;margin:auto;padding:10px}
       <button class="gen-btn" onclick="runSimulation()">送出並產生報告 ⚡</button>
     </div>
 
-    <!-- 完美對應您上傳圖片的 3 大面板分析呈現 -->
     <div class="report-panel-grid">
-      <!-- 面板 1：診斷摘要 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">1</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
         <div class="summary-top">
           <div class="ring"><div><strong id="v-total">41</strong><small>/ 100</small></div></div>
           <div class="fragile-box">
             <b id="v-type">高風險失能型 (Fragile)</b>
-            <p>組織在制度結構面評分中低，但在問題覺察、資訊流動與心理安全明顯不足，呈現結構與執行落差，可能形成制度運作但問題難以被識別與解決的風險。</p>
+            <p>組織在制度結構面評分中低，但在問題覺察、資訊流動與心理安全明顯不足，呈現結構與執行落差。</p>
           </div>
         </div>
         <div class="stats-row">
@@ -150,16 +148,9 @@ main{max-width:1600px;margin:auto;padding:10px}
             <li>問題覺察與資訊流動較弱。</li>
             <li>心理安全得分偏低，員工表達意見可能受限。</li>
           </ul>
-          <b style="color:#d93838;display:block;margin-top:4px">使用限制：</b>
-          <ul style="margin:2px 0">
-            <li>本結果為問卷初步診斷</li>
-            <li>未包含個性訪談</li>
-            <li>不宜作為單一決策依據</li>
-          </ul>
         </div>
       </div>
 
-      <!-- 面板 2：四構面分析 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">2</span>四構面分析 <small>各構面分數與實際意義</small></div>
         <div id="dim-list">
@@ -167,37 +158,36 @@ main{max-width:1600px;margin:auto;padding:10px}
             <div class="dim-name" style="background:#00a86b">Mirror<small>問題覺察</small></div>
             <div class="dim-score">8 / 25<br><span style="font-size:9px">(1.6 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-m">偏低</div>
-            <div class="dim-desc"><b>問題覺察不足</b><br>• 但願意回饋<br>• 後續端倪弱</div>
+            <div class="dim-desc"><b>問題覺察不足</b><br>• 但願意回饋</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#087cf3">Matrix<small>制度權責</small></div>
             <div class="dim-score">18 / 25<br><span style="font-size:9px">(3.6 / 5)</span></div>
             <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
-            <div class="dim-desc"><b>制度結構較清晰</b><br>• 權責配置完整<br>• 資源配置較充足</div>
+            <div class="dim-desc"><b>制度結構較清晰</b><br>• 權責配置完整</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#ff8500">Flow<small>資訊流動</small></div>
             <div class="dim-score">6 / 25<br><span style="font-size:9px">(1.2 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-f">偏低</div>
-            <div class="dim-desc"><b>資訊傳遞受阻</b><br>• 跨部門協作弱<br>• 版本不一致</div>
+            <div class="dim-desc"><b>資訊傳遞受阻</b><br>• 跨部門協作弱</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#9218ef">Safety<small>心理安全</small></div>
             <div class="dim-score">9 / 25<br><span style="font-size:9px">(1.8 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-s">偏低</div>
-            <div class="dim-desc"><b>表達意見保守</b><br>• 實質回饋管道有限<br>• 信任氛圍不足</div>
+            <div class="dim-desc"><b>表達意見保守</b><br>• 信任氛圍不足</div>
           </div>
         </div>
       </div>
 
-      <!-- 面板 3：四象限圖與落點判讀 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖與落點判讀</div>
         <div class="quad">
-          <div class="q q2"><b>II 潛能未釋放區</b><ul><li>具備回應與執行能力</li><li>但對風險與問題覺察不足</li></ul></div>
-          <div class="q q1"><b>I 最佳運作區</b><ul><li>資訊透明、權責明確</li><li>支持協作與持續學習</li></ul></div>
-          <div class="q q3"><b>III 失衡風險區</b><ul><li>資訊不明朗、權責不清</li><li>流動受阻、發聲不足</li></ul></div>
-          <div class="q q4"><b>IV 看見未轉化區</b><ul><li>能看清問題但風險</li><li>未有效轉化為行動</li></ul></div>
+          <div class="q q2"><b>II 潛能未釋放區</b><ul><li>執行強、覺察不足</li></ul></div>
+          <div class="q q1"><b>I 最佳運作區</b><ul><li>資訊透明、協作順暢</li></ul></div>
+          <div class="q q3"><b>III 失衡風險區</b><ul><li>流動受阻、發聲不足</li></ul></div>
+          <div class="q q4"><b>IV 看見未轉化區</b><ul><li>看見問題未落實行動</li></ul></div>
           <div class="point" id="v-point"></div>
           <div class="pointlabel" id="v-pointlabel">(1.7, 2.4)</div>
         </div>
@@ -210,19 +200,19 @@ main{max-width:1600px;margin:auto;padding:10px}
     </div>
   </section>
 
-  <!-- 模組二：因材施教（動態質性填答） -->
+  <!-- 模組二：因材施教（動態質性填答，允許留空） -->
   <section class="module-box" id="stage2-sec">
-    <div class="module-title"><span>📦</span> 模組二：因材施教（參與者針對動態派發之題目進行質性填答）</div>
-    <p style="margin:0 0 8px 0;color:#6b5388">請根據您的實際職場情境填寫以下欄位，填寫完畢後系統將自動帶入模組三進行量化與質性交叉分析：</p>
+    <div class="module-title"><span>📦</span> 模組二：因材施教（參與者針對動態派發之題目進行質性填答，可自由選填）</div>
+    <p style="margin:0 0 8px 0;color:#6b5388">請根據您的實際職場情境填寫以下欄位（若未填寫，系統將依量化分數直接進行對應分析）：</p>
     
     <div class="qual-grid">
       <div class="qual-group">
         <label id="dyn-label-1"><b>Q1 核心深掘題：</b></label>
-        <textarea id="qual-ans-1" placeholder="請在此輸入您的實際職場情境...">近期在跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
+        <textarea id="qual-ans-1" placeholder="若無特別補充可保持空白..."></textarea>
       </div>
       <div class="qual-group">
         <label id="dyn-label-2"><b>Q2 輔助驗證題：</b></label>
-        <textarea id="qual-ans-2" placeholder="請在此輸入您的具體感受與反思...">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
+        <textarea id="qual-ans-2" placeholder="若無特別補充可保持空白..."></textarea>
       </div>
     </div>
     <div style="margin-top:10px">
@@ -230,10 +220,10 @@ main{max-width:1600px;margin:auto;padding:10px}
     </div>
   </section>
 
-  <!-- 模組三：顧問分析與後續操作步驟（動態抓取填答結果） -->
+  <!-- 模組三：顧問分析與後續操作步驟（動態判斷有無填寫回饋欄位） -->
   <section class="module-box" id="stage3-sec" style="display:none">
-    <div class="module-title"><span>📦</span> 模組三：顧問分析與後續操作步驟（量化分數與模組二質性填答之個別欄位交叉對照）</div>
-    <p style="font-size:11px;color:#521493;margin:0 0 8px 0">下表即時整合了您在<b>模組一的量化分數</b>與<b>模組二親自填寫的質性結果個別欄位</b>，並對應專業工具與後續操作步驟：</p>
+    <div class="module-title"><span>📦</span> 模組三：顧問分析與後續操作步驟（量化分數與質性回饋之個別欄位交叉對照）</div>
+    <p style="font-size:11px;color:#521493;margin:0 0 8px 0">下表根據您在<b>模組一的量化分數</b>與<b>模組二的填答狀況（支援未填寫時的系統預設導引）</b>進行對應分析：</p>
     
     <table class="analysis-table">
       <thead>
@@ -254,13 +244,13 @@ main{max-width:1600px;margin:auto;padding:10px}
     </div>
   </section>
 
-  <!-- 模組四：總結及建議 (預設隱藏，需完成模組三才能解鎖) -->
+  <!-- 模組四：總結及建議 -->
   <section class="module-box" id="stage4-sec" style="display:none">
     <div class="module-title"><span>🎨</span> 模組四：總結及建議（參與者個人報告 6 大繽紛精簡區塊）</div>
     <div class="report-grid-6">
       <div class="report-card rc-1">
         <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 41</span></div>
-        <p id="r1-desc">呈現四構面量化分數、總分 41/100 分，以及高風險失能型（Fragile）的初步解讀。</p>
+        <p>呈現四構面量化分數、總分 41/100 分，以及高風險失能型（Fragile）的初步解讀。</p>
       </div>
       <div class="report-card rc-2">
         <div class="rc-title">02｜我的四構面輪廓 <span>視覺化分布[cite: 3]</span></div>
@@ -268,16 +258,15 @@ main{max-width:1600px;margin:auto;padding:10px}
       </div>
       <div class="report-card rc-3">
         <div class="rc-title">03｜我可以看見什麼？ <span>客觀鏡像</span></div>
-        <p id="r3-desc">說明相對較高與較低的客觀訊號，以非批判性文字協助理解。</p>
+        <p>說明相對較高與較低的客觀訊號，以非批判性文字協助理解。</p>
       </div>
       <div class="report-card rc-4">
         <div class="rc-title">04｜值得思考的問題 <span>情境連結</span></div>
-        <p id="r4-desc">結合您在模組二親自填寫的職場情境，反思當前行為模式。</p>
+        <p>結合量化分數與質性填答狀況，反思當前行為模式。</p>
       </div>
       <div class="report-card rc-5">
-        <div class="report-card rc-5"></div>
         <div class="rc-title">05｜我的下一步行動 <span>IDP 行動</span></div>
-        <p>提供 1 至 3 項可執行的小行動、預計完成時間與個人自我檢視方式。</p>
+        <p>提供 1 至 3 項可執行的小行動、預計完成時間與個人檢視方式。</p>
       </div>
       <div class="report-card rc-6">
         <div class="rc-title">06｜我的後續追蹤 <span>永續覆盤</span></div>
@@ -303,7 +292,6 @@ function runSimulation() {
   let aw = ((m + s) / 2 / 5).toFixed(1);
   let ac = ((mx + f) / 2 / 5).toFixed(1);
   
-  // 更新圖形落點
   let leftPct = (aw / 5) * 100;
   let bottomPct = (ac / 5) * 100;
   let pt = document.getElementById('v-point');
@@ -319,18 +307,6 @@ function runSimulation() {
   document.getElementById('v-avg').innerText = avg + ' / 5';
   document.getElementById('calc-aw').innerText = aw + ' / 5';
   document.getElementById('calc-ac').innerText = ac + ' / 5';
-
-  // 診斷類型判定
-  let typeTitle = "平衡穩健型 (Balanced)";
-  if(total < 50) { typeTitle = "高風險失能型 (Fragile)"; }
-  else if(aw < 3) { typeTitle = "潛能未釋放型"; }
-  document.getElementById('v-type').innerText = typeTitle;
-
-  // 更新構面顯示
-  updateDimRow('m', m, 16, 9);
-  updateDimRow('mx', mx, 16, 9);
-  updateDimRow('f', f, 16, 9);
-  updateDimRow('s', s, 16, 9);
 
   let scores = [{name:'Mirror', val:m}, {name:'Matrix', val:mx}, {name:'Flow', val:f}, {name:'Safety', val:s}];
   scores.sort((a,b)=>a.val - b.val);
@@ -350,29 +326,12 @@ function runSimulation() {
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為突破此卡點最需要調整的資源或心態是什麼？`;
   }
 
-  alert('模組一數據與圖形已成功更新，模組二因材施教題目已動態派發！');
-}
-
-function updateDimRow(id, val, highThresh, lowThresh) {
-  let pill = document.getElementById('pill-' + id);
-  let v5 = (val / 5).toFixed(1);
-  if(val >= highThresh) {
-    pill.className = 'dim-pill p-high';
-    pill.innerText = '相對偏高';
-  } else {
-    pill.className = 'dim-pill p-low';
-    pill.innerText = '偏低';
-  }
+  alert('模組一數據與圖形已成功更新！');
 }
 
 function runConsultantAnalysis() {
   let ans1 = document.getElementById('qual-ans-1').value.trim();
   let ans2 = document.getElementById('qual-ans-2').value.trim();
-
-  if(!ans1 || !ans2) {
-    alert('請完整填寫模組二的 Q1 與 Q2 質性反饋內容，才能進行模組三的交叉分析！');
-    return;
-  }
 
   let m = document.getElementById('mirror').value;
   let mx = document.getElementById('matrix').value;
@@ -383,20 +342,28 @@ function runConsultantAnalysis() {
 
   let tbody = document.getElementById('stage3-tbody');
   
+  // 檢查是否有填寫回饋欄位，若沒有則顯示友善提示與依量化分數的推論
+  let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
+  let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
+
+  let analysis1 = ans1 ? `量化低分與您在 Q1 填寫的文本內容高度吻合[cite: 3]。顯示該項指標確實對應到當前的真實職場痛點。` : `由於未填寫具體情境，系統直接依據量化低分（${lowName} ${lowScore}分）進行推論：顯示該構面存在潛在盲點或資源卡點[cite: 3]，建議透過顧問訪談進一步補齊。`;
+  
+  let analysis2 = ans2 ? `您在 Q2 的補充反思反映出深層感受，與結構性壓力產生連動。` : `未填寫補充說明，系統建議優先針對當前數據落點進行 30 天內行為觀察與焦點訪談[cite: 3]。`;
+
   tbody.innerHTML = `
     <tr>
       <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分 (偏低)[cite: 3]</td>
-      <td><b>Q1 填答內容：</b><br>"${ans1}"</td>
-      <td><b>顧問交叉驗證與理論回應：</b><br>量化低分與您在 Q1 親自填寫的文本內容高度吻合[cite: 3]。顯示該項指標確實對應到當前的真實職場痛點，數據具備高度參考價值。</td>
+      <td><b>Q1 填答內容：</b><br>${q1Display}</td>
+      <td><b>顧問交叉驗證與理論回應：</b><br>${analysis1}</td>
       <td><b>對應佐證工具：</b><br>${lowName === 'Flow' ? 'EVQ 資訊流動量表' : lowName === 'Safety' ? 'PSY-12 心理安全量表' : '360度領導力回饋量表'}[cite: 3]</td>
-      <td><b>後續操作步驟（0-30天）：</b><br>針對 Q1 提及的情境進行焦點訪談，設立專屬改善行動方案[cite: 3]。</td>
+      <td><b>後續操作步驟（0-30天）：</b><br>針對量化警訊進行焦點訪談與量表複測[cite: 3]。</td>
     </tr>
     <tr>
       <td><b>輔助對照構面 (Matrix & Safety)</b><br>量化分數：Matrix(${mx}) / Safety(${s})</td>
-      <td><b>Q2 填答內容：</b><br>"${ans2}"</td>
-      <td><b>顧問交叉驗證與理論回應：</b><br>您在 Q2 的補充反思反映出深層感受，與結構性壓力產生連動，需透過系統性重塑來打破僵局。</td>
+      <td><b>Q2 填答內容：</b><br>${q2Display}</td>
+      <td><b>顧問交叉驗證與理論回應：</b><br>${analysis2}</td>
       <td><b>對應佐證工具：</b><br>OCAI 組織文化與角色定位量表[cite: 3]</td>
-      <td><b>後續操作步驟（30-90天）：</b><br>推動行為實驗與覆盤機制，降低高壓環境帶來的負面影響[cite: 3]。</td>
+      <td><b>後續操作步驟（30-90天）：</b><br>推動行為實驗與覆盤機制，降低組織壓力[cite: 3]。</td>
     </tr>
   `;
 
@@ -404,7 +371,7 @@ function runConsultantAnalysis() {
   let nav3 = document.getElementById('nav-stage3');
   nav3.innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
   setTimeout(() => { scrollToSection('stage3-sec'); }, 400);
-  alert('模組三已成功結合您的質性填答與量化分數完成交叉分析！');
+  alert('模組三已完成分析（包含未填寫欄位的智慧對應處理）！');
 }
 
 function unlockStage4() {
@@ -413,7 +380,7 @@ function unlockStage4() {
   nav4.style.opacity = '1';
   nav4.innerHTML = '<span>4</span>總結與建議 (已解鎖)';
   setTimeout(() => { scrollToSection('stage4-sec'); }, 400);
-  alert('模組三確認完畢！模組四 6 大繽紛報告與 IDP 總結已成功解鎖！');
+  alert('模組四總結與建議報告已成功解鎖！');
 }
 
 window.onload = function() {
