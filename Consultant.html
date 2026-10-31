@@ -31,11 +31,11 @@ main{max-width:1600px;margin:auto;padding:16px}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:15px;width:100%}
 
-/* 一排三張卡片版面 */
+/* 一排三張卡片版面：確保寬度分配平均、內容不擠壓 */
 .report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.65fr;gap:16px;align-items:stretch}
-.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:12px;padding:16px;display:flex;flex-direction:column}
+.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:12px;padding:16px;display:flex;flex-direction:column;min-width:0}
 .r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:10px 12px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:14px;margin-bottom:12px;border-radius:6px}
-.r-num{width:26px;height:26px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:13px}
+.r-num{width:26px;height:26px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:13px;flex-shrink:0}
 
 /* 診斷摘要內部排版 */
 .summary-top{display:flex;align-items:center;gap:16px;margin-bottom:12px}
@@ -53,13 +53,13 @@ main{max-width:1600px;margin:auto;padding:16px}
 .sub-box{font-size:13px;line-height:1.5}
 .sub-box ul{padding-left:18px;margin:6px 0}
 
-/* 四構面列表 */
-.dim-row{display:grid;grid-template-columns:95px 70px 60px minmax(0,1fr);gap:8px;align-items:center;padding:8px;margin-bottom:8px;border-radius:8px;background:#fff;border:1px solid #ecdffc}
-.dim-name{padding:6px;color:white;border-radius:6px;font-weight:bold;font-size:12px;text-align:center}
-.dim-score{font-size:13px;font-weight:900;text-align:center}
-.dim-pill{padding:4px 6px;text-align:center;color:white;font-weight:bold;border-radius:4px;font-size:11px}
+/* 四構面列表：調整欄位比例防擠壓 */
+.dim-row{display:grid;grid-template-columns:85px 75px 65px minmax(0,1fr);gap:6px;align-items:center;padding:8px 6px;margin-bottom:8px;border-radius:8px;background:#fff;border:1px solid #ecdffc}
+.dim-name{padding:6px 4px;color:white;border-radius:6px;font-weight:bold;font-size:11.5px;text-align:center;word-break:break-all}
+.dim-score{font-size:12.5px;font-weight:900;text-align:center;line-height:1.2}
+.dim-pill{padding:4px 4px;text-align:center;color:white;font-weight:bold;border-radius:4px;font-size:11px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
-.dim-desc{font-size:12px;color:#444;padding-left:4px;line-height:1.4}
+.dim-desc{font-size:11.5px;color:#444;padding-left:4px;line-height:1.4;word-break:break-word}
 
 /* 第三張卡片 (象限圖) */
 .plot-wrap{width:100%;height:100%;display:flex;align-items:center}
@@ -89,8 +89,8 @@ main{max-width:1600px;margin:auto;padding:16px}
 .rc-title span{background:#521493;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px}
 .report-card p{font-size:13px;line-height:1.5;margin:0}
 
-@media(max-width:1250px){.report-panel-grid{grid-template-columns:1fr 1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:850px){.report-panel-grid{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr}}
+@media(max-width:1400px){.report-panel-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:850px){.qual-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr}}
 </style></head><body>
 
 <header class="top">
@@ -155,26 +155,26 @@ main{max-width:1600px;margin:auto;padding:16px}
         <div class="r-card-head"><span class="r-num">2</span>四構面分析 <small>各構面分數與實際意義</small></div>
         <div id="dim-list">
           <div class="dim-row">
-            <div class="dim-name" style="background:#00a86b">Mirror<small style="display:block;font-size:10px">問題覺察</small></div>
-            <div class="dim-score" id="txt-m">8 / 25<br><span style="font-size:11px">(1.6 / 5)</span></div>
+            <div class="dim-name" style="background:#00a86b">Mirror<small style="display:block;font-size:9.5px">問題覺察</small></div>
+            <div class="dim-score" id="txt-m">8 / 25<br><span style="font-size:10px">(1.6 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-m">偏低</div>
             <div class="dim-desc" id="desc-m"><b>問題覺察不足</b><br>• 但願意回饋</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#087cf3">Matrix<small style="display:block;font-size:10px">制度權責</small></div>
-            <div class="dim-score" id="txt-mx">18 / 25<br><span style="font-size:11px">(3.6 / 5)</span></div>
+            <div class="dim-name" style="background:#087cf3">Matrix<small style="display:block;font-size:9.5px">制度權責</small></div>
+            <div class="dim-score" id="txt-mx">18 / 25<br><span style="font-size:10px">(3.6 / 5)</span></div>
             <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
             <div class="dim-desc" id="desc-mx"><b>制度結構較清晰</b><br>• 權責配置完整</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#ff8500">Flow<small style="display:block;font-size:10px">資訊流動</small></div>
-            <div class="dim-score" id="txt-f">6 / 25<br><span style="font-size:11px">(1.2 / 5)</span></div>
+            <div class="dim-name" style="background:#ff8500">Flow<small style="display:block;font-size:9.5px">資訊流動</small></div>
+            <div class="dim-score" id="txt-f">6 / 25<br><span style="font-size:10px">(1.2 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-f">偏低</div>
             <div class="dim-desc" id="desc-f"><b>資訊傳遞受阻</b><br>• 跨部門協作弱</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#9218ef">Safety<small style="display:block;font-size:10px">心理安全</small></div>
-            <div class="dim-score" id="txt-s">9 / 25<br><span style="font-size:11px">(1.8 / 5)</span></div>
+            <div class="dim-name" style="background:#9218ef">Safety<small style="display:block;font-size:9.5px">心理安全</small></div>
+            <div class="dim-score" id="txt-s">9 / 25<br><span style="font-size:10px">(1.8 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-s">偏低</div>
             <div class="dim-desc" id="desc-s"><b>表達意見保守</b><br>• 信任氛圍不足</div>
           </div>
@@ -274,7 +274,7 @@ function scrollToSection(id) {
 function updateDimRow(idPrefix, val, dimTitle, lowText, highText) {
   let score5 = (val / 5).toFixed(1);
   let isLow = val < 12.5;
-  document.getElementById('txt-' + idPrefix).innerHTML = `${val} / 25<br><span style="font-size:11px">(${score5} / 5)</span>`;
+  document.getElementById('txt-' + idPrefix).innerHTML = `${val} / 25<br><span style="font-size:10px">(${score5} / 5)</span>`;
   let pill = document.getElementById('pill-' + idPrefix);
   let desc = document.getElementById('desc-' + idPrefix);
   
