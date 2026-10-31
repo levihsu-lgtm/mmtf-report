@@ -150,7 +150,7 @@ main{max-width:1600px;margin:auto;padding:12px}
         </div>
       </div>
 
-      <!-- 第二張卡片：四構面分析（加入動態 ID 連動） -->
+      <!-- 第二張卡片：四構面分析（與上方輸入框即時連動） -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">2</span>四構面分析 <small>各構面分數與實際意義</small></div>
         <div id="dim-list">
@@ -272,7 +272,7 @@ function scrollToSection(id) {
   document.getElementById(id).scrollIntoView({behavior: 'smooth'});
 }
 
-function updateDimRow(idPrefix, val) {
+function updateDimRow(idPrefix, val, dimTitle, lowText, highText) {
   let score5 = (val / 5).toFixed(1);
   let isLow = val < 12.5;
   document.getElementById('txt-' + idPrefix).innerHTML = `${val} / 25<br><span style="font-size:11px">(${score5} / 5)</span>`;
@@ -282,9 +282,11 @@ function updateDimRow(idPrefix, val) {
   if(isLow) {
     pill.className = "dim-pill p-low";
     pill.innerText = "偏低";
+    desc.innerHTML = `<b>${lowText}</b>`;
   } else {
     pill.className = "dim-pill p-high";
     pill.innerText = "相對偏高";
+    desc.innerHTML = `<b>${highText}</b>`;
   }
 }
 
@@ -303,11 +305,11 @@ function runSimulation() {
   document.getElementById('v-sum').innerText = total + ' / 100';
   document.getElementById('v-avg').innerText = avg + ' / 5';
 
-  // 動態更新第二張卡片各構面顯示
-  updateDimRow('m', m);
-  updateDimRow('mx', mx);
-  updateDimRow('f', f);
-  updateDimRow('s', s);
+  // 動態更新第二張卡片各構面顯示與狀態標籤
+  updateDimRow('m', m, '問題覺察', '問題覺察不足<br>• 但願意回饋', '問題覺察清晰<br>• 回饋機制完善');
+  updateDimRow('mx', mx, '制度權責', '制度結構較弱<br>• 權責待釐清', '制度結構較清晰<br>• 權責配置完整');
+  updateDimRow('f', f, '資訊流動', '資訊傳遞受阻<br>• 跨部門協作弱', '資訊流動順暢<br>• 跨部門協作佳');
+  updateDimRow('s', s, '心理安全', '表達意見保守<br>• 信任氛圍不足', '心理安全充足<br>• 鼓勵多元建言');
 
   // 組織類型動態判斷
   let typeTitle = document.getElementById('v-type');
@@ -429,7 +431,7 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const resultLabelX = Math.min(Math.max(px-70, L+5), R-145);
   const resultLabelY = Math.min(Math.max(py-56, T+5), B-50);
 
-  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-24}" stroke="#c90020" stroke-width="2.3"/><circle cx="${px}" cy="${py}" r="10" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="140" height="40" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+70}" y="${resultLabelY+16}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+70}" y="${resultLabelY+32}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-24}" stroke="#c90020" stroke-width="2.3"/><circle cx="${px}" cy="${py}" r="10" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="140" height="40" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+70}" y="${resultLabelY+16}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+70}" y="${resultLabelY+32}" text-anchor="middle" font-size="11.5" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
   svgContent += `<path d="M ${L-5} ${B} L ${R+15} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
   svgContent += `<text x="${L}" y="${B+24}" font-size="12" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="12" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">5 (高)</text>`;
