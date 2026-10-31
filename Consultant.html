@@ -61,9 +61,9 @@ main{max-width:1600px;margin:auto;padding:10px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
 .dim-desc{font-size:10px;color:#555;padding-left:3px}
 
-/* 第三張卡片：大型完美置中象限圖 */
+/* 置中大型象限圖容器 */
 .plot-wrap{width:100%;max-width:1150px;margin:0 auto;box-sizing:border-box}
-#quadrantChart{display:block;width:100%;height:auto;min-height:540px}
+#quadrantChart{display:block;width:100%;height:auto;min-height:560px}
 
 /* 質性填答欄位 */
 .qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -121,9 +121,17 @@ main{max-width:1600px;margin:auto;padding:10px}
       <button class="gen-btn" onclick="runSimulation()">送出並更新報告 ⚡</button>
     </div>
 
-    <div class="report-panel-grid">
+    <!-- 置頂的大型象限圖面板 -->
+    <div class="r-card-wide">
+      <div class="r-card-head"><span class="r-num">1</span>組織效能四象限圖與落點判讀</div>
+      <div class="plot-wrap">
+        <svg id="quadrantChart" viewBox="0 0 1020 540" role="img" aria-label="依四構面分數動態定位的四象限圖與詳細落點面板"></svg>
+      </div>
+    </div>
+
+    <div class="report-panel-grid" style="margin-top:12px;">
       <div class="r-card">
-        <div class="r-card-head"><span class="r-num">1</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
+        <div class="r-card-head"><span class="r-num">2</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
         <div class="summary-top">
           <div class="ring"><div><strong id="v-total">41</strong><small>/ 100</small></div></div>
           <div class="fragile-box">
@@ -146,7 +154,7 @@ main{max-width:1600px;margin:auto;padding:10px}
       </div>
 
       <div class="r-card">
-        <div class="r-card-head"><span class="r-num">2</span>四構面分析 <small>各構面分數與實際意義</small></div>
+        <div class="r-card-head"><span class="r-num">3</span>四構面分析 <small>各構面分數與實際意義</small></div>
         <div id="dim-list">
           <div class="dim-row">
             <div class="dim-name" style="background:#00a86b">Mirror<small>問題覺察</small></div>
@@ -173,14 +181,6 @@ main{max-width:1600px;margin:auto;padding:10px}
             <div class="dim-desc"><b>表達意見保守</b><br>• 信任氛圍不足</div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- 第三張卡片：置中且字體放大的大型象限圖面板 -->
-    <div class="r-card-wide">
-      <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖與落點判讀</div>
-      <div class="plot-wrap">
-        <svg id="quadrantChart" viewBox="0 0 1020 540" role="img" aria-label="依四構面分數動態定位的四象限圖與詳細落點面板"></svg>
       </div>
     </div>
   </section>
@@ -364,7 +364,6 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 
   svgContent += `<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
 
-  // 象限標題與內容卡片（字體放大）
   const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="32" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+21}" text-anchor="middle" font-size="14" font-weight="900" fill="#182a27">${label}</text>`;
 
   svgContent += pill(L+15, T+15, 235, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
@@ -379,13 +378,11 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
     <text x="${midX+18}" y="${midY+66}"><tspan x="${midX+18}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+18}" dy="19">• 但未有效轉化為行動</tspan><tspan x="${midX+18}" dy="19">• 強化資源配置與追蹤</tspan></text>
   </g>`;
 
-  // 定位紅點與標籤
   const resultLabelX = Math.min(Math.max(px-70, L+5), R-145);
   const resultLabelY = Math.min(Math.max(py-56, T+5), B-50);
 
   svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-24}" stroke="#c90020" stroke-width="2.3"/><circle cx="${px}" cy="${py}" r="10" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="140" height="40" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+70}" y="${resultLabelY+16}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+70}" y="${resultLabelY+32}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
-  // 坐標軸與刻度
   svgContent += `<path d="M ${L-5} ${B} L ${R+15} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
   svgContent += `<text x="${L}" y="${B+24}" font-size="12" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="12" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">5 (高)</text>`;
   svgContent += `<text x="${L-12}" y="${B}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">0</text><text x="${L-12}" y="${midY}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">2</text><text x="${L-12}" y="${T}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">5 (高)</text>`;
@@ -394,7 +391,7 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   svgContent += `<text x="${(L+R)/2}" y="${B+46}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
 
   // ----------------------------------------------------
-  // 右側詳細分析面板（字體全面放大並排版清晰）
+  // 右側詳細分析面板
   // ----------------------------------------------------
   const rx = 670, rw = 330;
   svgContent += `
@@ -402,7 +399,6 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
     <rect x="${rx}" y="${T}" width="${rw}" height="40" rx="8" fill="#521493"/>
     <text x="${rx+rw/2}" y="${T+26}" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">本次數據落點判讀</text>
     
-    <!-- 計算公式區 -->
     <rect x="${rx+12}" y="${T+52}" width="${rw-24}" height="116" rx="6" fill="#fff" stroke="#ebdffc"/>
     <text x="${rx+22}" y="${T+72}" font-size="12" font-weight="900" fill="#521493">計算公式（分數轉換為 0-5 尺度）</text>
     <text x="${rx+22}" y="${T+93}" font-size="11.5" font-weight="700" fill="#333">Awareness = (Mirror + Safety) / 2</text>
@@ -410,7 +406,6 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
     <text x="${rx+22}" y="${T+135}" font-size="11.5" font-weight="700" fill="#333">Action = (Matrix + Flow) / 2</text>
     <text x="${rx+45}" y="${T+154}" font-size="11.5" font-weight="700" fill="#7012ca">= (${mx} + ${f}) / 2 = <b>${mx+f}</b> / 25 = <b>${quadrantY.toFixed(1)} / 5</b></text>
 
-    <!-- 分數卡片 -->
     <rect x="${rx+12}" y="${T+178}" width="149" height="56" rx="6" fill="#fff" stroke="#ebdffc"/>
     <text x="${rx+86}" y="${T+198}" text-anchor="middle" font-size="12" font-weight="900" fill="#521493">Awareness</text>
     <text x="${rx+86}" y="${T+224}" text-anchor="middle" font-size="15" font-weight="900" fill="#d93838">${quadrantX.toFixed(1)} / 5 <tspan font-size="10.5" font-weight="700" fill="#e05650">${quadrantX<2.5?'相對偏低':'偏高'}</tspan></text>
@@ -419,11 +414,9 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
     <text x="${rx+243}" y="${T+198}" text-anchor="middle" font-size="12" font-weight="900" fill="#521493">Action</text>
     <text x="${rx+243}" y="${T+224}" text-anchor="middle" font-size="15" font-weight="900" fill="#d93838">${quadrantY.toFixed(1)} / 5 <tspan font-size="10.5" font-weight="700" fill="#e05650">${quadrantY<2.5?'偏低':'偏高'}</tspan></text>
 
-    <!-- 所在象限標題 -->
     <rect x="${rx+12}" y="${T+244}" width="${rw-24}" height="35" rx="6" fill="#7012ca"/>
     <text x="${rx+rw/2}" y="${T+267}" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">所在象限：${quadrantX<2.5?(quadrantY<2.5?'第三象限｜失衡風險區':'第二象限｜潛能未釋放區'):(quadrantY<2.5?'第四象限｜看見未轉化區':'第一象限｜最佳運作區')}</text>
 
-    <!-- 數據落點解讀清單 -->
     <rect x="${rx+12}" y="${T+289}" width="${rw-24}" height="184" rx="6" fill="#fff" stroke="#ebdffc"/>
     <text x="${rx+22}" y="${T+311}" font-size="12.5" font-weight="900" fill="#521493">數據落點解讀</text>
     
