@@ -2,92 +2,92 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 模組化職涯顧問分析報告</title>
 <style>
 :root{--navy:#073f87;--purple:#521493;--green:#00a86b;--orange:#ff9700;--ink:#12345a;--pale:#faf5ff}
-*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:12px}
-.top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;border-bottom:5px solid #b67afb}
-.top h1{font-size:clamp(20px,2.8vw,34px);margin:0;white-space:nowrap}
-.tagline{border-left:1px solid #c99bfc;padding-left:18px;font-size:13px;line-height:1.7;flex:1}
-main{max-width:1680px;margin:auto;padding:10px}
+*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:11px}
+.top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:10px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;border-bottom:4px solid #b67afb}
+.top h1{font-size:clamp(18px,2.4vw,30px);margin:0;white-space:nowrap}
+.tagline{border-left:1px solid #c99bfc;padding-left:14px;font-size:12px;line-height:1.6;flex:1}
+main{max-width:1800px;margin:auto;padding:8px}
 
 /* 階段按鈕與流程指引列 */
-.stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;padding:12px 15px;margin-bottom:12px;gap:8px;flex-wrap:wrap}
-.stage-pill{display:flex;align-items:center;gap:6px;font-weight:bold;color:#521493;font-size:11px;background:#fff;padding:6px 10px;border-radius:20px;border:1px solid #d5bcff}
-.stage-pill span{width:20px;height:20px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:10px}
-.stage-arrow{color:#7012ca;font-weight:900;font-size:14px}
-.next-btn{background:#521493;color:white;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:11px;box-shadow:0 2px 5px rgba(82,20,147,0.3)}
+.stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:8px;padding:10px 14px;margin-bottom:10px;gap:6px;flex-wrap:wrap}
+.stage-pill{display:flex;align-items:center;gap:5px;font-weight:bold;color:#521493;font-size:11px;background:#fff;padding:5px 9px;border-radius:18px;border:1px solid #d5bcff}
+.stage-pill span{width:18px;height:18px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:10px}
+.stage-arrow{color:#7012ca;font-weight:900;font-size:13px}
+.next-btn{background:#521493;color:white;border:none;border-radius:6px;padding:7px 12px;cursor:pointer;font-weight:bold;font-size:11px;box-shadow:0 2px 4px rgba(82,20,147,0.3)}
 .next-btn:hover{background:#6d1ac7}
 
 /* 模組通用樣式 */
-.module-box{background:#fff;border:1px solid #d5bcff;border-radius:12px;padding:15px;margin-bottom:12px;box-shadow:0 3px 10px rgba(82,20,147,0.05)}
-.module-title{font-size:16px;font-weight:900;color:#521493;margin-bottom:10px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #f3e8ff;padding-bottom:6px}
+.module-box{background:#fff;border:1px solid #d5bcff;border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(82,20,147,0.05)}
+.module-title{font-size:15px;font-weight:900;color:#521493;margin-bottom:8px;display:flex;align-items:center;gap:6px;border-bottom:2px solid #f3e8ff;padding-bottom:5px}
 
-/* 輸入面板 */
-.inputs-grid{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr)) auto;gap:8px;align-items:center}
-.input-card{padding:8px;border-radius:8px;color:#fff;display:flex;align-items:center;gap:6px}
-.input-card input{width:55px;padding:5px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:14px;color:#15365d}
+/* 輸入面板：完美適配 100% 畫面不換行 */
+.inputs-grid{display:grid;grid-template-columns:repeat(4,minmax(110px,1fr)) auto;gap:6px;align-items:center}
+.input-card{padding:6px 8px;border-radius:6px;color:#fff;display:flex;align-items:center;gap:5px;font-size:11px}
+.input-card input{width:48px;padding:4px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:13px;color:#15365d;text-align:center}
 .m-mirror{background:linear-gradient(110deg,#00a86b,#20d2a0)}
 .m-matrix{background:linear-gradient(110deg,#087cf3,#32b9ff)}
 .m-flow{background:linear-gradient(110deg,#ff8500,#ffc34e)}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
-.gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:14px}
+.gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:6px;padding:10px 14px;font-weight:900;cursor:pointer;font-size:13px}
 
-/* 圖形分析呈現區 (模組一：精準一排三張卡片對齊) */
-.report-panel-grid{display:grid;grid-template-columns:0.95fr 1.05fr 1.8fr;gap:10px;margin-top:10px;align-items:stretch}
-.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:12px;display:flex;flex-direction:column}
-.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:6px 8px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:6px;color:#521493;font-weight:900;font-size:12px;margin-bottom:8px;border-radius:6px}
-.r-num{width:22px;height:22px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:12px}
+/* 圖形分析呈現區 (100% 狀態下一排三張卡片精準並排) */
+.report-panel-grid{display:grid;grid-template-columns:0.85fr 0.95fr 1.85fr;gap:8px;margin-top:8px;align-items:stretch}
+.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:8px;padding:10px;display:flex;flex-direction:column}
+.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:5px 7px;border-bottom:2px solid #9a4efe;display:flex;align-items:center;gap:5px;color:#521493;font-weight:900;font-size:11px;margin-bottom:6px;border-radius:5px}
+.r-num{width:18px;height:18px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:10px}
 
 /* 診斷摘要內部排版 */
-.summary-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-.ring{width:75px;height:75px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#8a0bfa 0 41%,#e2c2ff 41% 100%);position:relative;flex-shrink:0}
-.ring:before{content:"";position:absolute;inset:7px;background:white;border-radius:50%}
+.summary-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ring{width:65px;height:65px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#8a0bfa 0 41%,#e2c2ff 41% 100%);position:relative;flex-shrink:0}
+.ring:before{content:"";position:absolute;inset:6px;background:white;border-radius:50%}
 .ring div{position:relative;text-align:center}
-.ring strong{font-size:22px;color:#7012ca;display:block;line-height:1}
-.ring small{font-size:11px;font-weight:bold}
-.fragile-box b{color:#d93838;font-size:13px;display:block}
-.fragile-box p{font-size:10px;color:#555;margin:2px 0 0;line-height:1.4}
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
-.stat-box{background:#f4eaff;padding:5px;border-radius:6px;text-align:center;border:1px solid #e0c5ff}
-.stat-box b{display:block;font-size:10px;color:#521493}
-.stat-box strong{font-size:14px;color:#7012ca}
-.sub-box{font-size:10px;line-height:1.4}
-.sub-box ul{padding-left:14px;margin:2px 0}
+.ring strong{font-size:18px;color:#7012ca;display:block;line-height:1}
+.ring small{font-size:10px;font-weight:bold}
+.fragile-box b{color:#d93838;font-size:12px;display:block}
+.fragile-box p{font-size:9.5px;color:#555;margin:2px 0 0;line-height:1.3}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px}
+.stat-box{background:#f4eaff;padding:4px;border-radius:5px;text-align:center;border:1px solid #e0c5ff}
+.stat-box b{display:block;font-size:9.5px;color:#521493}
+.stat-box strong{font-size:12px;color:#7012ca}
+.sub-box{font-size:9.5px;line-height:1.3}
+.sub-box ul{padding-left:12px;margin:2px 0}
 
 /* 四構面列表 */
-.dim-row{display:grid;grid-template-columns:85px 55px 50px minmax(0,1fr);gap:4px;align-items:center;padding:4px;margin-bottom:4px;border-radius:6px;background:#fff;border:1px solid #ecdffc}
-.dim-name{padding:4px;color:white;border-radius:4px;font-weight:bold;font-size:10px;text-align:center}
-.dim-score{font-size:12px;font-weight:900;text-align:center}
-.dim-pill{padding:3px 2px;text-align:center;color:white;font-weight:bold;border-radius:3px;font-size:9px}
+.dim-row{display:grid;grid-template-columns:75px 50px 45px minmax(0,1fr);gap:4px;align-items:center;padding:3px 4px;margin-bottom:3px;border-radius:5px;background:#fff;border:1px solid #ecdffc}
+.dim-name{padding:3px;color:white;border-radius:3px;font-weight:bold;font-size:9.5px;text-align:center}
+.dim-score{font-size:11px;font-weight:900;text-align:center}
+.dim-pill{padding:2px;text-align:center;color:white;font-weight:bold;border-radius:3px;font-size:8.5px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
-.dim-desc{font-size:9px;color:#555;padding-left:2px}
+.dim-desc{font-size:8.5px;color:#555;padding-left:2px}
 
-/* 第三張卡片 (象限圖與側邊完整資訊同在一框內) */
+/* 第三張卡片 (象限圖) */
 .plot-wrap{width:100%;height:100%;display:flex;align-items:center}
-#quadrantChart{display:block;width:100%;height:auto;max-height:430px}
+#quadrantChart{display:block;width:100%;height:auto;max-height:390px}
 
 /* 質性填答欄位 */
-.qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.qual-group{background:#f9f5ff;padding:10px;border-radius:8px;border:1px solid #e2cffc}
-.qual-group label{display:block;font-weight:bold;color:#521493;margin-bottom:4px}
-.qual-group textarea{width:100%;height:75px;padding:8px;border:1px solid #d5bcff;border-radius:6px;font-family:inherit}
+.qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qual-group{background:#f9f5ff;padding:8px;border-radius:6px;border:1px solid #e2cffc}
+.qual-group label{display:block;font-weight:bold;color:#521493;margin-bottom:3px;font-size:11px}
+.qual-group textarea{width:100%;height:65px;padding:6px;border:1px solid #d5bcff;border-radius:50px;font-family:inherit;font-size:11px}
 
 /* 模組三表格 */
-.analysis-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
-.analysis-table th{background:#521493;color:white;padding:6px;text-align:left}
-.analysis-table td{padding:6px;border:1px solid #ebdffc;vertical-align:top;background:#fff}
+.analysis-table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:6px}
+.analysis-table th{background:#521493;color:white;padding:5px;text-align:left}
+.analysis-table td{padding:5px;border:1px solid #ebdffc;vertical-align:top;background:#fff}
 
 /* 模組四 6 大繽紛區塊 */
-.report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.report-card{border-radius:12px;padding:12px;border:1px solid #e0ebf5}
+.report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.report-card{border-radius:10px;padding:10px;border:1px solid #e0ebf5}
 .rc-1{background:linear-gradient(145deg,#f0fff8,#fff);border-color:#bcebd7}
 .rc-2{background:linear-gradient(145deg,#f4fbff,#fff);border-color:#b9dfff}
 .rc-3{background:linear-gradient(145deg,#fff7e9,#fff);border-color:#f5d5a4}
 .rc-4{background:linear-gradient(145deg,#f6efff,#fff);border-color:#d7c8ff}
 .rc-5{background:linear-gradient(145deg,#fff0f4,#fff);border-color:#ffcbd8}
 .rc-6{background:linear-gradient(145deg,#f4f6ff,#fff);border-color:#c8d4ff}
-.rc-title{font-size:12px;font-weight:900;color:#174875;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
-.rc-title span{background:#521493;color:#fff;padding:2px 5px;border-radius:4px;font-size:9px}
+.rc-title{font-size:11px;font-weight:900;color:#174875;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+.rc-title span{background:#521493;color:#fff;padding:2px 5px;border-radius:3px;font-size:8.5px}
 
-@media(max-width:1280px){.report-panel-grid{grid-template-columns:1fr 1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:1350px){.report-panel-grid{grid-template-columns:1fr 1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){.report-panel-grid{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
 </style></head><body>
 
@@ -121,7 +121,7 @@ main{max-width:1680px;margin:auto;padding:10px}
       <button class="gen-btn" onclick="runSimulation()">送出並更新報告 ⚡</button>
     </div>
 
-    <!-- 一排三張卡片完全水平並排 -->
+    <!-- 一排三張卡片在 100% 縮放下完美並排 -->
     <div class="report-panel-grid">
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">1</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
@@ -151,32 +151,32 @@ main{max-width:1680px;margin:auto;padding:10px}
         <div id="dim-list">
           <div class="dim-row">
             <div class="dim-name" style="background:#00a86b">Mirror<small>問題覺察</small></div>
-            <div class="dim-score">8 / 25<br><span style="font-size:9px">(1.6 / 5)</span></div>
+            <div class="dim-score">8 / 25<br><span style="font-size:8.5px">(1.6 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-m">偏低</div>
             <div class="dim-desc"><b>問題覺察不足</b><br>• 但願意回饋</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#087cf3">Matrix<small>制度權責</small></div>
-            <div class="dim-score">18 / 25<br><span style="font-size:9px">(3.6 / 5)</span></div>
+            <div class="dim-score">18 / 25<br><span style="font-size:8.5px">(3.6 / 5)</span></div>
             <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
             <div class="dim-desc"><b>制度結構較清晰</b><br>• 權責配置完整</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#ff8500">Flow<small>資訊流動</small></div>
-            <div class="dim-score">6 / 25<br><span style="font-size:9px">(1.2 / 5)</span></div>
+            <div class="dim-score">6 / 25<br><span style="font-size:8.5px">(1.2 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-f">偏低</div>
             <div class="dim-desc"><b>資訊傳遞受阻</b><br>• 跨部門協作弱</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#9218ef">Safety<small>心理安全</small></div>
-            <div class="dim-score">9 / 25<br><span style="font-size:9px">(1.8 / 5)</span></div>
+            <div class="dim-score">9 / 25<br><span style="font-size:8.5px">(1.8 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-s">偏低</div>
             <div class="dim-desc"><b>表達意見保守</b><br>• 信任氛圍不足</div>
           </div>
         </div>
       </div>
 
-      <!-- 第三張卡片：並排於右側，內容完全復刻第二張圖 -->
+      <!-- 第三張卡片：並排於右側 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
         <div class="plot-wrap">
@@ -189,7 +189,7 @@ main{max-width:1680px;margin:auto;padding:10px}
   <!-- 模組二：因材施教（動態質性填答，允許留空） -->
   <section class="module-box" id="stage2-sec">
     <div class="module-title"><span>📦</span> 模組二：因材施教（參與者針對動態派發之題目進行質性填答，可自由選填）</div>
-    <p style="margin:0 0 8px 0;color:#6b5388">請根據您的實際職場情境填寫以下欄位（若未填寫，系統將依量化分數與文獻進行對應分析）：</p>
+    <p style="margin:0 0 6px 0;color:#6b5388">請根據您的實際職場情境填寫以下欄位（若未填寫，系統將依量化分數與文獻進行對應分析）：</p>
     
     <div class="qual-grid">
       <div class="qual-group">
@@ -201,7 +201,7 @@ main{max-width:1680px;margin:auto;padding:10px}
         <textarea id="qual-ans-2" placeholder="若無特別補充可保持空白...">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
       </div>
     </div>
-    <div style="margin-top:10px">
+    <div style="margin-top:8px">
       <button class="next-btn" onclick="runConsultantAnalysis()">提交填答並生成模組三顧問交叉分析表 ➔</button>
     </div>
   </section>
@@ -209,7 +209,7 @@ main{max-width:1680px;margin:auto;padding:10px}
   <!-- 模組三：顧問分析與後續操作步驟（結合文獻對策與質性關係） -->
   <section class="module-box" id="stage3-sec" style="display:none">
     <div class="module-title"><span>📦</span> 模組三：量化／質性整合驗證與顧問規畫建議（依文獻對策與顧問裁量）</div>
-    <p style="font-size:11px;color:#521493;margin:0 0 8px 0">下表整合量化分數、模組二質性填答狀態、學術理論文獻對策，並提供初步規劃建議（最終執行與否由專業顧問評估決定）：</p>
+    <p style="font-size:10.5px;color:#521493;margin:0 0 6px 0">下表整合量化分數、模組二質性填答狀態、學術理論文獻對策，並提供初步規劃建議（最終執行與否由專業顧問評估決定）：</p>
     
     <table class="analysis-table">
       <thead>
@@ -225,7 +225,7 @@ main{max-width:1680px;margin:auto;padding:10px}
         <!-- 動態填入 -->
       </tbody>
     </table>
-    <div style="margin-top:10px">
+    <div style="margin-top:8px">
       <button class="next-btn" onclick="unlockStage4()">確認分析無誤，解鎖模組四個人報告 ➔</button>
     </div>
   </section>
@@ -236,7 +236,7 @@ main{max-width:1680px;margin:auto;padding:10px}
     <div class="report-grid-6">
       <div class="report-card rc-1">
         <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 41</span></div>
-        <p>呈現四構面量化分數、總分 41/100 分，以及高風險失能型（Fragile）的初步解讀。</p>
+        <p>呈現四構面量化分數、總分 41/100 分[cite: 3]，以及高風險失能型（Fragile）的初步解讀。</p>
       </div>
       <div class="report-card rc-2">
         <div class="rc-title">02｜四構面輪廓與文獻參照 <span>理論基礎</span></div>
@@ -446,10 +446,10 @@ function runConsultantAnalysis() {
   let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
   let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
 
-  let rel1 = ans1 ? `質性文本提及「專案時程延遲、缺乏即時回饋」[cite: 3]，與 Flow 低分（${f}分）完全呼應。` : `未填寫具體情境，系統依據 Flow 量化低分推論：跨部門溝通存在雜訊與版本落差[cite: 3]。`;
+  let rel1 = ans1 ? `質性文本提及「專案時程延遲、缺乏即時回饋」[cite: 3]，與 Flow 低分（${f}分）完全呼應。` : `未填寫具體情境[cite: 3]，系統依據 Flow 量化低分推論：跨部門溝通存在雜訊與版本落差[cite: 3]。`;
   let feedback1 = `依據 <b>Shannon & Weaver (1949) 資訊傳播模型</b>[cite: 3]，建議重新檢視通道雜訊與編解碼機制。`;
 
-  let rel2 = ans2 ? `質性文本提及「高壓主管在場、不敢指出結構性問題」[cite: 3]，直接呼應 Safety 低分（${s}分）。` : `未填寫補充說明，系統依據 Safety 量化低分推論：組織內部存在防禦性發聲障礙[cite: 3]。`;
+  let rel2 = ans2 ? `質性文本提及「高壓主管在場、不敢指出結構性問題」[cite: 3]，直接呼應 Safety 低分（${s}分）。` : `未填寫補充說明[cite: 3]，系統依據 Safety 量化低分推論：組織內部存在防禦性發聲障礙[cite: 3]。`;
   let feedback2 = `依據 <b>Edmondson (1999) 心理安全感模型</b>[cite: 3]，建議推動無咎責機制，降低發聲焦慮。`;
 
   tbody.innerHTML = `
@@ -487,4 +487,4 @@ window.onload = function() {
   runSimulation();
 };
 </script></body></html>
-```[cite: 3, 5, 14]
+```[cite: 3, 5]
