@@ -2,7 +2,7 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 模組化職涯顧問分析報告</title>
 <style>
 :root{--navy:#073f87;--purple:#521493;--green:#00a86b;--orange:#ff9700;--ink:#12345a;--pale:#faf5ff}
-*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:12px}
+*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:13px}
 .top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;border-bottom:5px solid #b67afb}
 .top h1{font-size:clamp(20px,2.8vw,34px);margin:0;white-space:nowrap}
 .tagline{border-left:1px solid #c99bfc;padding-left:18px;font-size:13px;line-height:1.7;flex:1}
@@ -10,82 +10,83 @@ main{max-width:1600px;margin:auto;padding:10px}
 
 /* 階段按鈕與流程指引列 */
 .stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;padding:12px 15px;margin-bottom:12px;gap:8px;flex-wrap:wrap}
-.stage-pill{display:flex;align-items:center;gap:6px;font-weight:bold;color:#521493;font-size:11px;background:#fff;padding:6px 10px;border-radius:20px;border:1px solid #d5bcff}
-.stage-pill span{width:20px;height:20px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:10px}
-.stage-arrow{color:#7012ca;font-weight:900;font-size:14px}
-.next-btn{background:#521493;color:white;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:11px;box-shadow:0 2px 5px rgba(82,20,147,0.3)}
+.stage-pill{display:flex;align-items:center;gap:6px;font-weight:bold;color:#521493;font-size:12px;background:#fff;padding:6px 12px;border-radius:20px;border:1px solid #d5bcff}
+.stage-pill span{width:22px;height:22px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:11px}
+.stage-arrow{color:#7012ca;font-weight:900;font-size:15px}
+.next-btn{background:#521493;color:white;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:12px;box-shadow:0 2px 5px rgba(82,20,147,0.3)}
 .next-btn:hover{background:#6d1ac7}
 
 /* 模組通用樣式 */
-.module-box{background:#fff;border:1px solid #d5bcff;border-radius:12px;padding:15px;margin-bottom:12px;box-shadow:0 3px 10px rgba(82,20,147,0.05)}
-.module-title{font-size:16px;font-weight:900;color:#521493;margin-bottom:10px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #f3e8ff;padding-bottom:6px}
+.module-box{background:#fff;border:1px solid #d5bcff;border-radius:12px;padding:18px;margin-bottom:12px;box-shadow:0 3px 10px rgba(82,20,147,0.05)}
+.module-title{font-size:17px;font-weight:900;color:#521493;margin-bottom:12px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #f3e8ff;padding-bottom:8px}
 
 /* 輸入面板 */
-.inputs-grid{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr)) auto;gap:8px;align-items:center}
-.input-card{padding:8px;border-radius:8px;color:#fff;display:flex;align-items:center;gap:6px}
-.input-card input{width:55px;padding:5px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:14px;color:#15365d}
+.inputs-grid{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr)) auto;gap:10px;align-items:center}
+.input-card{padding:10px;border-radius:8px;color:#fff;display:flex;align-items:center;gap:8px;font-size:13px}
+.input-card input{width:60px;padding:6px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:15px;color:#15365d}
 .m-mirror{background:linear-gradient(110deg,#00a86b,#20d2a0)}
 .m-matrix{background:linear-gradient(110deg,#087cf3,#32b9ff)}
 .m-flow{background:linear-gradient(110deg,#ff8500,#ffc34e)}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
-.gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:14px}
+.gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:14px;font-weight:900;cursor:pointer;font-size:15px}
 
 /* 圖形分析呈現區 (模組一) */
-.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:10px;margin-top:10px}
-.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:12px}
-.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:6px 8px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:6px;color:#521493;font-weight:900;font-size:12px;margin-bottom:8px;border-radius:6px}
-.r-num{width:22px;height:22px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:12px}
+.report-panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:14px}
+.r-card-wide{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:18px;margin-top:12px;display:flex;flex-direction:column;align-items:center;width:100%}
+.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:8px 10px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:13px;margin-bottom:10px;border-radius:6px;width:100%}
+.r-num{width:24px;height:24px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:13px}
 
 /* 診斷摘要內部排版 */
-.summary-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-.ring{width:75px;height:75px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#8a0bfa 0 41%,#e2c2ff 41% 100%);position:relative;flex-shrink:0}
-.ring:before{content:"";position:absolute;inset:7px;background:white;border-radius:50%}
+.summary-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.ring{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#8a0bfa 0 41%,#e2c2ff 41% 100%);position:relative;flex-shrink:0}
+.ring:before{content:"";position:absolute;inset:8px;background:white;border-radius:50%}
 .ring div{position:relative;text-align:center}
-.ring strong{font-size:22px;color:#7012ca;display:block;line-height:1}
-.ring small{font-size:11px;font-weight:bold}
-.fragile-box b{color:#d93838;font-size:13px;display:block}
-.fragile-box p{font-size:10px;color:#555;margin:2px 0 0;line-height:1.4}
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
-.stat-box{background:#f4eaff;padding:5px;border-radius:6px;text-align:center;border:1px solid #e0c5ff}
-.stat-box b{display:block;font-size:10px;color:#521493}
-.stat-box strong{font-size:14px;color:#7012ca}
-.sub-box{font-size:10px;line-height:1.4}
-.sub-box ul{padding-left:14px;margin:2px 0}
+.ring strong{font-size:24px;color:#7012ca;display:block;line-height:1}
+.ring small{font-size:12px;font-weight:bold}
+.fragile-box b{color:#d93838;font-size:14px;display:block}
+.fragile-box p{font-size:11px;color:#555;margin:3px 0 0;line-height:1.5}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.stat-box{background:#f4eaff;padding:6px;border-radius:6px;text-align:center;border:1px solid #e0c5ff}
+.stat-box b{display:block;font-size:11px;color:#521493}
+.stat-box strong{font-size:15px;color:#7012ca}
+.sub-box{font-size:11px;line-height:1.5}
+.sub-box ul{padding-left:16px;margin:3px 0}
 
 /* 四構面列表 */
-.dim-row{display:grid;grid-template-columns:85px 55px 50px minmax(0,1fr);gap:4px;align-items:center;padding:4px;margin-bottom:4px;border-radius:6px;background:#fff;border:1px solid #ecdffc}
-.dim-name{padding:4px;color:white;border-radius:4px;font-weight:bold;font-size:10px;text-align:center}
-.dim-score{font-size:12px;font-weight:900;text-align:center}
-.dim-pill{padding:3px 2px;text-align:center;color:white;font-weight:bold;border-radius:3px;font-size:9px}
+.dim-row{display:grid;grid-template-columns:95px 60px 55px minmax(0,1fr);gap:6px;align-items:center;padding:6px;margin-bottom:6px;border-radius:6px;background:#fff;border:1px solid #ecdffc}
+.dim-name{padding:5px;color:white;border-radius:4px;font-weight:bold;font-size:11px;text-align:center}
+.dim-score{font-size:13px;font-weight:900;text-align:center}
+.dim-pill{padding:4px 3px;text-align:center;color:white;font-weight:bold;border-radius:3px;font-size:10px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
-.dim-desc{font-size:9px;color:#555;padding-left:2px}
+.dim-desc{font-size:10px;color:#555;padding-left:3px}
 
-/* 第三張卡片：完全復刻第二張圖片的大型詳細圖表區塊 */
-.plot-wrap{padding:2px 0 0;width:100%;box-sizing:border-box}
-#quadrantChart{display:block;width:100%;height:auto;min-height:500px}
+/* 第三張卡片：大型完美置中象限圖 */
+.plot-wrap{width:100%;max-width:1150px;margin:0 auto;box-sizing:border-box}
+#quadrantChart{display:block;width:100%;height:auto;min-height:540px}
 
 /* 質性填答欄位 */
-.qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.qual-group{background:#f9f5ff;padding:10px;border-radius:8px;border:1px solid #e2cffc}
-.qual-group label{display:block;font-weight:bold;color:#521493;margin-bottom:4px}
-.qual-group textarea{width:100%;height:75px;padding:8px;border:1px solid #d5bcff;border-radius:6px;font-family:inherit}
+.qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qual-group{background:#f9f5ff;padding:12px;border-radius:8px;border:1px solid #e2cffc}
+.qual-group label{display:block;font-weight:bold;color:#521493;margin-bottom:6px}
+.qual-group textarea{width:100%;height:85px;padding:10px;border:1px solid #d5bcff;border-radius:6px;font-family:inherit;font-size:13px}
 
 /* 模組三表格 */
-.analysis-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
-.analysis-table th{background:#521493;color:white;padding:6px;text-align:left}
-.analysis-table td{padding:6px;border:1px solid #ebdffc;vertical-align:top;background:#fff}
+.analysis-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.analysis-table th{background:#521493;color:white;padding:8px;text-align:left}
+.analysis-table td{padding:8px;border:1px solid #ebdffc;vertical-align:top;background:#fff}
 
 /* 模組四 6 大繽紛區塊 */
-.report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.report-card{border-radius:12px;padding:12px;border:1px solid #e0ebf5}
+.report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.report-card{border-radius:12px;padding:14px;border:1px solid #e0ebf5}
 .rc-1{background:linear-gradient(145deg,#f0fff8,#fff);border-color:#bcebd7}
 .rc-2{background:linear-gradient(145deg,#f4fbff,#fff);border-color:#b9dfff}
 .rc-3{background:linear-gradient(145deg,#fff7e9,#fff);border-color:#f5d5a4}
 .rc-4{background:linear-gradient(145deg,#f6efff,#fff);border-color:#d7c8ff}
 .rc-5{background:linear-gradient(145deg,#fff0f4,#fff);border-color:#ffcbd8}
 .rc-6{background:linear-gradient(145deg,#f4f6ff,#fff);border-color:#c8d4ff}
-.rc-title{font-size:12px;font-weight:900;color:#174875;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
-.rc-title span{background:#521493;color:#fff;padding:2px 5px;border-radius:4px;font-size:9px}
+.rc-title{font-size:13px;font-weight:900;color:#174875;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.rc-title span{background:#521493;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px}
 
 @media(max-width:1200px){.inputs-grid{grid-template-columns:1fr 1fr}.report-panel-grid{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
 </style></head><body>
@@ -149,37 +150,37 @@ main{max-width:1600px;margin:auto;padding:10px}
         <div id="dim-list">
           <div class="dim-row">
             <div class="dim-name" style="background:#00a86b">Mirror<small>問題覺察</small></div>
-            <div class="dim-score">8 / 25<br><span style="font-size:9px">(1.6 / 5)</span></div>
+            <div class="dim-score">8 / 25<br><span style="font-size:10px">(1.6 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-m">偏低</div>
             <div class="dim-desc"><b>問題覺察不足</b><br>• 但願意回饋</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#087cf3">Matrix<small>制度權責</small></div>
-            <div class="dim-score">18 / 25<br><span style="font-size:9px">(3.6 / 5)</span></div>
+            <div class="dim-score">18 / 25<br><span style="font-size:10px">(3.6 / 5)</span></div>
             <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
             <div class="dim-desc"><b>制度結構較清晰</b><br>• 權責配置完整</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#ff8500">Flow<small>資訊流動</small></div>
-            <div class="dim-score">6 / 25<br><span style="font-size:9px">(1.2 / 5)</span></div>
+            <div class="dim-score">6 / 25<br><span style="font-size:10px">(1.2 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-f">偏低</div>
             <div class="dim-desc"><b>資訊傳遞受阻</b><br>• 跨部門協作弱</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#9218ef">Safety<small>心理安全</small></div>
-            <div class="dim-score">9 / 25<br><span style="font-size:9px">(1.8 / 5)</span></div>
+            <div class="dim-score">9 / 25<br><span style="font-size:10px">(1.8 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-s">偏低</div>
             <div class="dim-desc"><b>表達意見保守</b><br>• 信任氛圍不足</div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- 第三張卡片：完全復刻第二張圖片樣式，左側大型象限圖，右側完整計算與解讀 -->
-      <div class="r-card" style="grid-column: span 1;">
-        <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖與落點判讀</div>
-        <div class="plot-wrap">
-          <svg id="quadrantChart" viewBox="0 0 980 520" role="img" aria-label="依四構面分數動態定位的四象限圖與詳細落點面板"></svg>
-        </div>
+    <!-- 第三張卡片：置中且字體放大的大型象限圖面板 -->
+    <div class="r-card-wide">
+      <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖與落點判讀</div>
+      <div class="plot-wrap">
+        <svg id="quadrantChart" viewBox="0 0 1020 540" role="img" aria-label="依四構面分數動態定位的四象限圖與詳細落點面板"></svg>
       </div>
     </div>
   </section>
@@ -187,7 +188,7 @@ main{max-width:1600px;margin:auto;padding:10px}
   <!-- 模組二：因材施教（動態質性填答，允許留空） -->
   <section class="module-box" id="stage2-sec">
     <div class="module-title"><span>📦</span> 模組二：因材施教（參與者針對動態派發之題目進行質性填答，可自由選填）</div>
-    <p style="margin:0 0 8px 0;color:#6b5388">請根據您的實際職場情境填寫以下欄位（若未填寫，系統將依量化分數與文獻進行對應分析）：</p>
+    <p style="margin:0 0 10px 0;color:#6b5388">請根據您的實際職場情境填寫以下欄位（若未填寫，系統將依量化分數與文獻進行對應分析）：</p>
     
     <div class="qual-grid">
       <div class="qual-group">
@@ -199,7 +200,7 @@ main{max-width:1600px;margin:auto;padding:10px}
         <textarea id="qual-ans-2" placeholder="若無特別補充可保持空白...">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
       </div>
     </div>
-    <div style="margin-top:10px">
+    <div style="margin-top:12px">
       <button class="next-btn" onclick="runConsultantAnalysis()">提交填答並生成模組三顧問交叉分析表 ➔</button>
     </div>
   </section>
@@ -207,7 +208,7 @@ main{max-width:1600px;margin:auto;padding:10px}
   <!-- 模組三：顧問分析與後續操作步驟（結合文獻對策與質性關係） -->
   <section class="module-box" id="stage3-sec" style="display:none">
     <div class="module-title"><span>📦</span> 模組三：量化／質性整合驗證與顧問規畫建議（依文獻對策與顧問裁量）</div>
-    <p style="font-size:11px;color:#521493;margin:0 0 8px 0">下表整合量化分數、模組二質性填答狀態、學術理論文獻對策，並提供初步規劃建議（最終執行與否由專業顧問評估決定）：</p>
+    <p style="font-size:12px;color:#521493;margin:0 0 10px 0">下表整合量化分數、模組二質性填答狀態、學術理論文獻對策，並提供初步規劃建議（最終執行與否由專業顧問評估決定）：</p>
     
     <table class="analysis-table">
       <thead>
@@ -223,7 +224,7 @@ main{max-width:1600px;margin:auto;padding:10px}
         <!-- 動態填入 -->
       </tbody>
     </table>
-    <div style="margin-top:10px">
+    <div style="margin-top:12px">
       <button class="next-btn" onclick="unlockStage4()">確認分析無誤，解鎖模組四個人報告 ➔</button>
     </div>
   </section>
@@ -280,9 +281,6 @@ function runSimulation() {
   document.getElementById('v-sum').innerText = total + ' / 100';
   document.getElementById('v-avg').innerText = avg + ' / 5';
 
-  let quadName = (aw < 2.5) ? ((ac < 2.5) ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : ((ac < 2.5) ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
-  document.getElementById('v-quad-name') ? document.getElementById('v-quad-name').innerText = quadName : null;
-
   drawQuadrant(aw, ac, m, mx, f, s);
 
   let scores = [{name:'Mirror', val:m}, {name:'Matrix', val:mx}, {name:'Flow', val:f}, {name:'Safety', val:s}];
@@ -307,7 +305,7 @@ function runSimulation() {
 function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const svg = document.getElementById('quadrantChart');
   if(!svg) return;
-  const L=55, R=625, T=35, B=480, W=R-L, H=B-T;
+  const L=65, R=650, T=40, B=490, W=R-L, H=B-T;
   const x = v => L + (v/5)*W, y = v => B - (v/5)*H;
   const px = x(quadrantX), py = y(quadrantY);
 
@@ -366,73 +364,73 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 
   svgContent += `<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
 
-  // 象限標題與內容卡片 (完整復刻第二張圖)
-  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="30" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+20}" text-anchor="middle" font-size="13" font-weight="900" fill="#182a27">${label}</text>`;
+  // 象限標題與內容卡片（字體放大）
+  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="32" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+21}" text-anchor="middle" font-size="14" font-weight="900" fill="#182a27">${label}</text>`;
 
-  svgContent += pill(L+12, T+12, 225, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
-  svgContent += pill(midX+12, T+12, 225, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
-  svgContent += pill(L+12, midY+12, 225, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
-  svgContent += pill(midX+12, midY+12, 225, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
+  svgContent += pill(L+15, T+15, 235, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
+  svgContent += pill(midX+15, T+15, 235, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
+  svgContent += pill(L+15, midY+15, 235, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
+  svgContent += pill(midX+15, midY+15, 235, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
 
-  svgContent += `<g font-size="11.5" font-weight="600" fill="#22332e">
-    <text x="${L+16}" y="${T+62}"><tspan x="${L+16}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+16}" dy="17">• 但對風險與問題覺察不足</tspan><tspan x="${L+16}" dy="17">• 需補足感知面機制</tspan></text>
-    <text x="${midX+16}" y="${T+62}"><tspan x="${midX+16}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+16}" dy="17">• 流程順暢、發聲安全</tspan><tspan x="${midX+16}" dy="17">• 支持協作與持續學習</tspan></text>
-    <text x="${L+16}" y="${midY+62}"><tspan x="${L+16}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+16}" dy="17">• 流動受阻、發聲不足</tspan><tspan x="${L+16}" dy="17">• 優先建立回報與支持</tspan></text>
-    <text x="${midX+16}" y="${midY+62}"><tspan x="${midX+16}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+16}" dy="17">• 但未有效轉化為行動</tspan><tspan x="${midX+16}" dy="17">• 強化資源配置與追蹤</tspan></text>
+  svgContent += `<g font-size="12.5" font-weight="600" fill="#22332e">
+    <text x="${L+18}" y="${T+66}"><tspan x="${L+18}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+18}" dy="19">• 但對風險與問題覺察不足</tspan><tspan x="${L+18}" dy="19">• 需補足感知面機制</tspan></text>
+    <text x="${midX+18}" y="${T+66}"><tspan x="${midX+18}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+18}" dy="19">• 流程順暢、發聲安全</tspan><tspan x="${midX+18}" dy="19">• 支持協作與持續學習</tspan></text>
+    <text x="${L+18}" y="${midY+66}"><tspan x="${L+18}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+18}" dy="19">• 流動受阻、發聲不足</tspan><tspan x="${L+18}" dy="19">• 優先建立回報與支持</tspan></text>
+    <text x="${midX+18}" y="${midY+66}"><tspan x="${midX+18}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+18}" dy="19">• 但未有效轉化為行動</tspan><tspan x="${midX+18}" dy="19">• 強化資源配置與追蹤</tspan></text>
   </g>`;
 
-  // 定位紅點與置頂紅色標籤
-  const resultLabelX = Math.min(Math.max(px-65, L+5), R-135);
-  const resultLabelY = Math.min(Math.max(py-52, T+5), B-45);
+  // 定位紅點與標籤
+  const resultLabelX = Math.min(Math.max(px-70, L+5), R-145);
+  const resultLabelY = Math.min(Math.max(py-56, T+5), B-50);
 
-  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-22}" stroke="#c90020" stroke-width="2.3"/><circle cx="${px}" cy="${py}" r="9.5" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="130" height="38" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+65}" y="${resultLabelY+15}" text-anchor="middle" font-size="11" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+65}" y="${resultLabelY+30}" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-24}" stroke="#c90020" stroke-width="2.3"/><circle cx="${px}" cy="${py}" r="10" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="140" height="40" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+70}" y="${resultLabelY+16}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+70}" y="${resultLabelY+32}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
-  // 坐標軸外框與刻度標籤
-  svgContent += `<path d="M ${L-5} ${B} L ${R+10} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
-  svgContent += `<text x="${L}" y="${B+22}" font-size="11" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+22}" text-anchor="middle" font-size="11" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+22}" text-anchor="end" font-size="11" font-weight="700" fill="#263746">5 (高)</text>`;
-  svgContent += `<text x="${L-10}" y="${B}" text-anchor="end" font-size="11" font-weight="700" fill="#263746">0</text><text x="${L-10}" y="${midY}" text-anchor="end" font-size="11" font-weight="700" fill="#263746">2</text><text x="${L-10}" y="${T}" text-anchor="end" font-size="11" font-weight="700" fill="#263746">5 (高)</text>`;
+  // 坐標軸與刻度
+  svgContent += `<path d="M ${L-5} ${B} L ${R+15} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
+  svgContent += `<text x="${L}" y="${B+24}" font-size="12" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="12" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">5 (高)</text>`;
+  svgContent += `<text x="${L-12}" y="${B}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">0</text><text x="${L-12}" y="${midY}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">2</text><text x="${L-12}" y="${T}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">5 (高)</text>`;
 
-  svgContent += `<text x="${L-38}" y="${(T+B)/2}" text-anchor="middle" font-size="12" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-38} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
-  svgContent += `<text x="${(L+R)/2}" y="${B+42}" text-anchor="middle" font-size="12" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
+  svgContent += `<text x="${L-42}" y="${(T+B)/2}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-42} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
+  svgContent += `<text x="${(L+R)/2}" y="${B+46}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
 
   // ----------------------------------------------------
-  // 右側詳細分析面板 (完全復刻第二張圖的右側區塊與排版)
+  // 右側詳細分析面板（字體全面放大並排版清晰）
   // ----------------------------------------------------
-  const rx = 645, rw = 325;
+  const rx = 670, rw = 330;
   svgContent += `
     <rect x="${rx}" y="${T}" width="${rw}" height="${H}" rx="8" fill="#f8f4ff" stroke="#d5bcff" stroke-width="1.5"/>
-    <rect x="${rx}" y="${T}" width="${rw}" height="36" rx="8" fill="#521493"/>
-    <text x="${rx+rw/2}" y="${T+23}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#fff">本次數據落點判讀</text>
+    <rect x="${rx}" y="${T}" width="${rw}" height="40" rx="8" fill="#521493"/>
+    <text x="${rx+rw/2}" y="${T+26}" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">本次數據落點判讀</text>
     
     <!-- 計算公式區 -->
-    <rect x="${rx+10}" y="${T+46}" width="${rw-20}" height="110" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+20}" y="${T+65}" font-size="11" font-weight="900" fill="#521493">計算公式（分數轉換為 0-5 尺度）</text>
-    <text x="${rx+20}" y="${T+85}" font-size="11" font-weight="700" fill="#333">Awareness = (Mirror + Safety) / 2</text>
-    <text x="${rx+45}" y="${T+102}" font-size="11" font-weight="700" fill="#7012ca">= (${m} + ${s_val}) / 2 = <b>${m+s_val}</b> / 25 = <b>${quadrantX.toFixed(1)} / 5</b></text>
-    <text x="${rx+20}" y="${T+124}" font-size="11" font-weight="700" fill="#333">Action = (Matrix + Flow) / 2</text>
-    <text x="${rx+45}" y="${T+142}" font-size="11" font-weight="700" fill="#7012ca">= (${mx} + ${f}) / 2 = <b>${mx+f}</b> / 25 = <b>${quadrantY.toFixed(1)} / 5</b></text>
+    <rect x="${rx+12}" y="${T+52}" width="${rw-24}" height="116" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+22}" y="${T+72}" font-size="12" font-weight="900" fill="#521493">計算公式（分數轉換為 0-5 尺度）</text>
+    <text x="${rx+22}" y="${T+93}" font-size="11.5" font-weight="700" fill="#333">Awareness = (Mirror + Safety) / 2</text>
+    <text x="${rx+45}" y="${T+112}" font-size="11.5" font-weight="700" fill="#7012ca">= (${m} + ${s_val}) / 2 = <b>${m+s_val}</b> / 25 = <b>${quadrantX.toFixed(1)} / 5</b></text>
+    <text x="${rx+22}" y="${T+135}" font-size="11.5" font-weight="700" fill="#333">Action = (Matrix + Flow) / 2</text>
+    <text x="${rx+45}" y="${T+154}" font-size="11.5" font-weight="700" fill="#7012ca">= (${mx} + ${f}) / 2 = <b>${mx+f}</b> / 25 = <b>${quadrantY.toFixed(1)} / 5</b></text>
 
     <!-- 分數卡片 -->
-    <rect x="${rx+10}" y="${T+164}" width="148" height="52" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+84}" y="${T+182}" text-anchor="middle" font-size="10.5" font-weight="900" fill="#521493">Awareness</text>
-    <text x="${rx+84}" y="${T+206}" text-anchor="middle" font-size="14" font-weight="900" fill="#d93838">${quadrantX.toFixed(1)} / 5 <tspan font-size="9.5" font-weight="700" fill="#e05650">${quadrantX<2.5?'相對偏低':'偏高'}</tspan></text>
+    <rect x="${rx+12}" y="${T+178}" width="149" height="56" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+86}" y="${T+198}" text-anchor="middle" font-size="12" font-weight="900" fill="#521493">Awareness</text>
+    <text x="${rx+86}" y="${T+224}" text-anchor="middle" font-size="15" font-weight="900" fill="#d93838">${quadrantX.toFixed(1)} / 5 <tspan font-size="10.5" font-weight="700" fill="#e05650">${quadrantX<2.5?'相對偏低':'偏高'}</tspan></text>
 
-    <rect x="${rx+168}" y="${T+164}" width="148" height="52" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+242}" y="${T+182}" text-anchor="middle" font-size="10.5" font-weight="900" fill="#521493">Action</text>
-    <text x="${rx+242}" y="${T+206}" text-anchor="middle" font-size="14" font-weight="900" fill="#d93838">${quadrantY.toFixed(1)} / 5 <tspan font-size="9.5" font-weight="700" fill="#e05650">${quadrantY<2.5?'偏低':'偏高'}</tspan></text>
+    <rect x="${rx+169}" y="${T+178}" width="149" height="56" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+243}" y="${T+198}" text-anchor="middle" font-size="12" font-weight="900" fill="#521493">Action</text>
+    <text x="${rx+243}" y="${T+224}" text-anchor="middle" font-size="15" font-weight="900" fill="#d93838">${quadrantY.toFixed(1)} / 5 <tspan font-size="10.5" font-weight="700" fill="#e05650">${quadrantY<2.5?'偏低':'偏高'}</tspan></text>
 
     <!-- 所在象限標題 -->
-    <rect x="${rx+10}" y="${T+224}" width="${rw-20}" height="32" rx="6" fill="#7012ca"/>
-    <text x="${rx+rw/2}" y="${T+244}" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">所在象限：${quadrantX<2.5?(quadrantY<2.5?'第三象限｜失衡風險區':'第二象限｜潛能未釋放區'):(quadrantY<2.5?'第四象限｜看見未轉化區':'第一象限｜最佳運作區')}</text>
+    <rect x="${rx+12}" y="${T+244}" width="${rw-24}" height="35" rx="6" fill="#7012ca"/>
+    <text x="${rx+rw/2}" y="${T+267}" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">所在象限：${quadrantX<2.5?(quadrantY<2.5?'第三象限｜失衡風險區':'第二象限｜潛能未釋放區'):(quadrantY<2.5?'第四象限｜看見未轉化區':'第一象限｜最佳運作區')}</text>
 
     <!-- 數據落點解讀清單 -->
-    <rect x="${rx+10}" y="${T+264}" width="${rw-20}" height="202" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+20}" y="${T+284}" font-size="11.5" font-weight="900" fill="#521493">數據落點解讀</text>
+    <rect x="${rx+12}" y="${T+289}" width="${rw-24}" height="184" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+22}" y="${T+311}" font-size="12.5" font-weight="900" fill="#521493">數據落點解讀</text>
     
-    <text x="${rx+20}" y="${T+306}" font-size="10.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">①</tspan> 整體感知與行動能力均偏低，顯示組織存在明顯風險。</text>
-    <text x="${rx+20}" y="${T+335}" font-size="10.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">②</tspan> Matrix 評分較高，但 Flow 仍偏低，<tspan x="${rx+36}" dy="14">可能影響機制落實與跨部門協作。</tspan></text>
-    <text x="${rx+20}" y="${T+374}" font-size="10.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">③</tspan> Mirror 與 Safety 均偏低，顯示問題<tspan x="${rx+36}" dy="14">辨識與員工覺察不足。</tspan></text>
-    <text x="${rx+20}" y="${T+413}" font-size="10.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">④</tspan> 需進一步強化跨部門行動力，並優化資訊流動。</text>
+    <text x="${rx+22}" y="${T+335}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">①</tspan> 整體感知與行動能力均偏低，顯示組織存在明顯風險。</text>
+    <text x="${rx+22}" y="${T+366}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">②</tspan> Matrix 評分較高，但 Flow 仍偏低，<tspan x="${rx+38}" dy="15">可能影響機制落實與跨部門協作。</tspan></text>
+    <text x="${rx+22}" y="${T+410}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">③</tspan> Mirror 與 Safety 均偏低，顯示問題<tspan x="${rx+38}" dy="15">辨識與員工覺察不足。</tspan></text>
+    <text x="${rx+22}" y="${T+454}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">④</tspan> 需進一步強化跨部門行動力，並優化資訊流動。</text>
   `;
 
   svg.innerHTML = svgContent;
