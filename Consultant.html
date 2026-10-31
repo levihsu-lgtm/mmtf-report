@@ -31,7 +31,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:15px;width:100%}
 
-/* 💡 維持一排三個卡片區塊 */
+/* 一排三張卡片區塊 */
 .report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:16px;align-items:stretch}
 .r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:12px;padding:16px;display:flex;flex-direction:column;min-width:0}
 
@@ -45,7 +45,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 .ring div{position:relative;text-align:center}
 .ring strong{font-size:22px;color:#7012ca;display:block;line-height:1}
 .ring small{font-size:12px;font-weight:bold}
-.fragile-box b{color:#d93838;font-size:15px;display:block;margin-bottom:4px}
+.fragile-box b{font-size:15px;display:block;margin-bottom:4px}
 .fragile-box p{font-size:13px;color:#444;margin:0;line-height:1.5}
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .stat-box{background:#f4eaff;padding:8px;border-radius:8px;text-align:center;border:1px solid #e0c5ff}
@@ -62,7 +62,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
 .dim-desc{font-size:11.5px;color:#444;padding-left:4px;line-height:1.4}
 
-/* 💡 第三張卡片內部：上圖表、下說明的上下結構 */
+/* 第三張卡片內部：上圖表、下說明 */
 .card3-stack{display:flex;flex-direction:column;gap:14px;height:100%}
 .plot-wrap-stacked{width:100%;display:flex;align-items:center;justify-content:center}
 #quadrantChart{display:block;width:100%;height:auto;max-height:420px}
@@ -152,13 +152,8 @@ main{max-width:1650px;margin:auto;padding:16px}
           <div class="stat-box"><b>整體平均</b><strong id="v-avg">2.05 / 5</strong></div>
           <div class="stat-box"><b>四構面總分</b><strong id="v-sum">41 / 100</strong></div>
         </div>
-        <div class="sub-box">
-          <b>主要觀察：</b>
-          <ul>
-            <li>制度結構具有一定基礎，但執行落差明顯。</li>
-            <li>問題覺察與資訊流動較弱。</li>
-            <li>心理安全得分偏低，員工表達意見可能受限。</li>
-          </ul>
+        <div class="sub-box" id="v-observations">
+          <!-- JS 動態更新主要觀察 -->
         </div>
       </div>
 
@@ -193,17 +188,15 @@ main{max-width:1650px;margin:auto;padding:16px}
         </div>
       </div>
 
-      <!-- 卡片 3：內部改為「上四象限圖表、下數據說明面板」的上下排列 -->
+      <!-- 卡片 3：上四象限圖表、下說明面板 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
         <div class="card3-stack">
-          <!-- 上方：四象限圖表 (獨立渲染 SVG) -->
           <div class="plot-wrap-stacked">
             <svg id="quadrantChart" viewBox="0 0 660 540" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
           </div>
-          <!-- 下方：說明面板 -->
           <div class="bottom-info-panel" id="card3-bottom-info">
-            <!-- JS 動態更新內容 -->
+            <!-- JS 動態更新 -->
           </div>
         </div>
       </div>
@@ -338,18 +331,44 @@ function runSimulation() {
 
   let typeTitle = document.getElementById('v-type');
   let typeDesc = document.getElementById('v-type-desc');
+  let obsContainer = document.getElementById('v-observations');
+
   if(total >= 75) {
     typeTitle.style.color = "#00a86b";
     typeTitle.innerText = "高效運作型 (Optimal)";
     typeDesc.innerText = "組織在各構面評分均衡且表現優異，資訊流動順暢、心理安全充足，具備持續學習與高效執行力。";
+    obsContainer.innerHTML = `
+      <b>主要觀察：</b>
+      <ul>
+        <li>各構面表現均衡且位居高標，組織運作具備高度韌性。</li>
+        <li>資訊流動順暢，跨部門協作與心理安全機制健全。</li>
+        <li>持續維持優良的回饋與權責配置。</li>
+      </ul>
+    `;
   } else if(total >= 50) {
     typeTitle.style.color = "#ff9700";
     typeTitle.innerText = "穩健發展中型 (Developing)";
     typeDesc.innerText = "組織具備一定基礎結構，但在部分跨部門協作或問題覺察上仍有優化空間，建議加強連結。";
+    obsContainer.innerHTML = `
+      <b>主要觀察：</b>
+      <ul>
+        <li>組織具備基本制度框架，但執行力道尚有提升空間。</li>
+        <li>部分構面（如資訊流動或問題覺察）呈現中等水準。</li>
+        <li>建議加強跨部門溝通鏈結與回饋機制。</li>
+      </ul>
+    `;
   } else {
     typeTitle.style.color = "#d93838";
     typeTitle.innerText = "高風險失能型 (Fragile)";
     typeDesc.innerText = "組織在制度結構面評分中低，但在問題覺察、資訊流動與心理安全明顯不足，呈現結構與執行落差。";
+    obsContainer.innerHTML = `
+      <b>主要觀察：</b>
+      <ul>
+        <li>制度結構具有一定基礎，但執行落差明顯。</li>
+        <li>問題覺察與資訊流動較弱。</li>
+        <li>心理安全得分偏低，員工表達意見可能受限。</li>
+      </ul>
+    `;
   }
 
   drawQuadrant(aw, ac, m, mx, f, s);
@@ -442,118 +461,4 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 
   svgContent += pill(L+10, T+10, 245, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
   svgContent += pill(midX+10, T+10, 245, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
-  svgContent += pill(L+10, midY+10, 245, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
-  svgContent += pill(midX+10, midY+10, 245, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
-
-  svgContent += `<g font-size="13.5" font-weight="700" fill="#22332e">
-    <text x="${L+14}" y="${T+64}"><tspan x="${L+14}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+14}" dy="20">• 但對風險與問題覺察不足</tspan><tspan x="${L+14}" dy="20">• 需補足感知面機制</tspan></text>
-    <text x="${midX+14}" y="${T+64}"><tspan x="${midX+14}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+14}" dy="20">• 流程順暢、發聲安全</tspan><tspan x="${midX+14}" dy="20">• 支持協作與持續學習</tspan></text>
-    <text x="${L+14}" y="${midY+64}"><tspan x="${L+14}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+14}" dy="20">• 流動受阻、發聲不足</tspan><tspan x="${L+14}" dy="20">• 優先建立回報與支持</tspan></text>
-    <text x="${midX+14}" y="${midY+64}"><tspan x="${midX+14}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+14}" dy="20">• 但未有效轉化為行動</tspan><tspan x="${midX+14}" dy="20">• 強化資源配置與追蹤</tspan></text>
-  </g>`;
-
-  const resultLabelX = Math.min(Math.max(px-80, L+5), R-160);
-  const resultLabelY = Math.min(Math.max(py-62, T+5), B-55);
-
-  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
-
-  svgContent += `<path d="M ${L-5} ${B} L ${R+15} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
-  svgContent += `<text x="${L}" y="${B+24}" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
-  svgContent += `<text x="${L-14}" y="${B+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${L-14}" y="${midY+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${L-14}" y="${T+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
-
-  svgContent += `<text x="${L-50}" y="${(T+B)/2}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-50} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
-  svgContent += `<text x="${(L+R)/2}" y="${B+48}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
-
-  svg.innerHTML = svgContent;
-
-  // ----------------------------------------------------
-  // 卡片 3 下方說明面板
-  // ----------------------------------------------------
-  let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
-  let sumAw = m + s_val;
-  let sumAc = mx + f;
-
-  let bottomPanel = document.getElementById('card3-bottom-info');
-  if(bottomPanel) {
-    bottomPanel.innerHTML = `
-      <div class="b-panel-head">本次數據落點判讀</div>
-      <div class="b-panel-grid">
-        <div class="b-info-box">
-          <div class="b-info-title">計算公式與轉換 (0-5 尺度)</div>
-          <b>Awareness</b> = (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b> 
-          <span style="color:${quadrantX<2.5?'#e05650':'#00a86b'}; font-weight:bold;">(${quadrantX<2.5?'相對偏低':'偏高'})</span><br>
-          <b>Action</b> = (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b> 
-          <span style="color:${quadrantY<2.5?'#e05650':'#00a86b'}; font-weight:bold;">(${quadrantY<2.5?'偏低':'偏高'})</span><br>
-          <div style="margin-top:6px; background:#f4eaff; padding:4px 8px; border-radius:4px; font-weight:900; color:#521493; text-align:center;">
-            所在象限：${currentQuadName}
-          </div>
-        </div>
-        <div class="b-info-box">
-          <div class="b-info-title">數據落點解讀與觀察</div>
-          <div>① 落點於 <b>${currentQuadName}</b>。</div>
-          <div>② Matrix 與 Flow 影響機制落實與協作。</div>
-          <div>③ Mirror 與 Safety 顯示問題辨識與信任氛圍。</div>
-        </div>
-      </div>
-    `;
-  }
-}
-
-function runConsultantAnalysis() {
-  let ans1 = document.getElementById('qual-ans-1').value.trim();
-  let ans2 = document.getElementById('qual-ans-2').value.trim();
-
-  let m = document.getElementById('mirror').value;
-  let mx = document.getElementById('matrix').value;
-  let f = document.getElementById('flow').value;
-  let s = document.getElementById('safe').value;
-  let lowName = window.lowestDimName || 'Flow';
-  let lowScore = (lowName === 'Flow') ? f : (lowName === 'Safety') ? s : (lowName === 'Mirror') ? m : mx;
-
-  let tbody = document.getElementById('stage3-tbody');
-  
-  let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
-  let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
-
-  let rel1 = ans1 ? `質性文本提及相關情境[cite: 3]，與量化分數完全呼應。` : `未填寫具體情境[cite: 3]，系統依據量化分數進行對應推論[cite: 3]。`;
-  let feedback1 = `依據學術理論與文獻對策[cite: 3]，建議重新檢視相關機制與通道。`;
-
-  let rel2 = ans2 ? `質性文本提及職場實際感受[cite: 3]，呼應相應構面表現。` : `未填寫補充說明[cite: 3]，系統依據量化表現推論[cite: 3]。`;
-  let feedback2 = `依據相關管理模型[cite: 3]，建議推動對應改善方案。`;
-
-  tbody.innerHTML = `
-    <tr>
-      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分[cite: 3]</td>
-      <td><b>Q1 填答與關聯性：</b><br>${q1Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel1}</small></td>
-      <td><b>文獻對策回饋：</b><br>${feedback1}</td>
-      <td><b>建議佐證資料／量表：</b><br>• 相關評估量表[cite: 3]<br>• 現場事件紀錄與日誌[cite: 5]</td>
-      <td><b>規劃建議與時程（顧問可調整）：</b><br>可標示交接點、時限與升級處理路徑[cite: 5]。<br><b>建議時程：</b>0-30 天蒐集基線；30-90 天追蹤成果[cite: 5]。</td>
-    </tr>
-    <tr>
-      <td><b>輔助對照構面</b><br>量化分數與權衡[cite: 3]</td>
-      <td><b>Q2 填答與關聯性：</b><br>${q2Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel2}</small></td>
-      <td><b>文獻對策回饋：</b><br>${feedback2}</td>
-      <td><b>建議佐證資料／量表：</b><br>• 組織文化與心理安全量表[cite: 3]</td>
-      <td><b>規劃建議與時程（顧問可調整）：</b><br>盤點權責與跨部門交接節點[cite: 5]。<br><b>建議時程：</b>0-30 天蒐集基線；30-90 天追蹤成果[cite: 5]。</td>
-    </tr>
-  `;
-
-  document.getElementById('stage3-sec').style.display = 'block';
-  let nav3 = document.getElementById('nav-stage3');
-  nav3.innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
-  setTimeout(() => { scrollToSection('stage3-sec'); }, 400);
-}
-
-function unlockStage4() {
-  document.getElementById('stage4-sec').style.display = 'block';
-  let nav4 = document.getElementById('nav-stage4');
-  nav4.style.opacity = '1';
-  nav4.innerHTML = '<span>4</span>總結與建議 (已解鎖)';
-  setTimeout(() => { scrollToSection('stage4-sec'); }, 400);
-}
-
-window.onload = function() {
-  runSimulation();
-};
-</script></body></html>
-```[cite: 3, 5]
+  svgContent += pill(L+10, midY+10, 245, 'Ⅲ
