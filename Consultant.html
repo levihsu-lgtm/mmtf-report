@@ -62,8 +62,8 @@ main{max-width:1600px;margin:auto;padding:10px}
 
 /* SVG 四象限圖專用樣式 */
 .plot-wrap{padding:2px 0 0;width:100%;box-sizing:border-box}
-#quadrantChart{display:block;width:100%;height:auto;min-height:300px}
-.axis-note{text-align:center;font-size:10px;color:#284764;font-weight:700;padding:4px 0 2px}
+#quadrantChart{display:block;width:100%;height:auto;min-height:310px}
+.axis-note{text-align:center;font-size:11px;color:#284764;font-weight:700;padding:4px 0 2px}
 
 /* 質性填答欄位 */
 .qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -181,7 +181,7 @@ main{max-width:1600px;margin:auto;padding:10px}
           <svg id="quadrantChart" viewBox="0 0 680 430" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
         </div>
         <div class="axis-note">橫軸：資訊與感知基礎（Awareness） ｜ 縱軸：組織回應與行動能力（Action）</div>
-        <div style="font-size:10px;line-height:1.4;margin-top:6px">
+        <div style="font-size:11px;line-height:1.45;margin-top:6px;background:#f8f4ff;padding:6px;border-radius:6px;border:1px solid #e3d3fc">
           <b>本次數據落點判讀：</b><br>
           Awareness = <span id="calc-aw">1.7 / 5</span> | Action = <span id="calc-ac">2.4 / 5</span><br>
           <b>所在象限：<span id="v-quad-name" style="color:#7012ca">第三象限｜失衡風險區</span></b>
@@ -288,7 +288,9 @@ function runSimulation() {
   document.getElementById('calc-aw').innerText = aw + ' / 5';
   document.getElementById('calc-ac').innerText = ac + ' / 5';
 
-  // 動態渲染 SVG 象限圖 (第二張圖風格)
+  let quadName = (aw < 2.5) ? ((ac < 2.5) ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : ((ac < 2.5) ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
+  document.getElementById('v-quad-name').innerText = quadName;
+
   drawQuadrant(aw, ac);
 
   let scores = [{name:'Mirror', val:m}, {name:'Matrix', val:mx}, {name:'Flow', val:f}, {name:'Safety', val:s}];
@@ -372,27 +374,27 @@ function drawQuadrant(quadrantX, quadrantY) {
 
   s += `<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.5"/>`;
 
-  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="31" rx="7" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+20}" text-anchor="middle" font-size="13" font-weight="800" fill="#182a27">${label}</text>`;
+  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="32" rx="7" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+21}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#182a27">${label}</text>`;
 
   s += pill(L+10, T+10, 165, 'Ⅱ 潛能未釋放區', '#fff8e8', '#c98237');
   s += pill(R-175, T+10, 165, 'Ⅰ 最佳運作區', '#e5ffe5', '#4a9c55');
   s += pill(L+10, midY+10, 165, 'Ⅲ 失衡風險區', '#fff0ee', '#d75b54');
   s += pill(R-175, midY+10, 165, 'Ⅳ 看見未轉化區', '#eef8ff', '#5485d9');
 
-  s += `<g font-size="11.5" fill="#26332f">
-    <text x="${L+14}" y="${T+58}"><tspan x="${L+14}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+14}" dy="16">• 但資訊基礎與問題覺察不足</tspan><tspan x="${L+14}" dy="16">• 需補足透明回饋機制</tspan></text>
-    <text x="${R-14}" y="${T+58}" text-anchor="end"><tspan x="${R-14}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${R-14}" dy="16">• 流程順暢、發聲安全</tspan><tspan x="${R-14}" dy="16">• 支持協作與持續學習</tspan></text>
-    <text x="${L+14}" y="${midY+58}"><tspan x="${L+14}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+14}" dy="16">• 流動受阻、發聲不足</tspan><tspan x="${L+14}" dy="16">• 優先建立回報與支持</tspan></text>
-    <text x="${R-14}" y="${midY+58}" text-anchor="end"><tspan x="${R-14}" dy="0">• 能看見問題與風險</tspan><tspan x="${R-14}" dy="16">• 但未有效轉化為行動</tspan><tspan x="${R-14}" dy="16">• 強化資源配置與追蹤</tspan></text>
+  s += `<g font-size="11.5" font-weight="600" fill="#26332f">
+    <text x="${L+14}" y="${T+58}"><tspan x="${L+14}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+14}" dy="17">• 但資訊基礎與問題覺察不足</tspan><tspan x="${L+14}" dy="17">• 需補足透明回饋機制</tspan></text>
+    <text x="${R-14}" y="${T+58}" text-anchor="end"><tspan x="${R-14}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${R-14}" dy="17">• 流程順暢、發聲安全</tspan><tspan x="${R-14}" dy="17">• 支持協作與持續學習</tspan></text>
+    <text x="${L+14}" y="${midY+58}"><tspan x="${L+14}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+14}" dy="17">• 流動受阻、發聲不足</tspan><tspan x="${L+14}" dy="17">• 優先建立回報與支持</tspan></text>
+    <text x="${R-14}" y="${midY+58}" text-anchor="end"><tspan x="${R-14}" dy="0">• 能看見問題與風險</tspan><tspan x="${R-14}" dy="17">• 但未有效轉化為行動</tspan><tspan x="${R-14}" dy="17">• 強化資源配置與追蹤</tspan></text>
   </g>`;
 
   const resultLabelX = Math.min(Math.max(px-65, L+5), R-135);
   const resultLabelY = Math.min(Math.max(py-48, T+5), B-45);
 
-  s += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-18}" stroke="#b31324" stroke-width="2"/><circle cx="${px}" cy="${py}" r="9" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="130" height="36" rx="5" fill="#b80c20" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+65}" y="${resultLabelY+14}" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">本次結果位置</text><text x="${resultLabelX+65}" y="${resultLabelY+28}" text-anchor="middle" font-size="10.5" fill="#fff">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+  s += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-18}" stroke="#b31324" stroke-width="2.2"/><circle cx="${px}" cy="${py}" r="9" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="130" height="36" rx="6" fill="#b80c20" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+65}" y="${resultLabelY+14}" text-anchor="middle" font-size="11" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+65}" y="${resultLabelY+28}" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
   s += `<path d="M ${L-5} ${B} L ${R+10} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
-  s += `<text x="${L}" y="${B+20}" font-size="11" fill="#263746">0</text><text x="${R}" y="${B+20}" text-anchor="end" font-size="11" fill="#263746">5 (高)</text><text x="${L-10}" y="${T}" text-anchor="end" font-size="11" fill="#263746">5 (高)</text><text x="${L-10}" y="${B}" text-anchor="end" font-size="11" fill="#263746">0</text>`;
+  s += `<text x="${L}" y="${B+20}" font-size="11.5" font-weight="700" fill="#263746">0</text><text x="${R}" y="${B+20}" text-anchor="end" font-size="11.5" font-weight="700" fill="#263746">5 (高)</text><text x="${L-10}" y="${T}" text-anchor="end" font-size="11.5" font-weight="700" fill="#263746">5 (高)</text><text x="${L-10}" y="${B}" text-anchor="end" font-size="11.5" font-weight="700" fill="#263746">0</text>`;
 
   svg.innerHTML = s;
 }
@@ -454,4 +456,3 @@ window.onload = function() {
   runSimulation();
 };
 </script></body></html>
-```[cite: 3, 5]
