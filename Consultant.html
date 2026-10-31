@@ -59,7 +59,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 .dim-name{padding:6px 4px;color:white;border-radius:6px;font-weight:bold;font-size:11.5px;text-align:center}
 .dim-score{font-size:12.5px;font-weight:900;text-align:center;line-height:1.2}
 .dim-pill{padding:4px 4px;text-align:center;color:white;font-weight:bold;border-radius:4px;font-size:11px}
-.p-low{background:#f34550}.p-high{background:#00a86b}
+.p-low{background:#f34550}.p-mid{background:#ff9700}.p-high{background:#00a86b}
 .dim-desc{font-size:11.5px;color:#444;padding-left:4px;line-height:1.4}
 
 /* 第三張卡片內部：上圖表、下說明 */
@@ -128,10 +128,10 @@ main{max-width:1650px;margin:auto;padding:16px}
     
     <div class="inputs-container">
       <div class="inputs-grid">
-        <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small style="display:block;font-size:11px">問題覺察與回饋</small></div><input id="mirror" type="number" value="8" min="0" max="25" oninput="runSimulation()"></div>
-        <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small style="display:block;font-size:11px">制度與權責資源</small></div><input id="matrix" type="number" value="18" min="0" max="25" oninput="runSimulation()"></div>
-        <div class="input-card m-flow"><span>●</span><div><b>Flow</b><small style="display:block;font-size:11px">資訊流動與協作</small></div><input id="flow" type="number" value="6" min="0" max="25" oninput="runSimulation()"></div>
-        <div class="input-card m-safe"><span>♟</span><div><b>Safety</b><small style="display:block;font-size:11px">心理安全與員工意見</small></div><input id="safe" type="number" value="9" min="0" max="25" oninput="runSimulation()"></div>
+        <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small style="display:block;font-size:11px">問題覺察與回饋</small></div><input id="mirror" type="number" value="9" min="0" max="25" oninput="runSimulation()"></div>
+        <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small style="display:block;font-size:11px">制度與權責資源</small></div><input id="matrix" type="number" value="13" min="0" max="25" oninput="runSimulation()"></div>
+        <div class="input-card m-flow"><span>●</span><div><b>Flow</b><small style="display:block;font-size:11px">資訊流動與協作</small></div><input id="flow" type="number" value="8" min="0" max="25" oninput="runSimulation()"></div>
+        <div class="input-card m-safe"><span>♟</span><div><b>Safety</b><small style="display:block;font-size:11px">心理安全與員工意見</small></div><input id="safe" type="number" value="5" min="0" max="25" oninput="runSimulation()"></div>
       </div>
       <button class="gen-btn" onclick="runSimulation()">送出並更新報告 ⚡</button>
     </div>
@@ -142,15 +142,15 @@ main{max-width:1650px;margin:auto;padding:16px}
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">1</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
         <div class="summary-top">
-          <div class="ring" id="total-ring"><div><strong id="v-total">41</strong><small>/ 100</small></div></div>
+          <div class="ring" id="total-ring"><div><strong id="v-total">35</strong><small>/ 100</small></div></div>
           <div class="fragile-box">
             <b id="v-type">高風險失能型 (Fragile)</b>
             <p id="v-type-desc">組織在制度結構面評分中低，但在問題覺察、資訊流動與心理安全明顯不足，呈現結構與執行落差。</p>
           </div>
         </div>
         <div class="stats-row">
-          <div class="stat-box"><b>整體平均</b><strong id="v-avg">2.05 / 5</strong></div>
-          <div class="stat-box"><b>四構面總分</b><strong id="v-sum">41 / 100</strong></div>
+          <div class="stat-box"><b>整體平均</b><strong id="v-avg">1.75 / 5</strong></div>
+          <div class="stat-box"><b>四構面總分</b><strong id="v-sum">35 / 100</strong></div>
         </div>
         <div class="sub-box" id="v-observations">
           <!-- JS 動態更新主要觀察 -->
@@ -163,27 +163,27 @@ main{max-width:1650px;margin:auto;padding:16px}
         <div id="dim-list">
           <div class="dim-row">
             <div class="dim-name" style="background:#00a86b">Mirror<small style="display:block;font-size:9.5px">問題覺察</small></div>
-            <div class="dim-score" id="txt-m">8 / 25<br><span style="font-size:10px">(1.6 / 5)</span></div>
+            <div class="dim-score" id="txt-m">9 / 25<br><span style="font-size:10px">(1.8 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-m">偏低</div>
-            <div class="dim-desc" id="desc-m"><b>問題覺察不足</b><br>但願意回饋</div>
+            <div class="dim-desc" id="desc-m"><b>問題覺察不足</b><br>盲點較多，回饋通道受阻</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#087cf3">Matrix<small style="display:block;font-size:9.5px">制度權責</small></div>
-            <div class="dim-score" id="txt-mx">18 / 25<br><span style="font-size:10px">(3.6 / 5)</span></div>
-            <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
-            <div class="dim-desc" id="desc-mx"><b>制度結構較清晰</b><br>權責配置完整</div>
+            <div class="dim-score" id="txt-mx">13 / 25<br><span style="font-size:10px">(2.6 / 5)</span></div>
+            <div class="dim-pill p-mid" id="pill-mx">相對居中</div>
+            <div class="dim-desc" id="desc-mx"><b>制度具備基本雛形</b><br>雖為相對高分但絕對水準仍待落實</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#ff8500">Flow<small style="display:block;font-size:9.5px">資訊流動</small></div>
-            <div class="dim-score" id="txt-f">6 / 25<br><span style="font-size:10px">(1.2 / 5)</span></div>
+            <div class="dim-score" id="txt-f">8 / 25<br><span style="font-size:10px">(1.6 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-f">偏低</div>
-            <div class="dim-desc" id="desc-f"><b>資訊傳遞受阻</b><br>跨部門協作弱</div>
+            <div class="dim-desc" id="desc-f"><b>資訊傳遞受阻</b><br>跨部門協作弱，容易產生雜訊</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#9218ef">Safety<small style="display:block;font-size:9.5px">心理安全</small></div>
-            <div class="dim-score" id="txt-s">9 / 25<br><span style="font-size:10px">(1.8 / 5)</span></div>
-            <div class="dim-pill p-low" id="pill-s">偏低</div>
-            <div class="dim-desc" id="desc-s"><b>表達意見保守</b><br>信任氛圍不足</div>
+            <div class="dim-score" id="txt-s">5 / 25<br><span style="font-size:10px">(1.0 / 5)</span></div>
+            <div class="dim-pill p-low" id="pill-s">嚴重偏低</div>
+            <div class="dim-desc" id="desc-s"><b>表達意見保守</b><br>信任氛圍不足，發聲意願低</div>
           </div>
         </div>
       </div>
@@ -248,10 +248,10 @@ main{max-width:1650px;margin:auto;padding:16px}
 
   <!-- 模組四：總結及建議 (六大繽紛精簡區塊) -->
   <section class="module-box" id="stage4-sec" style="display:none">
-    <div class="module-title"><span>🎨</span> 模組四：參與者個人報告（六大繽紛精簡區塊 ── 含文獻理論簡述）</div>
+    <div class="module-title"><span>🎨</span> 模組四: 參與者個人報告（六大繽紛精簡區塊 ── 含文獻理論簡述）</div>
     <div class="report-grid-6">
       <div class="report-card rc-1">
-        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 41</span></div>
+        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 35</span></div>
         <p>呈現四構面量化分數、總分[cite: 3]，以及類型初步解讀。</p>
       </div>
       <div class="report-card rc-2">
@@ -283,22 +283,39 @@ function scrollToSection(id) {
   document.getElementById(id).scrollIntoView({behavior: 'smooth'});
 }
 
-// 💡 升級版 updateDimRow：根據分數動態切換高/低分敘述
-function updateDimRow(idPrefix, val, lowTitle, lowSub, highTitle, highSub) {
+// 💡 升級版組合分析邏輯：結合「絕對分數」與「相對高低」來判定標籤與解讀
+function updateSingleDim(idPrefix, val, maxVal, dimName, allScores) {
   let score5 = (val / 5).toFixed(1);
-  let isLow = val < 12.5;
   document.getElementById('txt-' + idPrefix).innerHTML = `${val} / 25<br><span style="font-size:10px">(${score5} / 5)</span>`;
+  
   let pill = document.getElementById('pill-' + idPrefix);
   let desc = document.getElementById('desc-' + idPrefix);
-  
-  if(isLow) {
-    pill.className = "dim-pill p-low";
-    pill.innerText = "偏低";
-    desc.innerHTML = `<b>${lowTitle}</b><br>${lowSub}`;
-  } else {
+
+  // 找出四個構面中的最高分與最低分，用來做相對比較
+  let sorted = [...allScores].sort((a,b) => b.val - a.val);
+  let isHighest = (val === sorted[0].val && val > sorted[3].val);
+  let isLowest = (val === sorted[3].val && val < sorted[0].val);
+
+  if (val === 25) {
     pill.className = "dim-pill p-high";
-    pill.innerText = val === 25 ? "完美" : "相對偏高";
-    desc.innerHTML = `<b>${highTitle}</b><br>${highSub}`;
+    pill.innerText = "完美";
+    desc.innerHTML = `<b>${dimName}達標完美</b><br>該構面運作卓越，無明顯改善缺口。`;
+  } else if (val >= 18) {
+    pill.className = "dim-pill p-high";
+    pill.innerText = isHighest ? "表現最佳" : "相對偏高";
+    desc.innerHTML = `<b>${dimName}表現穩健</b><br>結構與執行具備良好水準，可作為組織支撐點。`;
+  } else if (val >= 12) {
+    pill.className = "dim-pill p-mid";
+    pill.innerText = isHighest ? "相對最高" : "表現居中";
+    desc.innerHTML = `<b>${dimName}具備基本雛形</b><br>雖為相對分數，但絕對水準仍有優化空間。`;
+  } else if (val >= 8) {
+    pill.className = "dim-pill p-low";
+    pill.innerText = isLowest ? "主要卡點" : "偏低";
+    desc.innerHTML = `<b>${dimName}明顯不足</b><br>執行與落實受阻，需優先導入改善對策。`;
+  } else {
+    pill.className = "dim-pill p-low";
+    pill.innerText = "嚴重偏低";
+    desc.innerHTML = `<b>${dimName}極度匱乏</b><br>呈現嚴重斷層，對組織運作構成重大風險。`;
   }
 }
 
@@ -325,22 +342,23 @@ function runSimulation() {
   let r1Tag = document.getElementById('r1-tag');
   if(r1Tag) r1Tag.innerText = '總分 ' + total;
 
-  // 💡 傳入動態高低分各自對應的描述內容
-  updateDimRow('m', m, '問題覺察不足', '• 盲點較多，回饋通道受阻', '問題覺察清晰', '• 洞察力佳，回饋機制完善');
-  updateDimRow('mx', mx, '制度結構較弱', '• 權責待釐清，資源配置不足', '制度結構清晰', '• 權責配置完整，規則明確');
-  updateDimRow('f', f, '資訊傳遞受阻', '• 跨部門協作弱，容易產生雜訊', '資訊流動順暢', '• 跨部門協作佳，溝通高效');
-  updateDimRow('s', s, '表達意見保守', '• 信任氛圍不足，發聲意願低', '心理安全充足', '• 鼓勵多元建言，信任感高');
+  let scores = [
+    { key: 'm', name: 'Mirror (問題覺察)', val: m },
+    { key: 'mx', name: 'Matrix (制度權責)', val: mx },
+    { key: 'f', name: 'Flow (資訊流動)', val: f },
+    { key: 's', name: 'Safety (心理安全)', val: s }
+  ];
+
+  // 💡 執行四構面組合分析與動態解讀更新
+  updateSingleDim('m', m, 25, '問題覺察機制', scores);
+  updateSingleDim('mx', mx, 25, '制度權責架構', scores);
+  updateSingleDim('f', f, 25, '資訊流動協作', scores);
+  updateSingleDim('s', s, 25, '心理安全氛圍', scores);
 
   let typeTitle = document.getElementById('v-type');
   let typeDesc = document.getElementById('v-type-desc');
   let obsContainer = document.getElementById('v-observations');
 
-  let scores = [
-    { name: 'Mirror (問題覺察)', val: m },
-    { name: 'Matrix (制度權責)', val: mx },
-    { name: 'Flow (資訊流動)', val: f },
-    { name: 'Safety (心理安全)', val: s }
-  ];
   scores.sort((a, b) => b.val - a.val);
   let highest = scores[0];
   let lowest = scores[3];
@@ -354,7 +372,6 @@ function runSimulation() {
       <ul>
         <li>總分達 100 分滿分，四個構面全數達到完美水準（25/25）。</li>
         <li>各構面表現極其均衡、毫無落差，組織結構與實際執行高度契合。</li>
-        <li>資訊流動、心理安全與問題覺察機制皆運作完美，具備頂級韌性。</li>
       </ul>
     `;
   } else if(total >= 75) {
@@ -365,8 +382,7 @@ function runSimulation() {
       <b>主要觀察：</b>
       <ul>
         <li>整體表現優異（總分 ${total}/100），各構面均衡發展。</li>
-        <li>表現相對最佳構面為 <b>${highest.name} (${highest.val}/25)</b>，支撐組織高效運作。</li>
-        <li>各項機制運作順暢，具備高度協作韌性。</li>
+        <li>表現相對最佳構面為 <b>${highest.name} (${highest.val}/25)</b>。</li>
       </ul>
     `;
   } else if(total >= 50) {
@@ -378,19 +394,18 @@ function runSimulation() {
       <ul>
         <li>組織具備基本制度與結構，相對較高之構面為 <b>${highest.name} (${highest.val}/25)</b>。</li>
         <li>相對較低之構面為 <b>${lowest.name} (${lowest.val}/25)</b>，成為現階段主要卡點。</li>
-        <li>建議針對較弱構面加強溝通鏈結與回饋機制。</li>
       </ul>
     `;
   } else {
     typeTitle.style.color = "#d93838";
     typeTitle.innerText = "高風險失能型 (Fragile)";
-    typeDesc.innerText = "組織在制度結構面評分中低，但在問題覺察、資訊流動與心理安全明顯不足，呈現結構與執行落差。";
+    typeDesc.innerText = "組織在各構面評分偏低，呈現結構與執行落差，需優先針對最弱環節進行介入。";
     obsContainer.innerHTML = `
       <b>主要觀察：</b>
       <ul>
-        <li>整體總分偏低 (${total}/100)，各構面落差顯著。</li>
-        <li>最低分卡點落在 <b>${lowest.name} (${lowest.val}/25)</b>，直接影響日常執行效率。</li>
-        <li>現階段在問題覺察、資訊流動或心理安全上明顯不足，建構調整機制的急迫性高。</li>
+        <li>整體總分偏低 (${total}/100)，各構面普遍低落。</li>
+        <li>最嚴重卡點落在 <b>${lowest.name} (${lowest.val}/25)</b>，對營運與信任造成衝擊。</li>
+        <li>雖 Matrix (${mx}/25) 在其中相對較高，但絕對分數仍偏低，支撐力道尚顯不足。</li>
       </ul>
     `;
   }
@@ -401,13 +416,13 @@ function runSimulation() {
 
   let l1 = document.getElementById('dyn-label-1');
   let l2 = document.getElementById('dyn-label-2');
-  if(lowest.name.includes('Flow')) {
+  if(lowest.key === 'f') {
     l1.innerHTML = `<b>Q1 核心深掘題（偵測 Flow 資訊流動最低）：</b> 近期在跨部門資訊傳遞或專案協調時，哪一個環節最容易發生雜訊或延遲？`;
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 針對此資訊落差，對您的日常決策造成了什麼實質阻礙？`;
-  } else if(lowest.name.includes('Safety')) {
+  } else if(lowest.key === 's') {
     l1.innerHTML = `<b>Q1 核心深掘題（偵測 Safety 心理安全最低）：</b> 在高壓會議中，是什麼因素讓您或團隊成員選擇保持沈默？`;
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您希望組織提供什麼支持，能讓您更安心提出真實建言？`;
-  } else if(lowest.name.includes('Mirror')) {
+  } else if(lowest.key === 'm') {
     l1.innerHTML = `<b>Q1 核心深掘題（偵測 Mirror 問題覺察最低）：</b> 近期在問題辨識與回饋機制上，最常遇到盲點的原因是什麼？`;
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為如何改善組織內部的問題回饋通道？`;
   } else {
@@ -485,17 +500,10 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   svgContent += pill(L+10, midY+10, 245, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
   svgContent += pill(midX+10, midY+10, 245, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
 
-  svgContent += `<g font-size="13.5" font-weight="700" fill="#22332e">
-    <text x="${L+14}" y="${T+64}"><tspan x="${L+14}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+14}" dy="20">• 但對風險與問題覺察不足</tspan><tspan x="${L+14}" dy="20">• 需補足感知面機制</tspan></text>
-    <text x="${midX+14}" y="${T+64}"><tspan x="${midX+14}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+14}" dy="20">• 流程順暢、發聲安全</tspan><tspan x="${midX+14}" dy="20">• 支持協作與持續學習</tspan></text>
-    <text x="${L+14}" y="${midY+64}"><tspan x="${L+14}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+14}" dy="20">• 流動受阻、發聲不足</tspan><tspan x="${L+14}" dy="20">• 優先建立回報與支持</tspan></text>
-    <text x="${midX+14}" y="${midY+64}"><tspan x="${midX+14}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+14}" dy="20">• 但未有效轉化為行動</tspan><tspan x="${midX+14}" dy="20">• 強化資源配置與追蹤</tspan></text>
-  </g>`;
-
   const resultLabelX = Math.min(Math.max(px-80, L+5), R-160);
   const resultLabelY = Math.min(Math.max(py-62, T+5), B-55);
 
-  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
   svgContent += `<path d="M ${L-5} ${B} L ${R+15} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
   svgContent += `<text x="${L}" y="${B+24}" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
