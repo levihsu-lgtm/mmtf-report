@@ -344,6 +344,47 @@ function handleHeaderAction() {
   }
 }
 
+function readScore(id) {
+  const el = document.getElementById(id);
+  const raw = String(el.value).trim();
+  if (raw === '') throw new Error('請完整輸入四個構面分數。');
+  const value = Number(raw);
+  if (!Number.isInteger(value) || value < 0 || value > 25) {
+    throw new Error('四構面分數必須是 0 至 25 的整數。');
+  }
+  return value;
+}
+function escapeHTML(value) {
+  return String(value).replace(/[&<>\"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]));
+}
+function getDimensionBand(value) {
+  if (value <= 7) return '嚴重偏低';
+  if (value <= 11) return '偏低';
+  if (value <= 17) return '中等';
+  if (value <= 24) return '偏高';
+  return '滿分';
+}
+function analyzeCombination(scores, total, awareness, action) {
+  const sorted = [...scores].sort((a,b) => b.val - a.val);
+  const high = sorted[0], low = sorted[3];
+  const range = high.val - low.val;
+  const lowDims = scores.filter(x => x.val < 12);
+  const criticalDims = scores.filter(x => x.val <= 7);
+  const awarenessBand = awareness >= 3 ? '相對較高' : '偏低';
+  const actionBand = action >= 3 ? '相對較高' : '偏低';
+  let balance = range <= 5 ? '四構面相對均衡' : range <= 10 ? '四構面有一定落差' : '四構面落差明顯';
+  let combo = '';
+  if (lowDims.length >= 3) combo = '多構面低分型：至少三個構面低於 12 分，應先確認共同的組織性障礙。';
+  else if (criticalDims.length >= 1) combo = '單點嚴重弱項型：存在 7 分以下構面，整體總分可能掩蓋此風險。';
+  else if (lowDims.length === 2) combo = '雙構面弱項型：兩個構面低於 12 分，需檢視兩者是否互相牽動。';
+  else if (lowDims.length === 1) combo = '單一構面弱項型：一個構面低於 12 分，需確認是否形成局部瓶頸。';
+  else combo = '未出現低於 12 分的構面，仍需依各構面差距與質性資料確認運作狀況。';
+  const highRisk = criticalDims.length > 0;
+  let totalBand = total >= 75 ? '總分區間較高' : total >= 50 ? '總分區間中段' : '總分區間偏低';
+  let axisText = `Awareness ${awareness.toFixed(1)}/5（${awarenessBand}）；Action ${action.toFixed(1)}/5（${actionBand}）`;
+  return {sorted, high, low, range, lowDims, criticalDims, balance, combo, highRisk, totalBand, axisText};
+}
+
 function updateSingleDim(idPrefix, val, dimName, allScores) {
   let score5 = (val / 5).toFixed(1);
   document.getElementById('txt-' + idPrefix).innerHTML = `${val} / 25<br><span style="font-size:10px">(${score5} / 5)</span>`;
@@ -379,97 +420,101 @@ function updateSingleDim(idPrefix, val, dimName, allScores) {
 }
 
 function runSimulation() {
-  let m = Math.min(25, Math.max(0, Number(document.getElementById('mirror').value)||0));
-  let mx = Math.min(25, Math.max(0, Number(document.getElementById('matrix').value)||0));
-  let f = Math.min(25, Math.max(0, Number(document.getElementById('flow').value)||0));
-  let s = Math.min(25, Math.max(0, Number(document.getElementById('safe').value)||0));
-  
-  let total = m + mx + f + s;
-  let avg = (total / 4 / 5).toFixed(2);
-  
-  let aw = Number(((m + s) / 2 / 5).toFixed(1));
-  let ac = Number(((mx + f) / 2 / 5).toFixed(1));
-
-  let ring = document.getElementById('total-ring');
-  if(ring) {
-    ring.style.background = `conic-gradient(#8a0bfa 0 ${total}%, #e2c2ff ${total}% 100%)`;
+  let m, mx, f, s;
+  try {
+    m = readScore('mirror'); mx = readScore('matrix');
+    f = readScore('flow'); s = readScore('safe');
+  } catch (err) {
+    const box = document.getElementById('v-observations');
+    if (box) box.innerHTML = `<b style="color:#d93838">資料檢核：</b>${escapeHTML(err.message)}`;
+    return;
   }
 
+  const total = m + mx + f + s;
+  const avg = (total / 20).toFixed(2);
+  const aw = (m + s) / 10;
+  const ac = (mx + f) / 10;
+  const scores = [
+    { key:'m', name:'Mirror（問題覺察）', val:m },
+    { key:'mx', name:'Matrix（制度權責）', val:mx },
+    { key:'f', name:'Flow（資訊流動）', val:f },
+    { key:'s', name:'Safety（心理安全）', val:s }
+  ];
+  const combo = analyzeCombination(scores, total, aw, ac);
+
+  const ring = document.getElementById('total-ring');
+  if (ring) ring.style.background = `conic-gradient(#8a0bfa 0 ${total}%, #e2c2ff ${total}% 100%)`;
   document.getElementById('v-total').innerText = total;
   document.getElementById('v-sum').innerText = total + ' / 100';
   document.getElementById('v-avg').innerText = avg + ' / 5';
-  let r1Tag = document.getElementById('r1-tag');
-  if(r1Tag) r1Tag.innerText = '總分 ' + total;
-
-  let scores = [
-    { key: 'm', name: 'Mirror (問題覺察)', val: m },
-    { key: 'mx', name: 'Matrix (制度權責)', val: mx },
-    { key: 'f', name: 'Flow (資訊流動)', val: f },
-    { key: 's', name: 'Safety (心理安全)', val: s }
-  ];
+  const r1Tag = document.getElementById('r1-tag');
+  if (r1Tag) r1Tag.innerText = '總分 ' + total;
 
   updateSingleDim('m', m, '問題覺察機制', scores);
   updateSingleDim('mx', mx, '制度權責架構', scores);
   updateSingleDim('f', f, '資訊流動協作', scores);
   updateSingleDim('s', s, '心理安全氛圍', scores);
 
-  let typeTitle = document.getElementById('v-type');
-  let typeDesc = document.getElementById('v-type-desc');
-  let obsContainer = document.getElementById('v-observations');
+  const typeTitle = document.getElementById('v-type');
+  const typeDesc = document.getElementById('v-type-desc');
+  const obsContainer = document.getElementById('v-observations');
 
-  scores.sort((a, b) => b.val - a.val);
-  let highest = scores[0];
-  let lowest = scores[3];
-
-  if(total === 100) {
-    typeTitle.style.color = "#00a86b";
-    typeTitle.innerText = "完美運作型 (Optimal / Perfect)";
-    typeDesc.innerText = "組織在所有構面皆達到完美滿分，四構面均衡發展且毫無落差，展現頂級的高效協作與組織韌性。";
-    obsContainer.innerHTML = `<b>主要觀察：</b><ul><li>總分達 100 分滿分，四個構面全數達到完美水準（25/25）。</li></ul>`;
-  } else if(total >= 75) {
-    typeTitle.style.color = "#00a86b";
-    typeTitle.innerText = "高效運作型 (Optimal)";
-    typeDesc.innerText = "組織在各構面評分均衡且表現優異，資訊流動順暢、心理安全充足。";
-    obsContainer.innerHTML = `<b>主要觀察：</b><ul><li>整體表現優異（總分 ${total}/100），表現最佳構面為 <b>${highest.name} (${highest.val}/25)</b>。</li></ul>`;
-  } else if(total >= 50) {
-    typeTitle.style.color = "#ff9700";
-    typeTitle.innerText = "穩健發展中型 (Developing)";
-    typeDesc.innerText = "組織具備基本結構，但在部分跨部門協作上仍有優化空間。";
-    obsContainer.innerHTML = `<b>主要觀察：</b><ul><li>相對較高為 <b>${highest.name} (${highest.val}/25)</b>，卡點為 <b>${lowest.name} (${lowest.val}/25)</b>。</li></ul>`;
+  // 總分只描述整體程度；組合型態及嚴重弱項另行判讀，避免總分掩蓋單一構面風險。
+  if (total >= 75) {
+    typeTitle.style.color = '#00a86b';
+    typeTitle.innerText = '整體分數較高型 (Higher Overall Score)';
+    typeDesc.innerText = '總分位於較高區間，但仍須同時檢視四構面是否均衡，以及是否存在嚴重弱項。';
+  } else if (total >= 50) {
+    typeTitle.style.color = '#ff9700';
+    typeTitle.innerText = '整體發展中型 (Developing Overall)';
+    typeDesc.innerText = '總分位於中段，需進一步依四構面分布辨識優勢、弱項及結構落差。';
   } else {
-    typeTitle.style.color = "#d93838";
-    typeTitle.innerText = "高風險失能型 (Fragile)";
-    typeDesc.innerText = "組織在各構面評分偏低，呈現結構與執行落差，需優先針對最弱環節介入。";
-    obsContainer.innerHTML = `<b>主要觀察：</b><ul><li>總分偏低 (${total}/100)，最嚴重卡點落在 <b>${lowest.name} (${lowest.val}/25)</b>。</li></ul>`;
+    typeTitle.style.color = '#d93838';
+    typeTitle.innerText = '整體分數偏低型 (Lower Overall Score)';
+    typeDesc.innerText = '總分位於較低區間，應結合構面組合與實際情境確認優先改善方向。';
   }
+  if (combo.highRisk) {
+    typeTitle.style.color = '#d93838';
+    typeDesc.innerText += ' 注意：至少一個構面為 7 分以下，總分不可抵銷此嚴重弱項。';
+  }
+
+  const lowNames = combo.lowDims.length ? combo.lowDims.map(x => `${x.name} ${x.val}/25`).join('、') : '無（依本版 12 分操作性界線）';
+  const criticalNames = combo.criticalDims.length ? combo.criticalDims.map(x => `${x.name} ${x.val}/25`).join('、') : '無';
+  obsContainer.innerHTML = `
+    <b>主要觀察：</b>
+    <ul>
+      <li><b>總分：</b>${total}/100（${combo.totalBand}）；整體平均 ${avg}/5。</li>
+      <li><b>組合型態：</b>${combo.combo}</li>
+      <li><b>均衡程度：</b>${combo.balance}，最高與最低構面差距 ${combo.range} 分。</li>
+      <li><b>低分構面（低於 12 分）：</b>${lowNames}。</li>
+      <li><b>嚴重弱項（7 分以下）：</b>${criticalNames}。</li>
+      <li><b>雙軸：</b>${combo.axisText}；雙軸差距 ${(aw-ac).toFixed(1)} 分。</li>
+    </ul>
+    <small style="color:#6b5388">分數區間為目前系統的操作性分析規則，並非經驗常模；組合結果是待驗證的診斷線索，不代表因果關係。</small>`;
 
   drawQuadrant(aw, ac, m, mx, f, s);
 
-  window.lowestDimKey = lowest.key;
-  window.lowestDimName = lowest.name;
+  // 最低分構面用於派題；同時保存第二低分，以便辨識組合弱項。
+  const ascending = [...scores].sort((a,b) => a.val - b.val);
+  window.lowestDimKey = ascending[0].key;
+  window.lowestDimName = ascending[0].name;
+  window.secondLowestDimKey = ascending[1].key;
+  window.secondLowestDimName = ascending[1].name;
+  window.currentMMTF = {m, mx, f, s, total, avg:Number(avg), awareness:aw, action:ac};
 
-  // 💡 因材施教動態派發質性深掘題邏輯
-  let l1 = document.getElementById('dyn-label-1');
-  let l2 = document.getElementById('dyn-label-2');
-  let areaNotice = document.getElementById('qual-dynamic-notice');
-
-  if(lowest.key === 'f') {
-    areaNotice.innerText = "【因材施教系統動態偵測】目前最低分卡點為 Flow（資訊流動），已自動派發跨部門協作與溝通雜訊深掘題：";
-    l1.innerHTML = `<b>Q1 核心深掘題（Flow 資訊流動卡點）：</b> 近期在跨部門專案中，資訊傳遞在哪一個轉折點最容易發生延遲或雜訊？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 此資訊落差對您的日常跨部門決策造成了什麼實質阻礙？`;
-  } else if(lowest.key === 's') {
-    areaNotice.innerText = "【因材施教系統動態偵測】目前最低分卡點為 Safety（心理安全），已自動派發信任與發聲安全深掘題：";
-    l1.innerHTML = `<b>Q1 核心深掘題（Safety 心理安全卡點）：</b> 在高壓會議中，是什麼因素讓您或團隊成員選擇保持沈默？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您希望組織提供什麼制度支持，能讓您更安心提出真實建言？`;
-  } else if(lowest.key === 'm') {
-    areaNotice.innerText = "【因材施教系統動態偵測】目前最低分卡點為 Mirror（問題覺察），已自動派發盲點與回饋通道深掘題：";
-    l1.innerHTML = `<b>Q1 核心深掘題（Mirror 問題覺察卡點）：</b> 近期在問題辨識與回饋機制上，最常遇到盲點的原因是什麼？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為如何改善組織內部的問題回饋通道以提升透明度？`;
-  } else {
-    areaNotice.innerText = "【因材施教系統動態偵測】目前最低分卡點為 Matrix（制度權責），已自動派發權責劃分與資源配置深掘題：";
-    l1.innerHTML = `<b>Q1 核心深掘題（Matrix 制度權責卡點）：</b> 跨部門協作時，權責劃分不清或資源配置不足的情況如何影響效率？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您期望制度面做哪些具體調整以釐清跨部門交接點？`;
-  }
+  const l1 = document.getElementById('dyn-label-1');
+  const l2 = document.getElementById('dyn-label-2');
+  const areaNotice = document.getElementById('qual-dynamic-notice');
+  const primary = ascending[0], secondary = ascending[1];
+  areaNotice.innerText = `【組合導向派題】最低分為 ${primary.name}（${primary.val}/25），第二低為 ${secondary.name}（${secondary.val}/25）。請以最低分為主題，並用第二低構面檢視是否存在共同情境；此派題不代表因果判定。`;
+  const questionMap = {
+    f: ['近期在跨部門專案中，資訊傳遞在哪一個轉折點最容易發生延遲或雜訊？','此資訊落差是否與權責、問題回饋或發聲環境同時出現？請舉一個實際例子。'],
+    s: ['在高壓會議或工作情境中，是什麼因素讓您或團隊成員選擇保持沉默？','哪些制度安排、資訊流動或主管行為會影響您提出真實意見的意願？'],
+    m: ['近期在問題辨識與回饋機制上，最常遇到盲點的原因是什麼？','當問題被發現後，資訊是否能傳遞給有權責的人並形成後續處理？'],
+    mx: ['跨部門協作時，權責劃分不清或資源配置不足的情況如何影響效率？','當權責已經明確時，資訊流動與員工提出問題的管道是否足以支持執行？']
+  };
+  l1.innerHTML = `<b>Q1 核心深掘題（${escapeHTML(primary.name)}）：</b> ${questionMap[primary.key][0]}`;
+  l2.innerHTML = `<b>Q2 組合驗證題（${escapeHTML(secondary.name)}）：</b> ${questionMap[primary.key][1]}`;
 }
 
 function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
@@ -487,7 +532,7 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
     <clipPath id="qclip"><rect x="${L}" y="${T}" width="${W}" height="${H}"/></clipPath>
   </defs>`;
 
-  const midX = x(2.5), midY = y(2.5);
+  const midX = x(3), midY = y(3);
 
   svgContent += `
   <rect x="${L}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q2bg)"/>
@@ -510,7 +555,7 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 
   svg.innerHTML = svgContent;
 
-  let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
+  let currentQuadName = quadrantX < 3 ? (quadrantY < 3 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 3 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
   let sumAw = m + s_val;
   let sumAc = mx + f;
 
@@ -521,8 +566,9 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
       <div class="b-panel-grid">
         <div class="b-info-box">
           <div class="b-info-title">計算公式與轉換 (0-5 尺度)</div>
-          <b>Awareness</b> = (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b><br>
-          <b>Action</b> = (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b><br>
+          <b>Awareness</b> = (${m} + ${s_val}) / 10 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b><br>
+          <b>Action</b> = (${mx} + ${f}) / 10 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b><br>
+          <small>象限操作性切點：3 / 5（非經驗常模）</small><br>
           <div style="margin-top:6px; background:#f4eaff; padding:4px 8px; border-radius:4px; font-weight:900; color:#521493; text-align:center;">
             所在象限：${currentQuadName}
           </div>
@@ -541,62 +587,44 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 function runConsultantAnalysis() {
   let ans1 = document.getElementById('qual-ans-1').value.trim();
   let ans2 = document.getElementById('qual-ans-2').value.trim();
-
-  let m = document.getElementById('mirror').value;
-  let mx = document.getElementById('matrix').value;
-  let f = document.getElementById('flow').value;
-  let s = document.getElementById('safe').value;
-  let lowKey = window.lowestDimKey || 'f';
-  let lowName = window.lowestDimName || 'Flow (資訊流動)';
-  let lowScore = (lowKey === 'f') ? f : (lowKey === 's') ? s : (lowKey === 'm') ? m : mx;
-
-  let tbody = document.getElementById('stage3-tbody');
-  
-  let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
-  let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
-
-  // 💡 依據卡點構面自動對應匹配的管理工具種類與回饋分析
-  let toolName = "";
-  let feedbackText = "";
-  if(lowKey === 'f') {
-    toolName = "Shannon & Weaver 資訊傳播模型";
-    feedbackText = "質性填答顯示跨部門溝通存在雜訊與回報延遲。文獻建議建立標準化資訊看板與雙向回饋機制以降低資訊折損。";
-  } else if(lowKey === 's') {
-    toolName = "Edmondson 心理安全感模型";
-    feedbackText = "質性填答反映高壓下發聲意願低。文獻建議主管應落實去責化檢討，鼓勵建設性建言並建立匿名回報管道。";
-  } else if(lowKey === 'm') {
-    toolName = "Johari Window (賈哈里窗) 與盲點分析";
-    feedbackText = "質性填答指出問題辨識落差。文獻建議透過跨層級覆盤會議，將盲區轉為公開區。";
-  } else {
-    toolName = "Galbraith Star Model (星狀模型)";
-    feedbackText = "質性填答顯示權責與資源配置待釐清。文獻建議重新審視橫向協調流程與決策授權邊界。";
-  }
-
+  const current = window.currentMMTF;
+  if (!current) { alert('請先完成四構面分數分析。'); return; }
+  const lowKey = window.lowestDimKey;
+  const lowName = window.lowestDimName;
+  const lowScore = current[{f:'f',s:'s',m:'m',mx:'mx'}[lowKey]];
+  const secondName = window.secondLowestDimName || '第二低構面';
+  const tbody = document.getElementById('stage3-tbody');
+  const q1Display = ans1 ? `「${escapeHTML(ans1)}」` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
+  const q2Display = ans2 ? `「${escapeHTML(ans2)}」` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
+  const toolMap = {
+    f:['Shannon & Weaver 資訊傳播模型','可檢視訊息來源、傳遞通道、接收及回饋環節；需以實際填答確認問題發生位置。'],
+    s:['Edmondson 心理安全感模型','可檢視人際風險、發聲安全與主管回應方式；分數本身不能證明沉默的原因。'],
+    m:['Johari Window（賈哈里窗）','可檢視自我覺察、他人回饋與盲點；需透過具體事件確認回饋落差。'],
+    mx:['Galbraith Star Model（星狀模型）','可檢視策略、結構、流程、獎酬及人員配置；需確認實際權責與資源情境。']
+  };
+  const [toolName, feedbackText] = toolMap[lowKey];
+  const q1Check = ans1 ? '已取得質性描述，待顧問比對其是否涉及此構面；目前不能據此認定因果。' : '缺少 Q1 資料，尚不能進行量化與質性關聯檢核。';
+  const q2Check = ans2 ? '已取得補充情境，待顧問確認是否涉及第二低構面或跨構面交互情境。' : '缺少 Q2 資料，尚不能進行交叉驗證。';
   tbody.innerHTML = `
     <tr>
-      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分</td>
-      <td><b>Q1 填答與關聯性：</b><br>${q1Display}<br><small style="color:#521493"><b>關聯檢核：</b>與量化低分呈現高度因果呼應。</small></td>
+      <td><b>${escapeHTML(lowName)}（最低分構面）</b><br>量化分數：${lowScore}/25 分</td>
+      <td><b>Q1 填答：</b><br>${q1Display}<br><small style="color:#521493"><b>檢核狀態：</b>${q1Check}</small></td>
       <td><b>${toolName}</b></td>
-      <td><b>理論回饋分析：</b><br>${feedbackText}</td>
-      <td><b>規劃建議與時程：</b><br>建議於 0-30 天內完成流程盤點，30-90 天追蹤改善成效。</td>
+      <td><b>理論參照：</b><br>${feedbackText}</td>
+      <td><b>規劃建議與時程：</b><br>0-30 天蒐集具體事件、流程及相關角色資料；30-90 天依確認的問題設計改善與追蹤指標。</td>
     </tr>
     <tr>
-      <td><b>輔助對照構面</b><br>綜合評估與權衡</td>
-      <td><b>Q2 填答與關聯性：</b><br>${q2Display}<br><small style="color:#521493"><b>關聯檢核：</b>反映真實職場情境與結構障礙。</small></td>
-      <td><b>MMTF 2.0 組織健康診斷矩陣</b></td>
-      <td><b>理論回饋分析：</b><br>透過感知與行動雙軸交叉檢視，確保改善行動具備落地可行性。</td>
-      <td><b>規劃建議與時程：</b><br>設立跨部門專案小組定期覆盤檢討。</td>
-    </tr>
-  `;
+      <td><b>${escapeHTML(secondName)}（第二低構面）</b><br>搭配總分 ${current.total}/100；Awareness ${current.awareness.toFixed(1)}/5；Action ${current.action.toFixed(1)}/5</td>
+      <td><b>Q2 填答：</b><br>${q2Display}<br><small style="color:#521493"><b>檢核狀態：</b>${q2Check}</small></td>
+      <td><b>MMTF 2.0 四構面組合分析</b></td>
+      <td><b>交叉分析：</b><br>應同時檢視最低與第二低構面、Awareness／Action 雙軸及總分。量化分數提供待檢核線索，質性資料提供情境描述，兩者一致程度由顧問判讀，不自動宣稱因果。</td>
+      <td><b>規劃建議與時程：</b><br>先確認兩個弱項是否出現在同一工作事件，再決定優先改善順序；避免僅依最低分直接推定根本原因。</td>
+    </tr>`;
 
   document.getElementById('stage3-sec').style.display = 'block';
   currentUnlockedStage = Math.max(currentUnlockedStage, 3);
-  let nav3 = document.getElementById('nav-stage3');
-  nav3.innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
-  
-  let headerBtn = document.getElementById('header-action-btn');
-  headerBtn.innerText = "解鎖第四階段 ➔";
-  
+  document.getElementById('nav-stage3').innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
+  document.getElementById('header-action-btn').innerText = '解鎖第四階段 ➔';
   setTimeout(() => { scrollToSection('stage3-sec'); }, 400);
 }
 
@@ -627,22 +655,41 @@ function unlockStage5() {
 }
 
 function runStage5Review() {
-  let rem = Number(document.getElementById('re-m').value)||0;
-  let remx = Number(document.getElementById('re-mx').value)||0;
-  let ref = Number(document.getElementById('re-f').value)||0;
-  let res = Number(document.getElementById('re-s').value)||0;
-  let reTotal = rem + remx + ref + res;
-
-  let origTotal = Number(document.getElementById('mirror').value) + Number(document.getElementById('matrix').value) + Number(document.getElementById('flow').value) + Number(document.getElementById('safe').value);
-  let diff = reTotal - origTotal;
-
-  let box = document.getElementById('reivew-result-box');
+  let rem, remx, ref, res;
+  try {
+    rem = readScore('re-m'); remx = readScore('re-mx');
+    ref = readScore('re-f'); res = readScore('re-s');
+  } catch (err) { alert('複測資料檢核：' + err.message); return; }
+  const before = window.currentMMTF || {
+    m:readScore('mirror'), mx:readScore('matrix'), f:readScore('flow'), s:readScore('safe')
+  };
+  const beforeScores = [before.m,before.mx,before.f,before.s];
+  const afterScores = [rem,remx,ref,res];
+  const names = ['Mirror','Matrix','Flow','Safety'];
+  const changes = afterScores.map((v,i)=>v-beforeScores[i]);
+  const origTotal = beforeScores.reduce((a,b)=>a+b,0);
+  const reTotal = afterScores.reduce((a,b)=>a+b,0);
+  const diff = reTotal-origTotal;
+  const beforeAw = (before.m+before.s)/10, beforeAc=(before.mx+before.f)/10;
+  const afterAw = (rem+res)/10, afterAc=(remx+ref)/10;
+  const fmt = n => n>0?`+${n}`:String(n);
+  const details = names.map((name,i)=>`<li>${name}：${beforeScores[i]} → ${afterScores[i]}（${fmt(changes[i])}）</li>`).join('');
+  const declined = names.filter((name,i)=>changes[i]<0);
+  const improved = names.filter((name,i)=>changes[i]>0);
+  const resultText = declined.length
+    ? `有構面下降（${declined.join('、')}），即使總分增加，也不能直接判定全面改善。`
+    : improved.length ? `目前有構面上升（${improved.join('、')}），其餘構面持平；仍需結合實際改善證據。`
+    : '四構面分數皆未變動，尚未觀察到量化分數變化。';
+  const box = document.getElementById('reivew-result-box');
   box.style.display = 'block';
   box.innerHTML = `
     <b>📊 30-90 天成效迭代覆盤報告：</b><br>
-    • <b>前測總分：</b> ${origTotal} 分 ➔ <b>複測總分：</b> ${reTotal} 分（<b>${diff >= 0 ? '+' + diff : diff} 分</b>）<br>
-    • <b>系統狀態：</b> 資料已成功同步至後端資料庫，各構面改善幅度顯著，組織韌性與行動力呈現正向成長！
-  `;
+    • <b>前測總分：</b>${origTotal}/100 → <b>複測總分：</b>${reTotal}/100（${fmt(diff)} 分）<br>
+    • <b>逐構面比較：</b><ul>${details}</ul>
+    • <b>Awareness：</b>${beforeAw.toFixed(1)} → ${afterAw.toFixed(1)}（${fmt(Number((afterAw-beforeAw).toFixed(1)))}）<br>
+    • <b>Action：</b>${beforeAc.toFixed(1)} → ${afterAc.toFixed(1)}（${fmt(Number((afterAc-beforeAc).toFixed(1)))}）<br>
+    • <b>變化判讀：</b>${resultText}<br>
+    <small style="color:#6b5388">本頁僅完成瀏覽器端前後測比較；除非已另行完成 PHP API 寫入並收到成功回應，不能宣稱資料已同步至資料庫。分數變化也不單獨證明改善措施造成結果。</small>`;
 }
 
 function exportToExcel() {
