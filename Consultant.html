@@ -31,13 +31,13 @@ main{max-width:1600px;margin:auto;padding:12px}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:10px;font-weight:900;cursor:pointer;font-size:14px;width:100%}
 
-/* 一排三張卡片版面 */
+/* 一排三張卡片版面（保持原有分析邏輯與資料結構） */
 .report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.65fr;gap:12px;align-items:stretch}
 .r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:14px;display:flex;flex-direction:column}
 .r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:8px 10px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:13px;margin-bottom:10px;border-radius:6px}
 .r-num{width:24px;height:24px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:12px}
 
-/* 診斷摘要內部排版（字體全面放大對齊象限圖） */
+/* 診斷摘要內部排版（統一字體大小與行高） */
 .summary-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
 .ring{width:75px;height:75px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#8a0bfa 0 41%,#e2c2ff 41% 100%);position:relative;flex-shrink:0}
 .ring:before{content:"";position:absolute;inset:7px;background:white;border-radius:50%}
@@ -45,21 +45,21 @@ main{max-width:1600px;margin:auto;padding:12px}
 .ring strong{font-size:22px;color:#7012ca;display:block;line-height:1}
 .ring small{font-size:12px;font-weight:bold}
 .fragile-box b{color:#d93838;font-size:14px;display:block}
-.fragile-box p{font-size:11.5px;color:#444;margin:4px 0 0;line-height:1.5}
+.fragile-box p{font-size:12px;color:#444;margin:4px 0 0;line-height:1.5}
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
 .stat-box{background:#f4eaff;padding:8px;border-radius:6px;text-align:center;border:1px solid #e0c5ff}
 .stat-box b{display:block;font-size:11px;color:#521493}
 .stat-box strong{font-size:14px;color:#7012ca}
-.sub-box{font-size:11.5px;line-height:1.5}
+.sub-box{font-size:12px;line-height:1.5}
 .sub-box ul{padding-left:16px;margin:4px 0}
 
-/* 四構面列表（字體全面放大對齊象限圖） */
+/* 四構面列表（統一字體大小與行高） */
 .dim-row{display:grid;grid-template-columns:90px 65px 55px minmax(0,1fr);gap:6px;align-items:center;padding:6px;margin-bottom:6px;border-radius:6px;background:#fff;border:1px solid #ecdffc}
 .dim-name{padding:5px;color:white;border-radius:4px;font-weight:bold;font-size:11px;text-align:center}
 .dim-score{font-size:13px;font-weight:900;text-align:center}
 .dim-pill{padding:4px;text-align:center;color:white;font-weight:bold;border-radius:3px;font-size:10px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
-.dim-desc{font-size:10.5px;color:#444;padding-left:4px;line-height:1.4}
+.dim-desc{font-size:11px;color:#444;padding-left:4px;line-height:1.4}
 
 /* 第三張卡片 (象限圖) */
 .plot-wrap{width:100%;height:100%;display:flex;align-items:center}
@@ -125,7 +125,7 @@ main{max-width:1600px;margin:auto;padding:12px}
       <button class="gen-btn" onclick="runSimulation()">送出並更新報告 ⚡</button>
     </div>
 
-    <!-- 三張卡片在 100% 比例下完美並排，且字體大小完全統一 -->
+    <!-- 三張卡片並排，字體大小與排版完美一致 -->
     <div class="report-panel-grid">
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">1</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
@@ -154,33 +154,33 @@ main{max-width:1600px;margin:auto;padding:12px}
         <div class="r-card-head"><span class="r-num">2</span>四構面分析 <small>各構面分數與實際意義</small></div>
         <div id="dim-list">
           <div class="dim-row">
-            <div class="dim-name" style="background:#00a86b">Mirror<small style="display:block;font-size:9px">問題覺察</small></div>
-            <div class="dim-score">8 / 25<br><span style="font-size:10px">(1.6 / 5)</span></div>
+            <div class="dim-name" style="background:#00a86b">Mirror<small style="display:block;font-size:10px">問題覺察</small></div>
+            <div class="dim-score">8 / 25<br><span style="font-size:11px">(1.6 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-m">偏低</div>
             <div class="dim-desc"><b>問題覺察不足</b><br>• 但願意回饋</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#087cf3">Matrix<small style="display:block;font-size:9px">制度權責</small></div>
-            <div class="dim-score">18 / 25<br><span style="font-size:10px">(3.6 / 5)</span></div>
+            <div class="dim-name" style="background:#087cf3">Matrix<small style="display:block;font-size:10px">制度權責</small></div>
+            <div class="dim-score">18 / 25<br><span style="font-size:11px">(3.6 / 5)</span></div>
             <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
             <div class="dim-desc"><b>制度結構較清晰</b><br>• 權責配置完整</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#ff8500">Flow<small style="display:block;font-size:9px">資訊流動</small></div>
-            <div class="dim-score">6 / 25<br><span style="font-size:10px">(1.2 / 5)</span></div>
+            <div class="dim-name" style="background:#ff8500">Flow<small style="display:block;font-size:10px">資訊流動</small></div>
+            <div class="dim-score">6 / 25<br><span style="font-size:11px">(1.2 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-f">偏低</div>
             <div class="dim-desc"><b>資訊傳遞受阻</b><br>• 跨部門協作弱</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#9218ef">Safety<small style="display:block;font-size:9px">心理安全</small></div>
-            <div class="dim-score">9 / 25<br><span style="font-size:10px">(1.8 / 5)</span></div>
+            <div class="dim-name" style="background:#9218ef">Safety<small style="display:block;font-size:10px">心理安全</small></div>
+            <div class="dim-score">9 / 25<br><span style="font-size:11px">(1.8 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-s">偏低</div>
             <div class="dim-desc"><b>表達意見保守</b><br>• 信任氛圍不足</div>
           </div>
         </div>
       </div>
 
-      <!-- 第三張卡片：並排於右側 -->
+      <!-- 第三張卡片：四象限圖 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
         <div class="plot-wrap">
