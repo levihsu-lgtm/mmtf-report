@@ -165,25 +165,25 @@ main{max-width:1650px;margin:auto;padding:16px}
             <div class="dim-name" style="background:#00a86b">Mirror<small style="display:block;font-size:9.5px">問題覺察</small></div>
             <div class="dim-score" id="txt-m">8 / 25<br><span style="font-size:10px">(1.6 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-m">偏低</div>
-            <div class="dim-desc" id="desc-m"><b>問題覺察不足</b><br>• 但願意回饋</div>
+            <div class="dim-desc" id="desc-m"><b>問題覺察不足</b><br>但願意回饋</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#087cf3">Matrix<small style="display:block;font-size:9.5px">制度權責</small></div>
             <div class="dim-score" id="txt-mx">18 / 25<br><span style="font-size:10px">(3.6 / 5)</span></div>
             <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
-            <div class="dim-desc" id="desc-mx"><b>制度結構較清晰</b><br>• 權責配置完整</div>
+            <div class="dim-desc" id="desc-mx"><b>制度結構較清晰</b><br>權責配置完整</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#ff8500">Flow<small style="display:block;font-size:9.5px">資訊流動</small></div>
             <div class="dim-score" id="txt-f">6 / 25<br><span style="font-size:10px">(1.2 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-f">偏低</div>
-            <div class="dim-desc" id="desc-f"><b>資訊傳遞受阻</b><br>• 跨部門協作弱</div>
+            <div class="dim-desc" id="desc-f"><b>資訊傳遞受阻</b><br>跨部門協作弱</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#9218ef">Safety<small style="display:block;font-size:9.5px">心理安全</small></div>
             <div class="dim-score" id="txt-s">9 / 25<br><span style="font-size:10px">(1.8 / 5)</span></div>
             <div class="dim-pill p-low" id="pill-s">偏低</div>
-            <div class="dim-desc" id="desc-s"><b>表達意見保守</b><br>• 信任氛圍不足</div>
+            <div class="dim-desc" id="desc-s"><b>表達意見保守</b><br>信任氛圍不足</div>
           </div>
         </div>
       </div>
@@ -283,7 +283,8 @@ function scrollToSection(id) {
   document.getElementById(id).scrollIntoView({behavior: 'smooth'});
 }
 
-function updateDimRow(idPrefix, val, dimTitle, lowText, highText) {
+// 💡 升級版 updateDimRow：根據分數動態切換高/低分敘述
+function updateDimRow(idPrefix, val, lowTitle, lowSub, highTitle, highSub) {
   let score5 = (val / 5).toFixed(1);
   let isLow = val < 12.5;
   document.getElementById('txt-' + idPrefix).innerHTML = `${val} / 25<br><span style="font-size:10px">(${score5} / 5)</span>`;
@@ -293,11 +294,11 @@ function updateDimRow(idPrefix, val, dimTitle, lowText, highText) {
   if(isLow) {
     pill.className = "dim-pill p-low";
     pill.innerText = "偏低";
-    desc.innerHTML = `<b>${lowText}</b>`;
+    desc.innerHTML = `<b>${lowTitle}</b><br>${lowSub}`;
   } else {
     pill.className = "dim-pill p-high";
-    pill.innerText = "相對偏高";
-    desc.innerHTML = `<b>${highText}</b>`;
+    pill.innerText = val === 25 ? "完美" : "相對偏高";
+    desc.innerHTML = `<b>${highTitle}</b><br>${highSub}`;
   }
 }
 
@@ -324,27 +325,39 @@ function runSimulation() {
   let r1Tag = document.getElementById('r1-tag');
   if(r1Tag) r1Tag.innerText = '總分 ' + total;
 
-  updateDimRow('m', m, '問題覺察', '問題覺察不足<br>• 但願意回饋', '問題覺察清晰<br>• 回饋機制完善');
-  updateDimRow('mx', mx, '制度權責', '制度結構較弱<br>• 權責待釐清', '制度結構較清晰<br>• 權責配置完整');
-  updateDimRow('f', f, '資訊流動', '資訊傳遞受阻<br>• 跨部門協作弱', '資訊流動順暢<br>• 跨部門協作佳');
-  updateDimRow('s', s, '心理安全', '表達意見保守<br>• 信任氛圍不足', '心理安全充足<br>• 鼓勵多元建言');
+  // 💡 傳入動態高低分各自對應的描述內容
+  updateDimRow('m', m, '問題覺察不足', '• 盲點較多，回饋通道受阻', '問題覺察清晰', '• 洞察力佳，回饋機制完善');
+  updateDimRow('mx', mx, '制度結構較弱', '• 權責待釐清，資源配置不足', '制度結構清晰', '• 權責配置完整，規則明確');
+  updateDimRow('f', f, '資訊傳遞受阻', '• 跨部門協作弱，容易產生雜訊', '資訊流動順暢', '• 跨部門協作佳，溝通高效');
+  updateDimRow('s', s, '表達意見保守', '• 信任氛圍不足，發聲意願低', '心理安全充足', '• 鼓勵多元建言，信任感高');
 
   let typeTitle = document.getElementById('v-type');
   let typeDesc = document.getElementById('v-type-desc');
   let obsContainer = document.getElementById('v-observations');
 
-  // 💡 根據總分與各項分數動態生成「主要觀察」，不再一層不變
   let scores = [
     { name: 'Mirror (問題覺察)', val: m },
     { name: 'Matrix (制度權責)', val: mx },
     { name: 'Flow (資訊流動)', val: f },
     { name: 'Safety (心理安全)', val: s }
   ];
-  scores.sort((a, b) => b.val - a.val); // 由高到低排序
+  scores.sort((a, b) => b.val - a.val);
   let highest = scores[0];
   let lowest = scores[3];
 
-  if(total >= 75) {
+  if(total === 100) {
+    typeTitle.style.color = "#00a86b";
+    typeTitle.innerText = "完美運作型 (Optimal / Perfect)";
+    typeDesc.innerText = "組織在所有構面皆達到完美滿分，四構面均衡發展且毫無落差，展現頂級的高效協作與組織韌性。";
+    obsContainer.innerHTML = `
+      <b>主要觀察：</b>
+      <ul>
+        <li>總分達 100 分滿分，四個構面全數達到完美水準（25/25）。</li>
+        <li>各構面表現極其均衡、毫無落差，組織結構與實際執行高度契合。</li>
+        <li>資訊流動、心理安全與問題覺察機制皆運作完美，具備頂級韌性。</li>
+      </ul>
+    `;
+  } else if(total >= 75) {
     typeTitle.style.color = "#00a86b";
     typeTitle.innerText = "高效運作型 (Optimal)";
     typeDesc.innerText = "組織在各構面評分均衡且表現優異，資訊流動順暢、心理安全充足，具備持續學習與高效執行力。";
@@ -352,8 +365,8 @@ function runSimulation() {
       <b>主要觀察：</b>
       <ul>
         <li>整體表現優異（總分 ${total}/100），各構面均衡發展。</li>
-        <li>表現最佳構面為 <b>${highest.name} (${highest.val}/25)</b>，支撐組織高效運作。</li>
-        <li>資訊流動與心理安全機制健全，具備高度協作韌性。</li>
+        <li>表現相對最佳構面為 <b>${highest.name} (${highest.val}/25)</b>，支撐組織高效運作。</li>
+        <li>各項機制運作順暢，具備高度協作韌性。</li>
       </ul>
     `;
   } else if(total >= 50) {
@@ -493,14 +506,10 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 
   svg.innerHTML = svgContent;
 
-  // ----------------------------------------------------
-  // 卡片 3 下方說明面板（根據分數動態調整高分/低分回饋字眼）
-  // ----------------------------------------------------
   let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
   let sumAw = m + s_val;
   let sumAc = mx + f;
 
-  // 💡 分數高時顯示「表現優異」，分數低時顯示「相對偏高/偏低」
   let awStatus = quadrantX < 2.5 ? '<span style="color:#e05650; font-weight:bold;">(相對偏低)</span>' : '<span style="color:#00a86b; font-weight:bold;">(表現優異)</span>';
   let acStatus = quadrantY < 2.5 ? '<span style="color:#e05650; font-weight:bold;">(相對偏低)</span>' : '<span style="color:#00a86b; font-weight:bold;">(表現優異)</span>';
 
