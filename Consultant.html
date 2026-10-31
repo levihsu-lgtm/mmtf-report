@@ -6,7 +6,7 @@
 .top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:16px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-bottom:4px solid #b67afb}
 .top h1{font-size:clamp(22px,2.5vw,32px);margin:0;white-space:nowrap}
 .tagline{border-left:1px solid #c99bfc;padding-left:15px;font-size:14px;line-height:1.6;flex:1}
-main{max-width:1450px;margin:auto;padding:16px}
+main{max-width:1650px;margin:auto;padding:16px}
 
 /* 階段按鈕與流程指引列 */
 .stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:12px;padding:12px 18px;margin-bottom:16px;gap:10px;flex-wrap:wrap}
@@ -31,10 +31,9 @@ main{max-width:1450px;margin:auto;padding:16px}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:15px;width:100%}
 
-/* 前兩張卡片維持並排，第三張卡片改為獨立占滿一行 */
-.report-panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+/* 💡 維持一排三個卡片區塊 */
+.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:16px;align-items:stretch}
 .r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:12px;padding:16px;display:flex;flex-direction:column;min-width:0}
-.r-card-full{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:12px;padding:16px;display:flex;flex-direction:column;min-width:0;grid-column:1 / -1}
 
 .r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:10px 12px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:13.5px;margin-bottom:12px;border-radius:6px}
 .r-num{width:26px;height:26px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:13px;flex-shrink:0}
@@ -56,24 +55,24 @@ main{max-width:1450px;margin:auto;padding:16px}
 .sub-box ul{padding-left:18px;margin:6px 0}
 
 /* 四構面列表 */
-.dim-row{display:grid;grid-template-columns:90px 75px 65px minmax(0,1fr);gap:6px;align-items:center;padding:8px 6px;margin-bottom:8px;border-radius:8px;background:#fff;border:1px solid #ecdffc}
+.dim-row{display:grid;grid-template-columns:85px 70px 60px minmax(0,1fr);gap:6px;align-items:center;padding:8px 6px;margin-bottom:8px;border-radius:8px;background:#fff;border:1px solid #ecdffc}
 .dim-name{padding:6px 4px;color:white;border-radius:6px;font-weight:bold;font-size:11.5px;text-align:center}
 .dim-score{font-size:12.5px;font-weight:900;text-align:center;line-height:1.2}
 .dim-pill{padding:4px 4px;text-align:center;color:white;font-weight:bold;border-radius:4px;font-size:11px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
 .dim-desc{font-size:11.5px;color:#444;padding-left:4px;line-height:1.4}
 
-/* 第三張卡片：改為上下堆疊佈局（上方圖表、下方判讀面板） */
-.quadrant-layout{display:flex;flex-direction:column;gap:16px}
-.plot-wrap{width:100%;display:flex;align-items:center;justify-content:center}
-#quadrantChart{display:block;width:100%;height:auto;max-height:600px}
+/* 💡 第三張卡片內部：上圖表、下說明的上下結構 */
+.card3-stack{display:flex;flex-direction:column;gap:14px;height:100%}
+.plot-wrap-stacked{width:100%;display:flex;align-items:center;justify-content:center}
+#quadrantChart{display:block;width:100%;height:auto;max-height:420px}
 
-/* 下方數據落點判讀區塊（改為精美橫向多欄排版） */
-.quadrant-panel-bottom{background:#f8f4ff;border:1.5px solid #d5bcff;border-radius:10px;padding:16px}
-.qp-head{background:#521493;color:#fff;padding:8px 16px;border-radius:6px;text-align:center;font-size:16px;font-weight:900;margin-bottom:14px}
-.qp-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:14px}
-.qp-box{background:#fff;border:1px solid #ebdffc;border-radius:8px;padding:12px}
-.qp-box-title{font-size:13.5px;font-weight:900;color:#521493;margin-bottom:8px;border-bottom:2px solid #f3e8ff;padding-bottom:4px}
+/* 下方說明面板 */
+.bottom-info-panel{background:#f8f4ff;border:1.5px solid #d5bcff;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.b-panel-head{background:#521493;color:#fff;padding:6px 12px;border-radius:6px;text-align:center;font-size:14px;font-weight:900}
+.b-panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.b-info-box{background:#fff;border:1px solid #ebdffc;border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.5}
+.b-info-title{font-size:12.5px;font-weight:900;color:#521493;margin-bottom:4px;border-bottom:1px solid #f3e8ff;padding-bottom:2px}
 
 /* 質性填答欄位 */
 .qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -99,8 +98,8 @@ main{max-width:1450px;margin:auto;padding:16px}
 .rc-title span{background:#521493;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px}
 .report-card p{font-size:13px;line-height:1.5;margin:0}
 
-@media(max-width:1100px){.report-panel-grid{grid-template-columns:1fr}.qp-grid{grid-template-columns:1fr}}
-@media(max-width:900px){.inputs-grid{grid-template-columns:1fr 1fr}.qual-grid{grid-template-columns:1fr}}
+@media(max-width:1250px){.report-panel-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:850px){.qual-grid{grid-template-columns:1fr}.b-panel-grid{grid-template-columns:1fr}}
 @media(max-width:550px){.inputs-grid{grid-template-columns:1fr}}
 </style></head><body>
 
@@ -137,7 +136,7 @@ main{max-width:1450px;margin:auto;padding:16px}
       <button class="gen-btn" onclick="runSimulation()">送出並更新報告 ⚡</button>
     </div>
 
-    <!-- 卡片佈局：前兩張並排，第三張改為上下堆疊占滿整行 -->
+    <!-- 一排三張卡片區塊 -->
     <div class="report-panel-grid">
       <!-- 卡片 1 -->
       <div class="r-card">
@@ -194,17 +193,17 @@ main{max-width:1450px;margin:auto;padding:16px}
         </div>
       </div>
 
-      <!-- 卡片 3：改為上下堆疊（上方圖表、下方判讀面板） -->
-      <div class="r-card-full">
+      <!-- 卡片 3：內部改為「上四象限圖表、下數據說明面板」的上下排列 -->
+      <div class="r-card">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
-        <div class="quadrant-layout">
-          <!-- 上方：四象限圖表 -->
-          <div class="plot-wrap">
-            <svg id="quadrantChart" viewBox="0 0 1100 520" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
+        <div class="card3-stack">
+          <!-- 上方：四象限圖表 (獨立渲染 SVG) -->
+          <div class="plot-wrap-stacked">
+            <svg id="quadrantChart" viewBox="0 0 660 540" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
           </div>
-          <!-- 下方：詳細落點判讀面板 -->
-          <div class="quadrant-panel-bottom" id="bottom-panel-content">
-            <!-- 動態填入下方數據解讀 -->
+          <!-- 下方：說明面板 -->
+          <div class="bottom-info-panel" id="card3-bottom-info">
+            <!-- JS 動態更新內容 -->
           </div>
         </div>
       </div>
@@ -234,7 +233,7 @@ main{max-width:1450px;margin:auto;padding:16px}
   <!-- 模組三：顧問分析與後續操作步驟 -->
   <section class="module-box" id="stage3-sec" style="display:none">
     <div class="module-title"><span>📦</span> 模組三：量化／質性整合驗證與顧問規畫建議（依文獻對策與顧問裁量）</div>
-    <p style="font-size:13px;color:#521493;margin:0 0 10px 0">下表整合量化分數[cite: 3]、模組二質性填答狀態、學術理論文獻對策[cite: 3]，並提供初步規劃建議：</p>
+    <p style="font-size:13px;color:#521493;margin:0 0 10px 0">下表整合量化分數[cite: 3]，模組二質性填答狀態，學術理論文獻對策[cite: 3]，並提供初步規劃建議：</p>
     
     <table class="analysis-table">
       <thead>
@@ -380,7 +379,7 @@ function runSimulation() {
 function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const svg = document.getElementById('quadrantChart');
   if(!svg) return;
-  const L=100, R=1000, T=40, B=460, W=R-L, H=B-T;
+  const L=75, R=620, T=35, B=485, W=R-L, H=B-T;
   const x = v => L + (v/5)*W, y = v => B - (v/5)*H;
   const px = x(quadrantX), py = y(quadrantY);
 
@@ -425,33 +424,32 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   <rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>
 
   <g clip-path="url(#qclip)">
-    <ellipse cx="${x(3.75)}" cy="${y(4.15)}" rx="250" ry="200" fill="url(#qpeak)"/>`;
+    <ellipse cx="${x(3.75)}" cy="${y(4.15)}" rx="220" ry="180" fill="url(#qpeak)"/>`;
 
   for (let i = 0; i < 20; i++) {
-    const yy = T + 60 + i * 20;
-    const rise = 180 - i * 4;
-    const peakX = x(3.3) + i * 2;
+    const yy = T + 70 + i * 20;
+    const rise = 180 - i * 4.2;
+    const peakX = x(3.3) + i * 1.8;
     const peakY = yy - rise;
-    svgContent += `<path d="M ${L-10} ${yy+40} C ${L+100} ${yy-30}, ${x(1.6)} ${yy-15}, ${x(2.35)} ${peakY+60} S ${peakX-25} ${peakY-30}, ${peakX} ${peakY} S ${x(4.2)} ${peakY+45}, ${R+15} ${yy-70}" fill="none" stroke="#ffffff" stroke-width="${i%3===0 ? 1.8 : 1.1}" stroke-opacity="${i%3===0 ? .82 : .45}"/>`;
+    svgContent += `<path d="M ${L-10} ${yy+40} C ${L+90} ${yy-30}, ${x(1.6)} ${yy-15}, ${x(2.35)} ${peakY+60} S ${peakX-25} ${peakY-30}, ${peakX} ${peakY} S ${x(4.2)} ${peakY+45}, ${R+15} ${yy-70}" fill="none" stroke="#ffffff" stroke-width="${i%3===0 ? 1.8 : 1.1}" stroke-opacity="${i%3===0 ? .82 : .45}"/>`;
   }
   svgContent += `<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.75)} ${y(4.15)}" fill="none" stroke="#172b24" stroke-width="2.4" stroke-dasharray="7 5"/>`;
   svgContent += `</g>`;
 
   svgContent += `<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
 
-  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="34" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+22}" text-anchor="middle" font-size="14.5" font-weight="900" fill="#182a27">${label}</text>`;
+  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="34" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+22}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#182a27">${label}</text>`;
 
-  let halfW = W/2 - 25;
-  svgContent += pill(L+15, T+15, halfW, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
-  svgContent += pill(midX+15, T+15, halfW, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
-  svgContent += pill(L+15, midY+15, halfW, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
-  svgContent += pill(midX+15, midY+15, halfW, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
+  svgContent += pill(L+10, T+10, 245, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
+  svgContent += pill(midX+10, T+10, 245, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
+  svgContent += pill(L+10, midY+10, 245, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
+  svgContent += pill(midX+10, midY+10, 245, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
 
-  svgContent += `<g font-size="14" font-weight="700" fill="#22332e">
-    <text x="${L+20}" y="${T+72}"><tspan x="${L+20}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+20}" dy="21">• 但對風險與問題覺察不足</tspan><tspan x="${L+20}" dy="21">• 需補足感知面機制</tspan></text>
-    <text x="${midX+20}" y="${T+72}"><tspan x="${midX+20}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+20}" dy="21">• 流程順暢、發聲安全</tspan><tspan x="${midX+20}" dy="21">• 支持協作與持續學習</tspan></text>
-    <text x="${L+20}" y="${midY+72}"><tspan x="${L+20}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+20}" dy="21">• 流動受阻、發聲不足</tspan><tspan x="${L+20}" dy="21">• 優先建立回報與支持</tspan></text>
-    <text x="${midX+20}" y="${midY+72}"><tspan x="${midX+20}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+20}" dy="21">• 但未有效轉化為行動</tspan><tspan x="${midX+20}" dy="21">• 強化資源配置與追蹤</tspan></text>
+  svgContent += `<g font-size="13.5" font-weight="700" fill="#22332e">
+    <text x="${L+14}" y="${T+64}"><tspan x="${L+14}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+14}" dy="20">• 但對風險與問題覺察不足</tspan><tspan x="${L+14}" dy="20">• 需補足感知面機制</tspan></text>
+    <text x="${midX+14}" y="${T+64}"><tspan x="${midX+14}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+14}" dy="20">• 流程順暢、發聲安全</tspan><tspan x="${midX+14}" dy="20">• 支持協作與持續學習</tspan></text>
+    <text x="${L+14}" y="${midY+64}"><tspan x="${L+14}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+14}" dy="20">• 流動受阻、發聲不足</tspan><tspan x="${L+14}" dy="20">• 優先建立回報與支持</tspan></text>
+    <text x="${midX+14}" y="${midY+64}"><tspan x="${midX+14}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+14}" dy="20">• 但未有效轉化為行動</tspan><tspan x="${midX+14}" dy="20">• 強化資源配置與追蹤</tspan></text>
   </g>`;
 
   const resultLabelX = Math.min(Math.max(px-80, L+5), R-160);
@@ -463,45 +461,38 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   svgContent += `<text x="${L}" y="${B+24}" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
   svgContent += `<text x="${L-14}" y="${B+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${L-14}" y="${midY+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${L-14}" y="${T+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
 
-  svgContent += `<text x="${L-55}" y="${(T+B)/2}" text-anchor="middle" font-size="14" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-55} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
-  svgContent += `<text x="${(L+R)/2}" y="${B+48}" text-anchor="middle" font-size="14" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
+  svgContent += `<text x="${L-50}" y="${(T+B)/2}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-50} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
+  svgContent += `<text x="${(L+R)/2}" y="${B+48}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
 
   svg.innerHTML = svgContent;
 
   // ----------------------------------------------------
-  // 下方詳細分析面板（改為精美橫向多欄排版）
+  // 卡片 3 下方說明面板
   // ----------------------------------------------------
   let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
   let sumAw = m + s_val;
   let sumAc = mx + f;
 
-  let bottomPanel = document.getElementById('bottom-panel-content');
+  let bottomPanel = document.getElementById('card3-bottom-info');
   if(bottomPanel) {
     bottomPanel.innerHTML = `
-      <div class="qp-head">本次數據落點判讀</div>
-      <div class="qp-grid">
-        <div class="qp-box">
-          <div class="qp-box-title">計算公式與量化分數（0-5 尺度）</div>
-          <div style="font-size:13px; line-height:1.6; color:#333;">
-            <b>Awareness = (Mirror + Safety) / 2</b><br>
-              = (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b> 
-            <span style="color:${quadrantX<2.5?'#e05650':'#00a86b'}; font-weight:bold;">(${quadrantX<2.5?'相對偏低':'偏高'})</span><br>
-            <b>Action = (Matrix + Flow) / 2</b><br>
-              = (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b> 
-            <span style="color:${quadrantY<2.5?'#e05650':'#00a86b'}; font-weight:bold;">(${quadrantY<2.5?'偏低':'偏高'})</span><br>
-            <div style="margin-top:8px; background:#f4eaff; padding:6px 10px; border-radius:6px; font-weight:900; color:#521493; text-align:center;">
-              所在象限：${currentQuadName}
-            </div>
+      <div class="b-panel-head">本次數據落點判讀</div>
+      <div class="b-panel-grid">
+        <div class="b-info-box">
+          <div class="b-info-title">計算公式與轉換 (0-5 尺度)</div>
+          <b>Awareness</b> = (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b> 
+          <span style="color:${quadrantX<2.5?'#e05650':'#00a86b'}; font-weight:bold;">(${quadrantX<2.5?'相對偏低':'偏高'})</span><br>
+          <b>Action</b> = (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b> 
+          <span style="color:${quadrantY<2.5?'#e05650':'#00a86b'}; font-weight:bold;">(${quadrantY<2.5?'偏低':'偏高'})</span><br>
+          <div style="margin-top:6px; background:#f4eaff; padding:4px 8px; border-radius:4px; font-weight:900; color:#521493; text-align:center;">
+            所在象限：${currentQuadName}
           </div>
         </div>
-        <div class="qp-box">
-          <div class="qp-box-title">數據落點解讀與行動建議</div>
-          <div style="font-size:13px; line-height:1.6; color:#333;">
-            <div><b>①</b> 整體感知與行動能力評估，落點於<b>${currentQuadName}</b>。</div>
-            <div><b>②</b> Matrix 與 Flow 交互作用，影響機制落實與跨部門協作。</div>
-            <div><b>③</b> Mirror 與 Safety 聯動，顯示問題辨識與心理安全氛圍狀況。</div>
-            <div><b>④</b> 建議依此數據優化跨部門行動力與資訊流動。</div>
-          </div>
+        <div class="b-info-box">
+          <div class="b-info-title">數據落點解讀與觀察</div>
+          <div>① 落點於 <b>${currentQuadName}</b>。</div>
+          <div>② Matrix 與 Flow 影響機制落實與協作。</div>
+          <div>③ Mirror 與 Safety 顯示問題辨識與信任氛圍。</div>
         </div>
       </div>
     `;
