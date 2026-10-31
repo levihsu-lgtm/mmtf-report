@@ -1,490 +1,829 @@
-<!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 模組化職涯顧問分析報告</title>
+<!DOCTYPE html>
+<!--
+MMTF 2.0 單檔模組化維護說明
+所有 HTML、CSS、JavaScript 都在同一個 index.html 內，沒有拆成外部檔案。
+使用「/////」與模組名稱作區隔，搜尋「模組 A /」「模組 B /」即可定位。
+常見更新位置：構面文字＝JS 模組 A；計分與網址＝JS 模組 B；象限圖＝JS 模組 C；
+雷達圖＝JS 模組 D；長條圖＝JS 模組 E；診斷分析＝JS 模組 F；顏色版面＝CSS 模組。
+請保留模組起訖標記與既有 HTML id，避免影響 JavaScript 更新頁面。
+-->
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="MMTF 組織診斷與顧問分析報告｜含浮水印與版權標示">
+<title>MMTF 動態組織診斷與理論／實證分析報告｜版權所有</title>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 01 / 網頁樣式 CSS：所有樣式都留在本檔，不需外部 CSS -->
+<!-- ////////////////////////////////////////////////////////////// -->
 <style>
-:root{--navy:#073f87;--purple:#521493;--green:#00a86b;--orange:#ff9700;--ink:#12345a;--pale:#faf5ff}
-*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:12px}
-.top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;border-bottom:5px solid #b67afb}
-.top h1{font-size:clamp(20px,2.8vw,34px);margin:0;white-space:nowrap}
-.tagline{border-left:1px solid #c99bfc;padding-left:18px;font-size:13px;line-height:1.7;flex:1}
-main{max-width:1680px;margin:auto;padding:10px}
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 A / 全站色彩、字體與基本版面
+   更新本區：全站色彩變數、字體、頁面背景、基本容器
+   ////////////////////////////////////////////////////////////// */
+:root{--navy:#0b416a;--ink:#17233b;--muted:#68778a;--line:#c9dce9;--red:#e62f3b;--mirror:#299bd9;--matrix:#439b67;--flow:#f28a18;--safe:#8950a0}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;padding:14px;background:#eaf0f6;color:var(--ink);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif}
+.toolbar{max-width:1200px;margin:0 auto 10px;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.toolbar button{border:1px solid #bfd3e2;border-radius:7px;background:#fff;color:#17466d;padding:8px 12px;font-weight:700;cursor:pointer}
+.toolbar button:hover{background:#edf7ff}
+.report{max-width:1200px;margin:auto;position:relative;background:#fff;border:1px solid #d2e0eb;box-shadow:0 6px 25px #143b5517;overflow:hidden;isolation:isolate}
+.report:before{content:"MMTF｜許銘祥版權所有 ©";position:absolute;z-index:3;pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:clamp(34px,6vw,76px);font-weight:900;letter-spacing:3px;white-space:nowrap;color:rgba(9,61,99,.075);text-shadow:0 1px 0 rgba(255,255,255,.12)}
+.report:after{content:"MMTF © ALL RIGHTS RESERVED";position:absolute;z-index:3;pointer-events:none;top:19%;left:50%;transform:translate(-50%,-50%) rotate(-32deg);font-size:clamp(15px,2vw,27px);font-weight:800;letter-spacing:2px;white-space:nowrap;color:rgba(9,61,99,.055)}
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 B / 報告抬頭與整體分數卡
+   更新本區：標題、風險卡、整體定義區
+   ////////////////////////////////////////////////////////////// */
+.hero{margin:8px 10px 0;padding:14px 20px 13px;background:linear-gradient(105deg,#0a355c,#07517b 65%,#0b416a);color:#fff;border-radius:5px;position:relative;z-index:1}
+.eyebrow{font-size:9px;letter-spacing:1.3px;opacity:.85}
+.hero h1{font-size:clamp(21px,2.5vw,34px);margin:3px 0 0;line-height:1.25}
+.hero p{font-size:12px;margin:4px 0 0;opacity:.9}
+.top{display:grid;grid-template-columns:1.15fr .85fr;gap:10px;padding:10px 12px 7px;position:relative;z-index:1}
+.risk,.definition{border:1px solid #d7e5ef;border-radius:10px;min-height:102px;padding:12px;background:#fff}
+.risk{display:flex;align-items:center;gap:14px;background:linear-gradient(110deg,#fff,#fff4f4);border-color:#f1d8dc}
+.ring{width:72px;height:72px;flex:0 0 72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ed1c2e 0 30%,#e9edf1 30% 100%)}
+.ring span{width:54px;height:54px;border-radius:50%;background:white;display:grid;place-items:center;color:#ed1c2e;font-size:23px}
+.risk h2{font-size:clamp(15px,1.8vw,23px);margin:0 0 5px;color:#e11d2d}
+.risk p,.definition p{font-size:11px;line-height:1.55;color:#617085;margin:0}
+.definition h2{font-size:14px;margin:2px 0 7px;color:#163c65}
+.section-heading{position:relative;z-index:1;margin:4px 12px 7px;padding-left:10px;border-left:5px solid #1474a5;font-size:16px;color:#123c69}
+.dimensions{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:0 12px 9px}
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 C / 四構面卡片與診斷文字
+   更新本區：構面卡片、標籤、診斷分析區
+   ////////////////////////////////////////////////////////////// */
+.dimension{border:1px solid #d7e5ef;border-top:5px solid var(--c);border-radius:9px;padding:9px 10px;min-width:0;background:#fff}
+.dimension h3{font-size:13px;color:#102f5f;margin:0 0 5px;line-height:1.3}
+.dimension .tag{float:right;background:#ffe1e4;color:#cb1e2a;font-size:9px;padding:3px 5px;border-radius:4px}
+.dimension .theory{font-size:10px;font-style:italic;color:#788394;margin-bottom:6px}
+.dimension p{font-size:10px;line-height:1.5;color:#4d5e72;margin:5px 0}
+.dimension b{color:#153b68}
+.dimension ul{font-size:10px;line-height:1.5;margin:4px 0 0;padding-left:17px;color:#52647a}
+.dashboard-image{position:relative;z-index:1;padding:0 12px 10px}
+.dashboard-image img{display:block;width:100%;height:auto;border:1px solid #cbddea;border-radius:8px}
+.below{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;padding:0 12px 10px}
+.card{border:1px solid #d6e4ee;border-radius:8px;overflow:hidden;background:#fff;min-width:0}
+.card h3{font-size:13px;color:#123e69;margin:0;padding:8px 10px;background:#eef7fd;border-left:4px solid #1676aa}
+.card.warning{border-color:#efc8cc;background:#fffafa}
+.card.warning h3{background:#fff0f1;color:#b31e2a;border-left-color:#e43d49}
+.card .body{padding:8px 10px;font-size:10px;line-height:1.55;color:#4d5e72}
+.card ul{margin:3px 0;padding-left:18px}
+.card li{margin:3px 0}
+.step{display:grid;grid-template-columns:29px 1fr;gap:7px;margin:5px 0}
+.step .n{width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:#126da4;color:#fff;font-size:14px;font-weight:900}
+.step strong{display:block;color:#173d68}
+.service-line{padding-top:6px;margin-top:6px;border-top:1px solid #e4ebf1}
+.literature{font-size:9.5px;line-height:1.55;padding:8px 10px;color:#5c6b7d}
+.literature div{padding:5px 0;border-bottom:1px solid #e8eef3}
+.literature b{color:#264d70}
+.footer{position:relative;z-index:4;border-top:1px solid #dbe5ec;margin-top:2px;padding:10px 12px;text-align:center;background:#f7fafc;color:#657487;font-size:9px;line-height:1.6}
+.footer strong{color:#173e67;font-size:10px}
+.footer .copyright{font-weight:800;letter-spacing:.4px}
+@media(max-width:850px){.top{grid-template-columns:1fr}.dimensions{grid-template-columns:repeat(2,minmax(0,1fr))}.below{grid-template-columns:1fr 1fr}.below .card:last-child{grid-column:1/-1}}
+@media(max-width:540px){body{padding:3px}.hero{margin:4px 4px 0;padding:12px}.top,.dimensions,.dashboard-image,.below{padding-left:6px;padding-right:6px}.dimensions{gap:5px}.dimension{padding:7px}.dimension h3{font-size:11px}.dimension p,.dimension ul{font-size:9px}.below{grid-template-columns:1fr}.below .card:last-child{grid-column:auto}.risk{gap:8px}.ring{width:56px;height:56px;flex-basis:56px}.ring span{width:43px;height:43px;font-size:18px}.report:before{font-size:34px}}
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 E / 手機與窄螢幕響應式版面
+   更新本區：手機顯示時的欄位排列與字級
+   ////////////////////////////////////////////////////////////// */
+@media print{body{padding:0;background:#fff}.toolbar{display:none}.report{border:0;box-shadow:none;max-width:none}.report:before,.report:after{position:fixed}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.dimension,.risk,.definition{break-inside:avoid}}
 
-/* 階段按鈕與流程指引列 */
-.stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;padding:12px 15px;margin-bottom:12px;gap:8px;flex-wrap:wrap}
-.stage-pill{display:flex;align-items:center;gap:6px;font-weight:bold;color:#521493;font-size:11px;background:#fff;padding:6px 10px;border-radius:20px;border:1px solid #d5bcff}
-.stage-pill span{width:20px;height:20px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:10px}
-.stage-arrow{color:#7012ca;font-weight:900;font-size:14px}
-.next-btn{background:#521493;color:white;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:11px;box-shadow:0 2px 5px rgba(82,20,147,0.3)}
-.next-btn:hover{background:#6d1ac7}
+/* 文獻實證區：橫向加寬並向右延伸 */
+.below .literature-wide{grid-column:2 / 4;justify-self:stretch;width:100%}
+.below .literature-wide .literature{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;padding:8px 14px}
+.below .literature-wide .literature div{padding:7px 4px}
+@media(max-width:850px){
+  .below .literature-wide{grid-column:1 / -1}
+  .below .literature-wide .literature{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:540px){
+  .below .literature-wide{grid-column:auto}
+  .below .literature-wide .literature{grid-template-columns:1fr}
+}
 
-/* 模組通用樣式 */
-.module-box{background:#fff;border:1px solid #d5bcff;border-radius:12px;padding:15px;margin-bottom:12px;box-shadow:0 3px 10px rgba(82,20,147,0.05)}
-.module-title{font-size:16px;font-weight:900;color:#521493;margin-bottom:10px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #f3e8ff;padding-bottom:6px}
 
-/* 輸入面板 */
-.inputs-grid{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr)) auto;gap:8px;align-items:center}
-.input-card{padding:8px;border-radius:8px;color:#fff;display:flex;align-items:center;gap:6px}
-.input-card input{width:55px;padding:5px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:14px;color:#15365d}
-.m-mirror{background:linear-gradient(110deg,#00a86b,#20d2a0)}
-.m-matrix{background:linear-gradient(110deg,#087cf3,#32b9ff)}
-.m-flow{background:linear-gradient(110deg,#ff8500,#ffc34e)}
-.m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
-.gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:14px}
+.service-line a{color:#17466d;font-weight:800;text-decoration:underline;text-underline-offset:2px}
 
-/* 圖形分析呈現區 (模組一：精準一排三張卡片對齊) */
-.report-panel-grid{display:grid;grid-template-columns:0.95fr 1.05fr 1.8fr;gap:10px;margin-top:10px;align-items:stretch}
-.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:12px;display:flex;flex-direction:column}
-.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:6px 8px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:6px;color:#521493;font-weight:900;font-size:12px;margin-bottom:8px;border-radius:6px}
-.r-num{width:22px;height:22px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:12px}
 
-/* 診斷摘要內部排版 */
-.summary-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-.ring{width:75px;height:75px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#8a0bfa 0 41%,#e2c2ff 41% 100%);position:relative;flex-shrink:0}
-.ring:before{content:"";position:absolute;inset:7px;background:white;border-radius:50%}
-.ring div{position:relative;text-align:center}
-.ring strong{font-size:22px;color:#7012ca;display:block;line-height:1}
-.ring small{font-size:11px;font-weight:bold}
-.fragile-box b{color:#d93838;font-size:13px;display:block}
-.fragile-box p{font-size:10px;color:#555;margin:2px 0 0;line-height:1.4}
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
-.stat-box{background:#f4eaff;padding:5px;border-radius:6px;text-align:center;border:1px solid #e0c5ff}
-.stat-box b{display:block;font-size:10px;color:#521493}
-.stat-box strong{font-size:14px;color:#7012ca}
-.sub-box{font-size:10px;line-height:1.4}
-.sub-box ul{padding-left:14px;margin:2px 0}
+/* //////////////////////////////////////////////////////////////
+   CSS 模組 D / 象限圖、數據摘要、雷達圖與長條圖
+   更新本區：儀表板及圖表顯示樣式
+   ////////////////////////////////////////////////////////////// */
+.live-dashboard{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.85fr);gap:9px;padding:0 12px 9px}
+.live-side{display:flex;flex-direction:column;gap:9px;min-width:0}
+.panel-live{border:1px solid #d4e3ed;border-radius:8px;background:#fff;overflow:hidden;min-width:0}
+.panel-live h2{font-size:13px;margin:0;padding:8px 10px;color:#123e69;background:#edf7fd;border-left:4px solid #1676aa}
+.plot-wrap{padding:4px 7px 0;margin-left:-55px;width:calc(100% + 55px);box-sizing:border-box}
+#quadrantChart{display:block;width:100%;height:auto;min-height:360px}
+.axis-note{text-align:center;font-size:10px;color:#284764;font-weight:700;padding:2px 8px 6px}
+.chart-disclaimer{font-size:9px;color:#6c7887;line-height:1.45;margin:0;padding:0 9px 9px}
+.live-table{width:100%;border-collapse:collapse;font-size:10px}
+.live-table th,.live-table td{border:1px solid #dbe5ed;padding:6px 4px;text-align:center}
+.live-table th{background:#f6f9fc;color:#314b64}
+.live-table td:first-child{text-align:left;font-weight:700}
+.live-table .num-low{color:#d72c39;font-weight:800}
+.live-table .num-mid{color:#a6600c;font-weight:800}
+.live-table .num-high{color:#1d7a46;font-weight:800}
+.live-overall{padding:7px;text-align:center;background:#f5f8fa;color:#253f58;font-size:11px}
+.live-overall b{color:#e22c38;font-size:15px}
+.live-copy{font-size:10px;line-height:1.6;padding:9px 11px;color:#46596d}
+.live-copy p{margin:0 0 7px}
+.live-copy ul{margin:3px 0;padding-left:18px}
+.live-copy li{margin:3px 0}
+.live-visuals{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.25fr;gap:9px;padding:0 12px 9px}
+.live-visuals svg{display:block;width:100%;height:auto;padding:5px}
+.live-bottom{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 12px 10px}
+.live-badge{display:inline-block;border-radius:4px;padding:2px 5px;font-weight:700;background:#fff0f0;color:#c62833}
+@media(max-width:850px){.live-dashboard{grid-template-columns:1fr}.live-visuals,.live-bottom{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.live-dashboard,.live-visuals,.live-bottom{padding-left:6px;padding-right:6px}.live-visuals,.live-bottom{grid-template-columns:1fr}#quadrantChart{min-height:280px}.live-table{font-size:9px}}
+@media print{.live-dashboard,.live-visuals,.live-bottom,.panel-live{break-inside:avoid}}
 
-/* 四構面列表 */
-.dim-row{display:grid;grid-template-columns:85px 55px 50px minmax(0,1fr);gap:4px;align-items:center;padding:4px;margin-bottom:4px;border-radius:6px;background:#fff;border:1px solid #ecdffc}
-.dim-name{padding:4px;color:white;border-radius:4px;font-weight:bold;font-size:10px;text-align:center}
-.dim-score{font-size:12px;font-weight:900;text-align:center}
-.dim-pill{padding:3px 2px;text-align:center;color:white;font-weight:bold;border-radius:3px;font-size:9px}
-.p-low{background:#f34550}.p-high{background:#00a86b}
-.dim-desc{font-size:9px;color:#555;padding-left:2px}
 
-/* 第三張卡片 (象限圖與側邊完整資訊同在一框內) */
-.plot-wrap{width:100%;height:100%;display:flex;align-items:center}
-#quadrantChart{display:block;width:100%;height:auto;max-height:430px}
+/* === 版面修正：下方資訊卡改為穩定雙欄，避免文獻卡跨欄造成服務卡掉到下一列 === */
+.below{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;gap:12px}
+.below .literature-wide{grid-column:auto;justify-self:stretch;width:100%}
+.below .literature-wide .literature{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}
+.below .card{height:100%}
+.below .card .body,.below .literature{font-size:11px;line-height:1.65}
+.below .card h3{font-size:14px;line-height:1.4}
+.below .step{grid-template-columns:27px minmax(0,1fr);gap:8px}
+.below .step .n{width:25px;height:25px;font-size:13px}
+@media(max-width:850px){.below{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.below .literature-wide{grid-column:auto}.below .literature-wide .literature{grid-template-columns:1fr}}
+@media(max-width:560px){.below{grid-template-columns:1fr}.below .literature-wide{grid-column:auto}.below .literature-wide .literature{grid-template-columns:1fr}.below .card .body,.below .literature{font-size:12px}}
 
-/* 質性填答欄位 */
-.qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.qual-group{background:#f9f5ff;padding:10px;border-radius:8px;border:1px solid #e2cffc}
-.qual-group label{display:block;font-weight:bold;color:#521493;margin-bottom:4px}
-.qual-group textarea{width:100%;height:75px;padding:8px;border:1px solid #d5bcff;border-radius:6px;font-family:inherit}
 
-/* 模組三表格 */
-.analysis-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
-.analysis-table th{background:#521493;color:white;padding:6px;text-align:left}
-.analysis-table td{padding:6px;border:1px solid #ebdffc;vertical-align:top;background:#fff}
+/* 統一內文閱讀字級：所有說明文字統一為 14px，標題與分數等視覺層級維持原設定 */
+.report p,
+.report li,
+.report .dimension .theory,
+.report .dimension p,
+.report .dimension ul,
+.report .card .body,
+.report .literature,
+.report .literature div,
+.report .risk p,
+.report .definition p,
+.report .step strong,
+.report .footer {
+  font-size:14px !important;
+  line-height:1.65 !important;
+}
+.report .dimension .tag { font-size:12px !important; }
+.report .eyebrow { font-size:11px !important; }
+.report .hero p { font-size:14px !important; }
+@media(max-width:540px){
+  .report p, .report li, .report .dimension .theory, .report .dimension p,
+  .report .dimension ul, .report .card .body, .report .literature,
+  .report .literature div, .report .risk p, .report .definition p,
+  .report .step strong, .report .footer { font-size:14px !important; }
+}
 
-/* 模組四 6 大繽紛區塊 */
-.report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.report-card{border-radius:12px;padding:12px;border:1px solid #e0ebf5}
-.rc-1{background:linear-gradient(145deg,#f0fff8,#fff);border-color:#bcebd7}
-.rc-2{background:linear-gradient(145deg,#f4fbff,#fff);border-color:#b9dfff}
-.rc-3{background:linear-gradient(145deg,#fff7e9,#fff);border-color:#f5d5a4}
-.rc-4{background:linear-gradient(145deg,#f6efff,#fff);border-color:#d7c8ff}
-.rc-5{background:linear-gradient(145deg,#fff0f4,#fff);border-color:#ffcbd8}
-.rc-6{background:linear-gradient(145deg,#f4f6ff,#fff);border-color:#c8d4ff}
-.rc-title{font-size:12px;font-weight:900;color:#174875;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
-.rc-title span{background:#521493;color:#fff;padding:2px 5px;border-radius:4px;font-size:9px}
 
-@media(max-width:1280px){.report-panel-grid{grid-template-columns:1fr 1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:900px){.report-panel-grid{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
-</style></head><body>
+.mmtf-sharp-analysis{margin:14px 0;padding:14px 16px;border:1px solid #d8a3a6;border-left:5px solid #b4232f;border-radius:8px;background:#fff8f7}
+.mmtf-sharp-analysis h3{margin:0 0 10px;color:#8e1b25;font-size:16px;line-height:1.45}
+.mmtf-sharp-analysis p{margin:9px 0;line-height:1.7}
+.mmtf-sharp-analysis .muted{padding-top:8px;border-top:1px solid #ead0d1;color:#596579;font-size:13px}
+</style>
+</head>
+<body>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 02 / 報告 HTML 主架構：抬頭、總分卡、四構面區 -->
+<!-- ////////////////////////////////////////////////////////////// -->
 
-<header class="top">
-  <h1>MMTF 2.0 模組化職涯顧問分析報告</h1>
-  <div class="tagline">模組一：圖像診斷 ➔ 模組二：因材施教填答 ➔ 模組三：顧問交叉分析與對策 ➔ 模組四：個人報告與文獻摘要</div>
+<main class="report" id="report">
+<header class="hero">
+<div class="eyebrow">ORGANIZATIONAL DIAGNOSTICS • MMTF</div>
+<h1>MMTF 組織診斷與顧問分析報告</h1>
+<p>四構面整合分析｜組織效能曲線｜四象限結果與改善建議</p>
 </header>
+<section class="top">
+<div class="risk"><div class="ring"><span id="totalScore">30</span></div><div><h2 id="riskTitle">高風險失能型（Fragile）</h2><p id="riskDesc">系統架構與信任基礎出現顯著弱點，需立即啟動管理干預。</p></div></div>
+<div class="definition"><h2>▥ MMTF 整體定義</h2><p>本報告整合 Mirror、Matrix、Flow、Safety 四構面，呈現組織資訊揭露、制度支持、流程運作與心理安全的動態回饋。四象限與曲線屬理論分析架構，應與實際資料及組織情境一併判讀。</p></div>
+</section>
+<h2 class="section-heading">四構面綜合分析</h2>
+<section class="dimensions" id="dimensions"></section>
 
-<main>
-  <!-- 階段導引列 -->
-  <div class="stage-nav-bar">
-    <div style="font-weight:900;color:#521493">顧問諮詢執行進度導引：</div>
-    <div class="stage-pill"><span>1</span>數據與圖像呈現</div>
-    <div class="stage-arrow">➔</div>
-    <div class="stage-pill"><span>2</span>動態質性填答</div>
-    <div class="stage-arrow">➔</div>
-    <div class="stage-pill" id="nav-stage3"><span>3</span>顧問交叉分析 (待填答)</div>
-    <div class="stage-arrow">➔</div>
-    <div class="stage-pill" style="opacity:0.6" id="nav-stage4"><span>4</span>總結與建議 (待解鎖)</div>
-    <button class="next-btn" onclick="scrollToSection('stage2-sec')">進入第二階段 ➔</button>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 03 / 動態儀表板 HTML：象限圖與本次數據摘要 -->
+<!-- ////////////////////////////////////////////////////////////// -->
+<section class="live-dashboard">
+  <div class="live-main panel-live">
+    <h2>四象限動態定位｜組織效能理論參考圖</h2>
+    <div class="plot-wrap">
+      <svg id="quadrantChart" viewBox="0 0 680 430" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
+    </div>
+    <div class="axis-note">橫軸：資訊與感知基礎（Awareness）　｜　縱軸：組織回應與行動能力（Action）</div>
+    <p class="chart-disclaimer">定位規則（本版本操作化定義）：Awareness＝（Mirror＋Safety）÷2；Action＝（Matrix＋Flow）÷2。此映射是 MMTF 報告的分析假設，尚非經驗證的標準公式。</p>
   </div>
-
-  <!-- 模組一：原始數據輸入與精準復刻圖片分析呈現 -->
-  <section class="module-box" id="stage1-sec">
-    <div class="module-title"><span>📦</span> 模組一：輸入四構面分數與 MMTF 2.0 顧問報告結果</div>
-    <div class="inputs-grid">
-      <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small>問題覺察與回饋</small></div><input id="mirror" type="number" value="8" min="0" max="25" oninput="runSimulation()"></div>
-      <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small>制度與權責資源</small></div><input id="matrix" type="number" value="18" min="0" max="25" oninput="runSimulation()"></div>
-      <div class="input-card m-flow"><span>●</span><div><b>Flow</b><small>資訊流動與協作</small></div><input id="flow" type="number" value="6" min="0" max="25" oninput="runSimulation()"></div>
-      <div class="input-card m-safe"><span>♟</span><div><b>Safety</b><small>心理安全與員工意見</small></div><input id="safe" type="number" value="9" min="0" max="25" oninput="runSimulation()"></div>
-      <button class="gen-btn" onclick="runSimulation()">送出並更新報告 ⚡</button>
-    </div>
-
-    <!-- 一排三張卡片完全水平並排 -->
-    <div class="report-panel-grid">
-      <div class="r-card">
-        <div class="r-card-head"><span class="r-num">1</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
-        <div class="summary-top">
-          <div class="ring"><div><strong id="v-total">41</strong><small>/ 100</small></div></div>
-          <div class="fragile-box">
-            <b id="v-type">高風險失能型 (Fragile)</b>
-            <p>組織在制度結構面評分中低，但在問題覺察、資訊流動與心理安全明顯不足，呈現結構與執行落差。</p>
-          </div>
-        </div>
-        <div class="stats-row">
-          <div class="stat-box"><b>整體平均</b><strong id="v-avg">2.05 / 5</strong></div>
-          <div class="stat-box"><b>四構面總分</b><strong id="v-sum">41 / 100</strong></div>
-        </div>
-        <div class="sub-box">
-          <b>主要觀察：</b>
-          <ul>
-            <li>制度結構具有一定基礎，但執行落差明顯。</li>
-            <li>問題覺察與資訊流動較弱。</li>
-            <li>心理安全得分偏低，員工表達意見可能受限。</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="r-card">
-        <div class="r-card-head"><span class="r-num">2</span>四構面分析 <small>各構面分數與實際意義</small></div>
-        <div id="dim-list">
-          <div class="dim-row">
-            <div class="dim-name" style="background:#00a86b">Mirror<small>問題覺察</small></div>
-            <div class="dim-score">8 / 25<br><span style="font-size:9px">(1.6 / 5)</span></div>
-            <div class="dim-pill p-low" id="pill-m">偏低</div>
-            <div class="dim-desc"><b>問題覺察不足</b><br>• 但願意回饋</div>
-          </div>
-          <div class="dim-row">
-            <div class="dim-name" style="background:#087cf3">Matrix<small>制度權責</small></div>
-            <div class="dim-score">18 / 25<br><span style="font-size:9px">(3.6 / 5)</span></div>
-            <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
-            <div class="dim-desc"><b>制度結構較清晰</b><br>• 權責配置完整</div>
-          </div>
-          <div class="dim-row">
-            <div class="dim-name" style="background:#ff8500">Flow<small>資訊流動</small></div>
-            <div class="dim-score">6 / 25<br><span style="font-size:9px">(1.2 / 5)</span></div>
-            <div class="dim-pill p-low" id="pill-f">偏低</div>
-            <div class="dim-desc"><b>資訊傳遞受阻</b><br>• 跨部門協作弱</div>
-          </div>
-          <div class="dim-row">
-            <div class="dim-name" style="background:#9218ef">Safety<small>心理安全</small></div>
-            <div class="dim-score">9 / 25<br><span style="font-size:9px">(1.8 / 5)</span></div>
-            <div class="dim-pill p-low" id="pill-s">偏低</div>
-            <div class="dim-desc"><b>表達意見保守</b><br>• 信任氛圍不足</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 第三張卡片：並排於右側，內容完全復刻第二張圖 -->
-      <div class="r-card">
-        <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
-        <div class="plot-wrap">
-          <svg id="quadrantChart" viewBox="0 0 1020 520" role="img" aria-label="依四構面分數動態定位的四象限圖與詳細落點面板"></svg>
-        </div>
-      </div>
-    </div>
+  <div class="live-side">
+    <section class="panel-live">
+      <h2>本次數據摘要</h2>
+      <table class="live-table">
+        <thead><tr><th>構面</th><th>總分／25</th><th>平均／5</th><th>相對狀態</th></tr></thead>
+        <tbody id="liveScoreRows"></tbody>
+      </table>
+      <div class="live-overall">總分 <b id="liveTotal">39</b>/100　｜　平均 <b id="liveMean">1.95</b>/5</div>
+    </section>
+    <section class="panel-live">
+      <h2>數據導向診斷分析</h2>
+      <div id="dynamicInterpretation" class="live-copy"></div>
+    </section>
+  </div>
+</section>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 04 / 圖表 HTML：雷達圖與長條圖 -->
+<!-- ////////////////////////////////////////////////////////////// -->
+<section class="live-visuals">
+  <section class="panel-live">
+    <h2>四構面雷達圖（依數據更新）</h2>
+    <svg id="liveRadar" viewBox="0 0 320 235" role="img" aria-label="四構面動態雷達圖"></svg>
   </section>
-
-  <!-- 模組二：因材施教（動態質性填答，允許留空） -->
-  <section class="module-box" id="stage2-sec">
-    <div class="module-title"><span>📦</span> 模組二：因材施教（參與者針對動態派發之題目進行質性填答，可自由選填）</div>
-    <p style="margin:0 0 8px 0;color:#6b5388">請根據您的實際職場情境填寫以下欄位（若未填寫，系統將依量化分數與文獻進行對應分析）：</p>
-    
-    <div class="qual-grid">
-      <div class="qual-group">
-        <label id="dyn-label-1"><b>Q1 核心深掘題：</b></label>
-        <textarea id="qual-ans-1" placeholder="若無特別補充可保持空白...">近期在跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
-      </div>
-      <div class="qual-group">
-        <label id="dyn-label-2"><b>Q2 輔助驗證題：</b></label>
-        <textarea id="qual-ans-2" placeholder="若無特別補充可保持空白...">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
-      </div>
-    </div>
-    <div style="margin-top:10px">
-      <button class="next-btn" onclick="runConsultantAnalysis()">提交填答並生成模組三顧問交叉分析表 ➔</button>
-    </div>
+  <section class="panel-live">
+    <h2>四構面分數長條圖（依數據更新）</h2>
+    <svg id="liveBars" viewBox="0 0 420 235" role="img" aria-label="四構面動態長條圖"></svg>
   </section>
-
-  <!-- 模組三：顧問分析與後續操作步驟（結合文獻對策與質性關係） -->
-  <section class="module-box" id="stage3-sec" style="display:none">
-    <div class="module-title"><span>📦</span> 模組三：量化／質性整合驗證與顧問規畫建議（依文獻對策與顧問裁量）</div>
-    <p style="font-size:11px;color:#521493;margin:0 0 8px 0">下表整合量化分數、模組二質性填答狀態、學術理論文獻對策，並提供初步規劃建議（最終執行與否由專業顧問評估決定）：</p>
-    
-    <table class="analysis-table">
-      <thead>
-        <tr>
-          <th>向量表構面與量化分數</th>
-          <th>模組二質性填答結果與關聯性檢核</th>
-          <th>文獻理論參照與對策回饋</th>
-          <th>建議採用佐證資料／量表</th>
-          <th>規劃建議與時程（顧問可調整）</th>
-        </tr>
-      </thead>
-      <tbody id="stage3-tbody">
-        <!-- 動態填入 -->
-      </tbody>
-    </table>
-    <div style="margin-top:10px">
-      <button class="next-btn" onclick="unlockStage4()">確認分析無誤，解鎖模組四個人報告 ➔</button>
+</section>
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 05 / 診斷與顧問資訊 HTML -->
+<!-- ////////////////////////////////////////////////////////////// -->
+<section class="live-bottom">
+  <article class="panel-live" style="grid-column:1 / -1">
+    <h2>延伸分析（依使用者需求提供）</h2>
+    <div class="live-copy">
+      <p>本報告先協助你理解分數與可能的工作情境，並讓你對照自身經驗。若你希望進一步釐清問題原因、比較部門差異或規劃改善方案，可再提出需求，進行更深入的顧問分析。</p>
     </div>
-  </section>
+  </article>
+</section>
+<section class="below">
+<article class="card">
+  <h3>🚀 下一步行動指南</h3>
+  <div class="body" id="actionGuideContent">
+    <!-- 由 renderActionGuide() 動態產生原本的四個 step -->
+  </div>
+</article>
+<article class="card warning"><h3>⚠ 危害提醒與管理注意事項</h3><div class="body"><ul>
+<li>本報告屬組織管理診斷參考，不是個人心理疾病診斷。</li>
+<li>避免將低分直接歸咎個人；應查證制度、流程與管理情境。</li>
+<li>應建立保密及反報復機制，避免員工因提出疑慮而受不利對待。</li>
+<li>如涉及職場霸凌、歧視、職安或重大風險，應依正式通報與調查程序處理。</li>
+</ul></div></article>
+<article class="card literature-wide"><h3>📘 文獻實證</h3><div class="literature">
+<div><b>Mirror｜認知與回饋</b><br>Luft & Ingham（1955），Johari Window：作為自我／他人認知與回饋的概念參照。</div>
+<div><b>Matrix｜組織結構</b><br>Galbraith（2009），組織設計相關著作：作為組織結構與協調機制的理論參照。</div>
+<div><b>Flow｜資訊傳遞</b><br>Shannon & Weaver（1949），The Mathematical Theory of Communication：作為訊息傳遞與噪音的概念背景。</div>
+<div><b>Safety｜心理安全</b><br>Edmondson（1999），Psychological Safety and Learning Behavior in Work Teams：支持心理安全與團隊學習行為之關聯。</div>
 
-  <!-- 模組四：總結及建議 (六大繽紛精簡區塊，內含文獻簡述) -->
-  <section class="module-box" id="stage4-sec" style="display:none">
-    <div class="module-title"><span>🎨</span> 模組四：參與者個人報告（六大繽紛精簡區塊 ── 含文獻理論簡述）</div>
-    <div class="report-grid-6">
-      <div class="report-card rc-1">
-        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 41</span></div>
-        <p>呈現四構面量化分數、總分 41/100 分，以及高風險失能型（Fragile）的初步解讀。</p>
-      </div>
-      <div class="report-card rc-2">
-        <div class="rc-title">02｜四構面輪廓與文獻參照 <span>理論基礎</span></div>
-        <p><b>Mirror</b>(Johari Window 賈哈里窗)[cite: 3] ╳ <b>Matrix</b>(Galbraith Star Model 星狀模型)[cite: 3] ╳ <b>Flow</b>(Shannon & Weaver 資訊傳播模型)[cite: 3] ╳ <b>Safety</b>(Edmondson 心理安全感模型)[cite: 3]。</p>
-      </div>
-      <div class="report-card rc-3">
-        <div class="rc-title">03｜我可以看見什麼？ <span>客觀鏡像</span></div>
-        <p>相對較高（Matrix 制度權責）與較低（Flow 資訊流動、Safety 心理安全）之落差，以非批判性文字協助理解[cite: 3]。</p>
-      </div>
-      <div class="report-card rc-4">
-        <div class="rc-title">04｜值得思考的問題 <span>情境連結</span></div>
-        <p>結合量化數據與模組二質性填答，反思跨部門專案中面臨的資訊斷點與高壓沈默行為[cite: 3]。</p>
-      </div>
-      <div class="report-card rc-5">
-        <div class="rc-title">05｜我的下一步行動 <span>IDP 行動</span></div>
-        <p>提供 1 至 3 項可執行的小行動（如建立安全回報管道、跨部門對齊）、預計完成時間與個人檢視方式[cite: 3]。</p>
-      </div>
-      <div class="report-card rc-6">
-        <div class="rc-title">06｜我的後續追蹤 <span>永續覆盤</span></div>
-        <p>記錄個人反思、改善項目，並設定 30-90 天後重新複測與迭代的日期[cite: 3]，確保組織變革持續落地。</p>
-      </div>
-    </div>
-  </section>
+</div></article>
+<article class="card"><h3>👥 顧問服務項目</h3><div class="body"><ul>
+<li>四構面診斷結果解讀與管理情境分析。</li>
+<li>主管工作坊：回饋對話、權責協作與改善優先順序。</li>
+<li>組織訪談、流程盤點與構面差距分析。</li>
+<li>改善行動計畫、追蹤指標與再評估設計。</li>
+</ul><div class="service-line"><strong>服務範圍、交付成果、費用及時程依雙方確認需求另行議定。</strong><br>顧問聯繫：<a href="mailto:levihsu@yahoo.com.tw">levihsu@yahoo.com.tw</a></div></div></article>
+</section>
+<footer class="footer">
+<strong>MMTF 組織診斷與顧問分析報告</strong><br>
+<span class="copyright">版權所有 © MMTF許銘祥｜未經授權，請勿複製、散布、轉售或移除版權標示。</span><br>
+浮水印與版權標示為報告識別用途；MMTF 專業診斷模組 v2.0 (邏輯引擎版) |。<br>
+診斷日期：<span id="diagnosisDate"></span>
+</footer>
 </main>
-
+<!-- ////////////////////////////////////////////////////////////// -->
+<!-- 模組 06 / JavaScript 計分與報告更新引擎（本檔內） -->
+<!-- ////////////////////////////////////////////////////////////// -->
 <script>
-function scrollToSection(id) {
-  document.getElementById(id).scrollIntoView({behavior: 'smooth'});
+(function(){
+'use strict';
+/* //////////////////////////////////////////////////////////////
+   JS 模組 A / 四構面設定資料
+   只要修改構面名稱、顏色、描述或行動建議，請改這一區。
+   ////////////////////////////////////////////////////////////// */
+const dims=[
+ {key:'mirror',name:'Mirror',zh:'鏡像構面',color:'#299bd9',icon:'◉',theory:'資訊透明、問題覺察與回饋',desc:'檢視組織是否能辨識問題、揭露資訊並讓回饋被看見。',actions:['建立領導回應與透明機制','強化問題揭露、回饋回應與主管言行一致性']},
+ {key:'matrix',name:'Matrix',zh:'結構構面',color:'#439b67',icon:'▦',theory:'權責配置、制度支持與協作',desc:'檢視制度、責任分工、資源配置是否支持問題處理。',actions:['釐清權責與決策邊界','確認制度是否真正支持跨部門協作']},
+ {key:'flow',name:'Flow',zh:'流動構面',color:'#f28a18',icon:'●',theory:'資訊傳遞、異常回報與流程',desc:'檢視資訊是否能及時傳遞，並轉化為協作及行動。',actions:['盤點資訊交接與異常回報流程','建立跨部門回覆時限與追蹤回應']},
+ {key:'safe',name:'Safety',zh:'心理安全',color:'#8950a0',icon:'⬟',theory:'發聲安全、異議表達與團隊學習',desc:'檢視成員是否能提出疑慮、承認錯誤及表達不同意見。',actions:['建立保密且反報復的發聲管道','訓練主管以非懲罰方式回應問題與錯誤']}
+];
+/* //////////////////////////////////////////////////////////////
+   JS 模組 B / 網址參數與分數計算
+   網址參數：mirror、matrix、flow、safe；每項有效分數 0–25。
+   修改計分公式時，請同步檢查總分、平均與象限座標。
+   ////////////////////////////////////////////////////////////// */
+const params=new URLSearchParams(location.search);
+const defaults={mirror:9,matrix:7,flow:7,safe:7};
+const scores={},means={};
+dims.forEach(d=>{
+ const raw=params.get(d.key);
+ const n=raw===null?defaults[d.key]:Number(raw);
+ scores[d.key]=(Number.isFinite(n)&&Number.isInteger(n)&&n>=0&&n<=25)?n:defaults[d.key];
+ means[d.key]=scores[d.key]/5;
+});
+const total=dims.reduce((s,d)=>s+scores[d.key],0);
+const overall=total/20;
+const min=Math.min(...dims.map(d=>means[d.key]));
+const max=Math.max(...dims.map(d=>means[d.key]));
+const weakest=dims.filter(d=>means[d.key]===min);
+const strongest=dims.filter(d=>means[d.key]===max);
+const meanStatus=v=>v<2.5?'偏低':v<3.5?'中低／需改善':'相對較高';
+const quadrantX=(means.mirror+means.safe)/2; // awareness proxy
+const quadrantY=(means.matrix+means.flow)/2; // action proxy
+const quadrant=quadrantX<2.5?(quadrantY<2.5?'Ⅲ 失衡風險區':'Ⅱ 潛能未釋放區'):(quadrantY<2.5?'Ⅳ 看見未轉化區':'Ⅰ 高感知與高行動區');
+const risk=overall<2?'高風險失能型（Fragile）':overall<3.5?'需優先改善型（Vulnerable）':'相對穩定型（Developing）';
+document.getElementById('totalScore').textContent=String(total);
+document.getElementById('riskTitle').textContent=risk;
+document.getElementById('riskDesc').textContent=`四構面總分 ${total}/100，整體平均 ${overall.toFixed(2)}/5；最低分為 ${weakest.map(d=>d.name).join('、')}。分類門檻為本報告操作規則，仍需依正式研究設計驗證。`;
+const ring=document.querySelector('.ring');
+ring.style.background=`conic-gradient(#ed1c2e 0 ${Math.max(0,Math.min(100,total))}%,#e9edf1 ${Math.max(0,Math.min(100,total))}% 100%)`;
+document.getElementById('dimensions').innerHTML=dims.map(d=>`<article class="dimension" style="--c:${d.color}"><h3><span style="display:inline-block;background:${d.color};color:white;border-radius:50%;padding:3px 6px;margin-right:4px">${d.icon}</span>${d.name}（${d.zh}）<span class="tag">${meanStatus(means[d.key])}</span></h3><div class="theory">${d.theory}</div><p>${d.desc}</p><b>顧問行動建議</b><ul>${d.actions.map(a=>`<li>${a}</li>`).join('')}</ul><p><b>本次平均：</b>${means[d.key].toFixed(1)} / 5</p></article>`).join('');
+document.getElementById('liveScoreRows').innerHTML=dims.map(d=>{
+ const v=means[d.key],cl=v<2.5?'num-low':v<3.5?'num-mid':'num-high';
+ return `<tr><td><span style="display:inline-block;background:${d.color};color:white;border-radius:50%;padding:3px 5px;margin-right:4px">${d.icon}</span>${d.name}<br><small>${d.zh}</small></td><td>${scores[d.key]}</td><td class="${cl}">${v.toFixed(1)}</td><td>${meanStatus(v)}</td></tr>`;
+}).join('');
+document.getElementById('liveTotal').textContent=String(total);
+document.getElementById('liveMean').textContent=overall.toFixed(2);
+
+/* //////////////////////////////////////////////////////////////
+   JS 模組 C / 四象限定位圖
+   只修改象限圖的 SVG、座標、色彩與標籤時，編輯此函式。
+   ////////////////////////////////////////////////////////////// */
+
+function drawQuadrant(){
+ const svg=document.getElementById('quadrantChart');
+ const L=88,R=700,T=24,B=430,W=R-L,H=B-T;
+ const x=v=>L+(v/5)*W, y=v=>B-(v/5)*H;
+ const px=x(quadrantX),py=y(quadrantY);
+
+ let s=`<defs>
+  <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#ffd65c"/>
+    <stop offset="55%" stop-color="#fff18d"/>
+    <stop offset="100%" stop-color="#ffb16a"/>
+  </linearGradient>
+  <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#9af59d"/>
+    <stop offset="50%" stop-color="#23dc83"/>
+    <stop offset="100%" stop-color="#a4f4df"/>
+  </linearGradient>
+  <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#ff555d"/>
+    <stop offset="45%" stop-color="#ff8877"/>
+    <stop offset="100%" stop-color="#ffd3db"/>
+  </linearGradient>
+  <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#d4eaff"/>
+    <stop offset="45%" stop-color="#12b8f4"/>
+    <stop offset="100%" stop-color="#a6e7ff"/>
+  </linearGradient>
+  <radialGradient id="qpeak">
+    <stop offset="0%" stop-color="#13e878" stop-opacity=".95"/>
+    <stop offset="38%" stop-color="#31e9a6" stop-opacity=".75"/>
+    <stop offset="70%" stop-color="#12c9ef" stop-opacity=".38"/>
+    <stop offset="100%" stop-color="#12c9ef" stop-opacity="0"/>
+  </radialGradient>
+  <clipPath id="qclip">
+    <rect x="${L}" y="${T}" width="${W}" height="${H}"/>
+  </clipPath>
+ </defs>`;
+
+const midX = x(2.5), midY = y(2.5);
+
+s += `
+<rect x="${L}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q2bg)"/>
+<rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/>
+<rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/>
+<rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>
+
+<g clip-path="url(#qclip)">
+  <ellipse cx="${x(3.65)}" cy="${y(4.05)}"
+    rx="235" ry="190" fill="url(#qpeak)"/>
+`;
+
+ // 多層流線：產生有起伏的組織效能曲面
+for (let i = 0; i < 18; i++) {
+  const yy = T + 90 + i * 18;
+  const rise = 175 - i * 4.5;
+  const peakX = x(3.25) + i * 1.8;
+  const peakY = yy - rise;
+
+  s += `
+  <path
+    d="M ${L-15} ${yy+45}
+       C ${L+100} ${yy-30},
+         ${x(1.6)} ${yy-15},
+         ${x(2.35)} ${peakY+60}
+       S ${peakX-25} ${peakY-30},
+         ${peakX} ${peakY}
+       S ${x(4.2)} ${peakY+45},
+         ${R+20} ${yy-70}"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="${i%3===0 ? 1.7 : 1.05}"
+    stroke-opacity="${i%3===0 ? .78 : .43}"/>
+  `;
 }
+ // 組織效能曲線：保留原有曲線，不顯示理論最佳點
+ s+=`<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.65)} ${y(4.05)}" fill="none" stroke="#172b24" stroke-width="2.3" stroke-dasharray="7 5"/>`;
 
-function runSimulation() {
-  let m = Number(document.getElementById('mirror').value)||0;
-  let mx = Number(document.getElementById('matrix').value)||0;
-  let f = Number(document.getElementById('flow').value)||0;
-  let s = Number(document.getElementById('safe').value)||0;
-  let total = m + mx + f + s;
-  let avg = (total / 4 / 5).toFixed(2);
-  
-  let aw = Number(((m + s) / 2 / 5).toFixed(1));
-  let ac = Number(((mx + f) / 2 / 5).toFixed(1));
+ s+=`</g>`;
 
-  document.getElementById('v-total').innerText = total;
-  document.getElementById('v-sum').innerText = total + ' / 100';
-  document.getElementById('v-avg').innerText = avg + ' / 5';
+ // 中央十字虛線：保留
+ s+=`<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.5"/>`;
 
-  drawQuadrant(aw, ac, m, mx, f, s);
+ // 象限標題標籤
+ const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="29" rx="7" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+19}" text-anchor="middle" font-size="13" font-weight="800" fill="#182a27">${label}</text>`;
 
-  let scores = [{name:'Mirror', val:m}, {name:'Matrix', val:mx}, {name:'Flow', val:f}, {name:'Safety', val:s}];
-  scores.sort((a,b)=>a.val - b.val);
-  let lowest = scores[0];
-  window.lowestDimName = lowest.name;
+ s+=pill(L+18,T+16,176,'Ⅱ 潛能未釋放區','#fff8e8','#c98237');
+ s+=pill(R-194,T+16,176,'Ⅰ 最佳運作區','#e5ffe5','#4a9c55');
+ s+=pill(L+18,midY+16,176,'Ⅲ 失衡風險區','#fff0ee','#d75b54');
+ s+=pill(R-194,midY+16,176,'Ⅳ 看見未轉化區','#eef8ff','#5485d9');
 
-  let l1 = document.getElementById('dyn-label-1');
-  let l2 = document.getElementById('dyn-label-2');
-  if(lowest.name === 'Flow') {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 Flow 資訊流動最低）：</b> 近期在跨部門資訊傳遞或專案協調時，哪一個環節最容易發生雜訊或延遲？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 針對此資訊落差，對您的日常決策造成了什麼實質阻礙？`;
-  } else if(lowest.name === 'Safety') {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 Safety 心理安全最低）：</b> 在高壓會議中，是什麼因素讓您或團隊成員選擇保持沈默？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您希望組織提供什麼支持，能讓您更安心提出真實建言？`;
+ // 四象限說明文字
+ s+=`<g font-size="12" fill="#26332f">
+ <text x="${L+23}" y="${T+69}"><tspan x="${L+23}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+23}" dy="17">• 但資訊基礎與問題覺察不足</tspan><tspan x="${L+23}" dy="17">• 需補足透明回饋機制</tspan></text>
+ <text x="${R-22}" y="${T+69}" text-anchor="end"><tspan x="${R-22}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${R-22}" dy="17">• 流程順暢、發聲安全</tspan><tspan x="${R-22}" dy="17">• 支持協作與持續學習</tspan></text>
+ <text x="${L+23}" y="${midY+69}"><tspan x="${L+23}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+23}" dy="17">• 流動受阻、發聲不足</tspan><tspan x="${L+23}" dy="17">• 優先建立回報與支持</tspan></text>
+ <text x="${R-22}" y="${midY+69}" text-anchor="end"><tspan x="${R-22}" dy="0">• 能看見問題與風險</tspan><tspan x="${R-22}" dy="17">• 但未有效轉化為行動</tspan><tspan x="${R-22}" dy="17">• 強化資源配置與追蹤</tspan></text></g>`;
+
+ // 本次結果定位點：保留動態座標
+ const resultLabelX=Math.min(Math.max(px+12,L+8),R-128);
+ const resultLabelY=Math.min(Math.max(py-48,T+8),B-43);
+
+ s+=`<line x1="${px}" y1="${py}" x2="${px+13}" y2="${py-20}" stroke="#b31324" stroke-width="2"/><circle cx="${px}" cy="${py}" r="8" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="122" height="37" rx="5" fill="#b80c20" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+61}" y="${resultLabelY+14}" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="800">本次結果位置</text><text x="${resultLabelX+61}" y="${resultLabelY+28}" text-anchor="middle" font-size="9.5" fill="#fff">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+
+ // 座標軸與高低提示
+ s+=`<path d="M ${L} ${B+1} L ${R+8} ${B+1} l -8 -5 m 8 5 l -8 5" fill="none" stroke="#111827" stroke-width="2.2"/><path d="M ${L} ${B} L ${L} ${T-8} l -5 8 m 5 -8 l 5 8" fill="none" stroke="#111827" stroke-width="2.2"/>`;
+
+ s+=`<text x="${L}" y="${B+20}" font-size="10.5" fill="#263746">低</text><text x="${R}" y="${B+20}" text-anchor="end" font-size="10.5" fill="#263746">高</text><text x="${L-12}" y="${T+5}" text-anchor="end" font-size="10.5" fill="#263746">高</text><text x="${L-12}" y="${B}" text-anchor="end" font-size="10.5" fill="#263746">低</text>`;
+
+ svg.innerHTML=s;
+}
+/* //////////////////////////////////////////////////////////////
+   JS 模組 D / 雷達圖
+   只修改雷達圖 SVG、刻度、標籤與配色時，編輯此函式。
+   ////////////////////////////////////////////////////////////// */
+function drawRadar(){
+ const svg=document.getElementById('liveRadar'),cx=160,cy=116,r=75,angles=[-90,0,90,180];
+ const pt=(rr,a)=>[cx+Math.cos(a*Math.PI/180)*rr,cy+Math.sin(a*Math.PI/180)*rr];
+ let s='';
+ for(let i=1;i<=5;i++){const pts=angles.map(a=>pt(r*i/5,a).map(n=>n.toFixed(1)).join(',')).join(' ');s+=`<polygon points="${pts}" fill="none" stroke="#bfcbd5" stroke-width="1"/>`;s+=`<text x="${cx+5}" y="${cy-r*i/5+3}" font-size="8" fill="#657487">${i}</text>`;}
+ angles.forEach(a=>{const p=pt(r,a);s+=`<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="#bfcbd5"/>`;});
+ const pts=dims.map((d,i)=>pt(r*means[d.key]/5,angles[i]));
+ s+=`<polygon points="${pts.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="#ef454533" stroke="#e33440" stroke-width="2"/>`;
+ pts.forEach(p=>s+=`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#e33440"/>`);
+ s+=`<text x="${cx}" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#18365c">Mirror ${means.mirror.toFixed(1)}</text><text x="250" y="${cy+4}" font-size="11" font-weight="700" fill="#18365c">Matrix ${means.matrix.toFixed(1)}</text><text x="${cx}" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#18365c">Flow ${means.flow.toFixed(1)}</text><text x="68" y="${cy+4}" text-anchor="end" font-size="11" font-weight="700" fill="#18365c">Safety ${means.safe.toFixed(1)}</text>`;
+ svg.innerHTML=s;
+}
+/* //////////////////////////////////////////////////////////////
+   JS 模組 E / 分數長條圖
+   只修改長條、數值標籤與刻度時，編輯此函式。
+   ////////////////////////////////////////////////////////////// */
+function drawBars(){
+ const svg=document.getElementById('liveBars'),x0=90,w=285,y0=34,row=44;let s='';
+ for(let t=0;t<=5;t++){const xx=x0+w*t/5;s+=`<line x1="${xx}" y1="23" x2="${xx}" y2="211" stroke="#d2dbe3"/><text x="${xx}" y="228" text-anchor="middle" font-size="10" fill="#41566b">${t}</text>`;}
+ const threshold=x0+w*3.5/5;s+=`<line x1="${threshold}" y1="20" x2="${threshold}" y2="211" stroke="#555" stroke-dasharray="4 4"/><text x="${threshold}" y="13" text-anchor="middle" font-size="9" fill="#4b5563">3.5參考門檻</text>`;
+ dims.forEach((d,i)=>{const v=means[d.key],yy=y0+i*row,bw=w*v/5;s+=`<text x="${x0-8}" y="${yy+15}" text-anchor="end" font-size="11" fill="#18365c">${d.name}</text><rect x="${x0}" y="${yy}" width="${bw}" height="22" rx="2" fill="${d.color}"/><text x="${x0+bw+5}" y="${yy+15}" font-size="11" font-weight="700" fill="${v<2.5?'#d32635':v<3.5?'#9b5b10':'#176b35'}">${v.toFixed(1)}</text>`;});
+ svg.innerHTML=s;
+}
+/* //////////////////////////////////////////////////////////////
+   JS 模組 F / 數據導向診斷文字
+   更新警訊、組合判讀、反思問題與判讀界線，請改此函式。
+   ////////////////////////////////////////////////////////////// */
+
+/* //////////////////////////////////////////////////////////////
+   JS 模組 F / 數據導向診斷文字（組合判讀修正版）
+   僅修改本模組：
+   1. 高優先警訊
+   2. 構面組合判讀
+   3. 經驗核對問題
+   4. 判讀界線
+
+   分數定義：
+   0–5 分制；每構面原始分數 0–25，平均分數 = 原始分數 / 5。
+   低分：< 2.5；極低分：< 1.5；相對高分：>= 3.5。
+   以上為本工具的操作性參考門檻，不代表已驗證的常模。
+   ////////////////////////////////////////////////////////////// */
+function renderText() {
+  const LOW = 2.5;
+  const VERY_LOW = 1.5;
+  const HIGH = 3.5;
+  const GAP = 0.8;
+
+  const scoreList = [
+    { key: 'mirror', name: 'Mirror', zh: '問題覺察／回饋', value: means.mirror },
+    { key: 'matrix', name: 'Matrix', zh: '組織結構／責任承接', value: means.matrix },
+    { key: 'flow', name: 'Flow', zh: '資訊流動／協作', value: means.flow },
+    { key: 'safe', name: 'Safety', zh: '心理安全／表達意見', value: means.safe }
+  ];
+
+  const get = key => means[key];
+  const fmt = key => `${scoreList.find(d => d.key === key).name}（${get(key).toFixed(1)}/5）`;
+  const isLow = key => get(key) < LOW;
+  const isVeryLow = key => get(key) < VERY_LOW;
+  const isHigh = key => get(key) >= HIGH;
+
+  const lowItems = scoreList.filter(d => d.value < LOW);
+  const veryLowItems = scoreList.filter(d => d.value < VERY_LOW);
+  const minValue = Math.min(...scoreList.map(d => d.value));
+  const maxValue = Math.max(...scoreList.map(d => d.value));
+  const spread = maxValue - minValue;
+
+  /* A. 高優先警訊：依低分嚴重度呈現，不直接推定成因 */
+  let highPriority = '';
+
+  if (veryLowItems.length > 0) {
+    highPriority = `
+      <p><b>高優先警訊｜${veryLowItems.map(d => d.name).join('、')}落在極低分區：</b>
+      ${veryLowItems.map(d => `${d.name} 為 ${d.value.toFixed(1)}/5`).join('；')}。
+      這些面向值得優先對照實際事件，確認是否存在反覆出現、未獲回應或處理後沒有追蹤的工作經驗。
+      極低分代表本次自評特別不利，不能單憑分數認定問題成因、影響範圍或發生頻率。</p>`;
+  } else if (lowItems.length > 0) {
+    highPriority = `
+      <p><b>高優先警訊｜多個構面低於參考中點：</b>
+      ${lowItems.map(d => `${d.name}（${d.value.toFixed(1)}/5）`).join('、')}。
+      建議優先核對這些面向是否在同一個工作事件中同時出現，或分別發生於不同情境。
+      分數只能指出需要調查的方向，不能直接證明組織已存在特定問題。</p>`;
   } else {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 ${lowest.name} 最低）：</b> 請描述近期在該構面上遭遇的最具體卡點與感受。`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為突破此卡點最需要調整的資源或心態是什麼？`;
+    highPriority = `
+      <p><b>高優先警訊｜沒有構面低於本工具設定的參考中點：</b>
+      這不等於沒有風險。整體平均可能掩蓋特定題項、部門或工作情境的落差；
+      建議仍對照具體事件及各題回答，不宜只依構面平均判定組織狀態。</p>`;
   }
-}
 
-function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
-  const svg = document.getElementById('quadrantChart');
-  if(!svg) return;
-  const L=65, R=650, T=40, B=480, W=R-L, H=B-T;
-  const x = v => L + (v/5)*W, y = v => B - (v/5)*H;
-  const px = x(quadrantX), py = y(quadrantY);
+  /* B. 組合判讀：先判斷多構面交互關係，再判斷單一落差 */
+  const findings = [];
+  const questions = [];
 
-  let svgContent = `<defs>
-    <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ffe891"/>
-      <stop offset="60%" stop-color="#fff4b0"/>
-      <stop offset="100%" stop-color="#ffc785"/>
-    </linearGradient>
-    <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#abfcc2"/>
-      <stop offset="50%" stop-color="#4ae899"/>
-      <stop offset="100%" stop-color="#b4f8e6"/>
-    </linearGradient>
-    <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ff757b"/>
-      <stop offset="45%" stop-color="#ff9b8e"/>
-      <stop offset="100%" stop-color="#ffe2e7"/>
-    </linearGradient>
-    <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#e0efff"/>
-      <stop offset="45%" stop-color="#3cc6ff"/>
-      <stop offset="100%" stop-color="#bceeff"/>
-    </linearGradient>
-    <radialGradient id="qpeak">
-      <stop offset="0%" stop-color="#23f088" stop-opacity=".95"/>
-      <stop offset="40%" stop-color="#41eeb0" stop-opacity=".75"/>
-      <stop offset="70%" stop-color="#22d5ef" stop-opacity=".35"/>
-      <stop offset="100%" stop-color="#22d5ef" stop-opacity="0"/>
-    </radialGradient>
-    <clipPath id="qclip">
-      <rect x="${L}" y="${T}" width="${W}" height="${H}"/>
-    </clipPath>
-  </defs>`;
-
-  const midX = x(2.5), midY = y(2.5);
-
-  svgContent += `
-  <rect x="${L}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q2bg)"/>
-  <rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/>
-  <rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/>
-  <rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>
-
-  <g clip-path="url(#qclip)">
-    <ellipse cx="${x(3.75)}" cy="${y(4.15)}" rx="220" ry="180" fill="url(#qpeak)"/>`;
-
-  for (let i = 0; i < 20; i++) {
-    const yy = T + 70 + i * 20;
-    const rise = 180 - i * 4.2;
-    const peakX = x(3.3) + i * 1.8;
-    const peakY = yy - rise;
-    svgContent += `<path d="M ${L-10} ${yy+40} C ${L+90} ${yy-30}, ${x(1.6)} ${yy-15}, ${x(2.35)} ${peakY+60} S ${peakX-25} ${peakY-30}, ${peakX} ${peakY} S ${x(4.2)} ${peakY+45}, ${R+15} ${yy-70}" fill="none" stroke="#ffffff" stroke-width="${i%3===0 ? 1.8 : 1.1}" stroke-opacity="${i%3===0 ? .82 : .45}"/>`;
+  // 組合 1：Mirror 與 Safety 同時偏低
+  // 問題不只可能在看見問題，也可能在提出問題的意願或回應經驗。
+  if (isLow('mirror') && isLow('safe')) {
+    findings.push(`
+      <b>Mirror 與 Safety 同時偏低｜問題不容易浮現，也未必容易被提出：</b>
+      ${fmt('mirror')}、${fmt('safe')}。
+      值得核對的是：問題是否能被辨識，以及成員提出疑慮後是否認為會得到認真處理。
+      若實際經驗吻合，管理端可能較難取得完整回饋；但這需要透過具體事件、不同角色的說法或紀錄確認。`);
+    questions.push('最近一次問題被發現時，是否有人提出？若沒有，是未察覺、認為不重要，還是擔心提出後沒有作用？');
   }
-  svgContent += `<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.75)} ${y(4.15)}" fill="none" stroke="#172b24" stroke-width="2.4" stroke-dasharray="7 5"/>`;
-  svgContent += `</g>`;
 
-  svgContent += `<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
+  // 組合 2：Matrix 低、Flow 相對高
+  // 資訊流動自評較高，不等於權責與決策責任清楚。
+  if (isLow('matrix') && isHigh('flow')) {
+    findings.push(`
+      <b>Flow 相對高、Matrix 偏低｜資訊有傳遞，不代表責任已承接：</b>
+      ${fmt('flow')}，但 ${fmt('matrix')}。
+      即使資訊能傳到相關人員手中，仍需核對誰有權決定、誰負責處理，以及何時回覆。
+      這種分數差異提示「資訊傳遞」與「責任承接」可能不是同一個問題，不能據此斷定實際流程一定失效。`);
+    questions.push('資訊傳到相關人員後，是否有明確負責人、決策者、完成期限與回覆紀錄？');
+  }
 
-  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="32" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+21}" text-anchor="middle" font-size="14" font-weight="900" fill="#182a27">${label}</text>`;
+  // 組合 3：Matrix 高、Flow 低
+  // 制度／分工評價較高，資訊交接自評較低。
+  if (isHigh('matrix') && isLow('flow')) {
+    findings.push(`
+      <b>Matrix 相對高、Flow 偏低｜分工安排較有基礎，但資訊交接仍值得查核：</b>
+      ${fmt('matrix')}，但 ${fmt('flow')}。
+      可核對流程規定、工作分工與實際交接是否一致，特別是資訊更新、跨部門傳遞及異常回報。
+      分數反映填答者的相對評價，不足以證明制度設計本身有缺陷。`);
+    questions.push('最近一次跨人員或跨部門交接時，是否發生資訊延遲、版本不一致或需要反覆確認？');
+  }
 
-  svgContent += pill(L+15, T+15, 235, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
-  svgContent += pill(midX+15, T+15, 235, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
-  svgContent += pill(L+15, midY+15, 235, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
-  svgContent += pill(midX+15, midY+15, 235, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
+  // 組合 4：Flow 高、Safety 低
+  // 例行資訊順暢，不代表壞消息或異議也能安全表達。
+  if (isHigh('flow') && isLow('safe')) {
+    findings.push(`
+      <b>Flow 相對高、Safety 偏低｜一般資訊流動與提出異議的安全感需分開看：</b>
+      ${fmt('flow')}，但 ${fmt('safe')}。
+      可核對例行工作資訊是否傳遞順暢，同時確認錯誤、壞消息、不同意見是否也能被提出與回應。
+      不宜把資訊傳得快，直接等同於成員敢說真話。`);
+    questions.push('一般進度資訊能否順利傳遞？若內容是錯誤、風險或反對意見，回應方式是否不同？');
+  }
 
-  svgContent += `<g font-size="12.5" font-weight="600" fill="#22332e">
-    <text x="${L+18}" y="${T+66}"><tspan x="${L+18}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+18}" dy="19">• 但對風險與問題覺察不足</tspan><tspan x="${L+18}" dy="19">• 需補足感知面機制</tspan></text>
-    <text x="${midX+18}" y="${T+66}"><tspan x="${midX+18}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+18}" dy="19">• 流程順暢、發聲安全</tspan><tspan x="${midX+18}" dy="19">• 支持協作與持續學習</tspan></text>
-    <text x="${L+18}" y="${midY+66}"><tspan x="${L+18}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+18}" dy="19">• 流動受阻、發聲不足</tspan><tspan x="${L+18}" dy="19">• 優先建立回報與支持</tspan></text>
-    <text x="${midX+18}" y="${midY+66}"><tspan x="${midX+18}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+18}" dy="19">• 但未有效轉化為行動</tspan><tspan x="${midX+18}" dy="19">• 強化資源配置與追蹤</tspan></text>
-  </g>`;
+  // 組合 5：Mirror 高、Matrix 低
+  // 問題辨識相對較高，責任承接較弱。
+  if (isHigh('mirror') && isLow('matrix')) {
+    findings.push(`
+      <b>Mirror 相對高、Matrix 偏低｜問題可能被辨識，但責任與決策安排仍需核對：</b>
+      ${fmt('mirror')}，但 ${fmt('matrix')}。
+      可檢查問題被提出後，是否出現等待核准、責任歸屬不清或處理權限不足的情況。
+      這是待核對的工作機制，不代表一定有人推卸責任。`);
+    questions.push('問題已被指出後，是否仍因權限、責任人或決策程序不清楚而延宕？');
+  }
 
-  const resultLabelX = Math.min(Math.max(px-70, L+5), R-145);
-  const resultLabelY = Math.min(Math.max(py-56, T+5), B-50);
+  // 組合 6：Safety 高、Matrix 低
+  // 願意表達與組織能否承接意見是兩個面向。
+  if (isHigh('safe') && isLow('matrix')) {
+    findings.push(`
+      <b>Safety 相對高、Matrix 偏低｜意見可能說得出來，但後續承接仍需確認：</b>
+      ${fmt('safe')}，但 ${fmt('matrix')}。
+      可核對成員提出建議或風險後，是否有人決定優先順序、分配責任並追蹤結果。
+      願意發言不代表組織已具備清楚的執行與決策機制。`);
+    questions.push('成員提出建議後，是否能知道由誰決定、何時處理，以及最後結果如何？');
+  }
 
-  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-24}" stroke="#c90020" stroke-width="2.3"/><circle cx="${px}" cy="${py}" r="10" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="140" height="40" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+70}" y="${resultLabelY+16}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+70}" y="${resultLabelY+32}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+  // 組合 7：Safety 高、Flow 低
+  // 願意說話不等於訊息能完整到達。
+  if (isHigh('safe') && isLow('flow')) {
+    findings.push(`
+      <b>Safety 相對高、Flow 偏低｜願意表達與資訊有效傳遞可能存在落差：</b>
+      ${fmt('safe')}，但 ${fmt('flow')}。
+      可核對成員是否願意提出問題，但資訊在交接、彙整、更新或跨部門傳遞時仍可能遺漏。
+      應分別檢查「有沒有說」與「訊息有沒有到達需要處理的人」。`);
+    questions.push('問題提出後，是否有被正確記錄、轉交給適當窗口，並收到回覆？');
+  }
 
-  svgContent += `<path d="M ${L-5} ${B} L ${R+15} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
-  svgContent += `<text x="${L}" y="${B+24}" font-size="12" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="12" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">5 (高)</text>`;
-  svgContent += `<text x="${L-12}" y="${B}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">0</text><text x="${L-12}" y="${midY}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">2</text><text x="${L-12}" y="${T}" text-anchor="end" font-size="12" font-weight="700" fill="#263746">5 (高)</text>`;
+  // 組合 8：Mirror 與 Flow 同時偏低
+  // 問題辨識及資訊流動皆需核對。
+  if (isLow('mirror') && isLow('flow')) {
+    findings.push(`
+      <b>Mirror 與 Flow 同時偏低｜問題辨識與資訊交接都值得優先核對：</b>
+      ${fmt('mirror')}、${fmt('flow')}。
+      可確認問題是否被不同角色以不同方式理解，以及相關資訊是否及時傳到需要處理的人。
+      兩個面向同時偏低不代表彼此存在因果關係，應透過事件順序確認實際瓶頸。`);
+    questions.push('最近一次問題從發現、回報到處理，在哪個環節出現理解落差或資訊中斷？');
+  }
 
-  svgContent += `<text x="${L-42}" y="${(T+B)/2}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-42} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
-  svgContent += `<text x="${(L+R)/2}" y="${B+46}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
+  // 組合 9：四構面差距大
+  // 只有當分差達門檻時才提示不均衡，不把它當成因果證據。
+  if (spread >= GAP) {
+    const highest = [...scoreList].filter(d => d.value === maxValue);
+    const lowest = [...scoreList].filter(d => d.value === minValue);
+    findings.push(`
+      <b>構面落差｜相對高分與低分面向並不一致：</b>
+      相對較高為 ${highest.map(d => `${d.name}（${d.value.toFixed(1)}）`).join('、')}；
+      相對較低為 ${lowest.map(d => `${d.name}（${d.value.toFixed(1)}）`).join('、')}；
+      最大差距 ${spread.toFixed(1)} 分。
+      建議確認這些評價是否來自同一工作流程，或是不同角色、部門及情境造成的差異。
+      分數差距本身不代表構面間存在因果關係。`);
+    questions.push('高分與低分面向是否發生在同一個事件？不同角色對同一事件的評價是否一致？');
+  }
 
-  // ----------------------------------------------------
-  // 右側詳細分析面板
-  // ----------------------------------------------------
-  const rx = 670, rw = 330;
-  svgContent += `
-    <rect x="${rx}" y="${T}" width="${rw}" height="${H}" rx="8" fill="#f8f4ff" stroke="#d5bcff" stroke-width="1.5"/>
-    <rect x="${rx}" y="${T}" width="${rw}" height="40" rx="8" fill="#521493"/>
-    <text x="${rx+rw/2}" y="${T+26}" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">本次數據落點判讀</text>
-    
-    <rect x="${rx+12}" y="${T+52}" width="${rw-24}" height="116" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+22}" y="${T+72}" font-size="12" font-weight="900" fill="#521493">計算公式（分數轉換為 0-5 尺度）</text>
-    <text x="${rx+22}" y="${T+93}" font-size="11.5" font-weight="700" fill="#333">Awareness = (Mirror + Safety) / 2</text>
-    <text x="${rx+45}" y="${T+112}" font-size="11.5" font-weight="700" fill="#7012ca">= (${m} + ${s_val}) / 2 = <b>${m+s_val}</b> / 25 = <b>${quadrantX.toFixed(1)} / 5</b></text>
-    <text x="${rx+22}" y="${T+135}" font-size="11.5" font-weight="700" fill="#333">Action = (Matrix + Flow) / 2</text>
-    <text x="${rx+45}" y="${T+154}" font-size="11.5" font-weight="700" fill="#7012ca">= (${mx} + ${f}) / 2 = <b>${mx+f}</b> / 25 = <b>${quadrantY.toFixed(1)} / 5</b></text>
+  // 若沒有任何特定組合，仍提供有依據的最低分判讀。
+  if (findings.length === 0) {
+    const lowest = scoreList.filter(d => d.value === minValue);
+    findings.push(`
+      <b>犀利判讀｜從最低分面向開始核對：</b>
+      ${lowest.map(d => `${d.name}（${d.value.toFixed(1)}/5）`).join('、')}是本次相對較低的面向。
+      建議從最近一次具體事件確認問題在哪個環節發生，而不是僅依總分推斷組織狀態。`);
+    questions.push('最近一次工作問題從發現到處理，哪個環節最需要補充具體事實？');
+  }
 
-    <rect x="${rx+12}" y="${T+178}" width="149" height="56" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+86}" y="${T+198}" text-anchor="middle" font-size="12" font-weight="900" fill="#521493">Awareness</text>
-    <text x="${rx+86}" y="${T+224}" text-anchor="middle" font-size="15" font-weight="900" fill="#d93838">${quadrantX.toFixed(1)} / 5 <tspan font-size="10.5" font-weight="700" fill="#e05650">${quadrantX<2.5?'相對偏低':'偏高'}</tspan></text>
+  /* C. 反思題：由低分構面產生，避免一律顯示相同問題 */
+  const reflection = [];
 
-    <rect x="${rx+169}" y="${T+178}" width="149" height="56" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+243}" y="${T+198}" text-anchor="middle" font-size="12" font-weight="900" fill="#521493">Action</text>
-    <text x="${rx+243}" y="${T+224}" text-anchor="middle" font-size="15" font-weight="900" fill="#d93838">${quadrantY.toFixed(1)} / 5 <tspan font-size="10.5" font-weight="700" fill="#e05650">${quadrantY<2.5?'偏低':'偏高'}</tspan></text>
+  if (isLow('mirror')) {
+    reflection.push('問題是否容易被看見、承認，且不同角色對問題的理解是否接近？');
+  }
+  if (isLow('matrix')) {
+    reflection.push('責任人、決策權、處理期限及後續追蹤是否清楚？');
+  }
+  if (isLow('flow')) {
+    reflection.push('資訊是否完整傳到正確的人，交接後是否有確認與回覆？');
+  }
+  if (isLow('safe')) {
+    reflection.push('提出疑慮、承認錯誤或表達不同意見時，對方如何回應？');
+  }
 
-    <rect x="${rx+12}" y="${T+244}" width="${rw-24}" height="35" rx="6" fill="#7012ca"/>
-    <text x="${rx+rw/2}" y="${T+267}" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">所在象限：${quadrantX<2.5?(quadrantY<2.5?'第三象限｜失衡風險區':'第二象限｜潛能未釋放區'):(quadrantY<2.5?'第四象限｜看見未轉化區':'第一象限｜最佳運作區')}</text>
+  const questionText = [...new Set([...questions, ...reflection])];
 
-    <rect x="${rx+12}" y="${T+289}" width="${rw-24}" height="184" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+22}" y="${T+311}" font-size="12.5" font-weight="900" fill="#521493">數據落點解讀</text>
-    
-    <text x="${rx+22}" y="${T+335}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">①</tspan> 整體感知與行動能力均偏低，顯示組織存在明顯風險。</text>
-    <text x="${rx+22}" y="${T+366}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">②</tspan> Matrix 評分較高，但 Flow 仍偏低，<tspan x="${rx+38}" dy="15">可能影響機制落實與跨部門協作。</tspan></text>
-    <text x="${rx+22}" y="${T+410}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">③</tspan> Mirror 與 Safety 均偏低，顯示問題<tspan x="${rx+38}" dy="15">辨識與員工覺察不足。</tspan></text>
-    <text x="${rx+22}" y="${T+454}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">④</tspan> 需進一步強化跨部門行動力，並優化資訊流動。</text>
+  const output = `
+    ${highPriority}
+    <p><b>犀利判讀｜依本次分數組合：</b></p>
+    <ul>${findings.map(item => `<li>${item}</li>`).join('')}</ul>
+    <p><b>請對照自己的經驗：</b></p>
+    <ul>${questionText.map(q => `<li>${q}</li>`).join('')}</ul>
+    <p><b>判讀界線：</b>
+    本分析依四構面自評分數及預先設定的操作性門檻，提供待核對的解讀方向。
+    同一組合可能有不同成因；低分不等於問題必然存在，高分也不等於沒有問題。
+    本分析不能單獨證明因果關係、統計顯著性或整個組織的普遍狀態。
+    實際判斷仍需結合題項回答、具體事件、不同角色的經驗及其他可用資料。</p>
   `;
 
-  svg.innerHTML = svgContent;
+  document.getElementById('dynamicInterpretation').innerHTML = output;
 }
 
-function runConsultantAnalysis() {
-  let ans1 = document.getElementById('qual-ans-1').value.trim();
-  let ans2 = document.getElementById('qual-ans-2').value.trim();
+/* //////////////////////////////////////////////////////////////
+   JS 模組 H / 下一步行動指南
+   僅更新行動指南，不修改其他模組。
+   使用既有的 means、dims 資料。
+   ////////////////////////////////////////////////////////////// */
 
-  let m = document.getElementById('mirror').value;
-  let mx = document.getElementById('matrix').value;
-  let f = document.getElementById('flow').value;
-  let s = document.getElementById('safe').value;
-  let lowName = window.lowestDimName || 'Flow';
-  let lowScore = (lowName === 'Flow') ? f : (lowName === 'Safety') ? s : (lowName === 'Mirror') ? m : mx;
+function renderActionGuide() {
+  const target = document.getElementById('actionGuideContent');
+  if (!target) return;
 
-  let tbody = document.getElementById('stage3-tbody');
-  
-  let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
-  let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
+  const LOW = 2.5;
 
-  let rel1 = ans1 ? `質性文本提及「專案時程延遲、缺乏即時回饋」[cite: 3]，與 Flow 低分（${f}分）完全呼應。` : `未填寫具體情境，系統依據 Flow 量化低分推論：跨部門溝通存在雜訊與版本落差[cite: 3]。`;
-  let feedback1 = `依據 <b>Shannon & Weaver (1949) 資訊傳播模型</b>[cite: 3]，建議重新檢視通道雜訊與編解碼機制。`;
+  const actions = {
+    mirror: {
+      name: 'Mirror｜問題覺察與回饋',
+      problem: '確認問題是否被發現、提出，以及回饋後是否獲得回應。',
+      cause: '檢查問題回報紀錄、主管回應情形及改善事項是否結案。',
+      plan: '建立問題清單，指定回覆人、處理期限與追蹤方式。',
+      metric: '回報回覆率、改善事項結案率。'
+    },
+    matrix: {
+      name: 'Matrix｜制度、權責與資源',
+      problem: '確認工作分工、決策權限及資源配置是否清楚。',
+      cause: '檢查案件延誤、責任不明、等待核准及跨部門協調紀錄。',
+      plan: '明確指定執行人、決策者、協調窗口及完成期限。',
+      metric: '責任明確率、逾期案件數、待決事項數。'
+    },
+    flow: {
+      name: 'Flow｜資訊流動與協作',
+      problem: '確認資訊是否完整、及時地傳遞給需要處理的人。',
+      cause: '檢查資訊延遲、交接遺漏、版本不一致及回覆紀錄。',
+      plan: '建立資訊交接確認、回覆時限與異常升級流程。',
+      metric: '交接完成率、平均回覆時間、重複確認次數。'
+    },
+    safe: {
+      name: 'Safety｜心理安全與表達意見',
+      problem: '確認成員是否能提出疑慮、承認錯誤及表達不同意見。',
+      cause: '核對問題提出後的實際回應、處理過程與保密機制。',
+      plan: '建立保密及反報復的回報機制，並明確回覆處理結果。',
+      metric: '問題回覆率、處理時效、後續回饋。'
+    }
+  };
 
-  let rel2 = ans2 ? `質性文本提及「高壓主管在場、不敢指出結構性問題」[cite: 3]，直接呼應 Safety 低分（${s}分）。` : `未填寫補充說明，系統依據 Safety 量化低分推論：組織內部存在防禦性發聲障礙[cite: 3]。`;
-  let feedback2 = `依據 <b>Edmondson (1999) 心理安全感模型</b>[cite: 3]，建議推動無咎責機制，降低發聲焦慮。`;
+  const ordered = dims
+    .map(d => ({
+      ...d,
+      score: Number(means[d.key])
+    }))
+    .sort((a, b) => a.score - b.score);
 
-  tbody.innerHTML = `
-    <tr>
-      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分 (偏低)[cite: 3]</td>
-      <td><b>Q1 填答與關聯性：</b><br>${q1Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel1}</small></td>
-      <td><b>文獻對策回饋：</b><br>${feedback1}</td>
-      <td><b>建議佐證資料／量表：</b><br>• EVQ 資訊流動量表[cite: 3]<br>• 跨部門事件紀錄與交接日誌[cite: 5]</td>
-      <td><b>規劃建議與時程（顧問可調整）：</b><br>可標示資訊交接點、回覆時限、責任人與升級處理路徑[cite: 5]。<br><b>建議時程：</b>0-30 天先蒐集基線資料；30-90 天追踪行動結果[cite: 5]。</td>
-    </tr>
-    <tr>
-      <td><b>輔助對照構面 (Matrix & Safety)</b><br>量化分數：Matrix(${mx}) / Safety(${s})[cite: 3]</td>
-      <td><b>Q2 填答與關聯性：</b><br>${q2Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel2}</small></td>
-      <td><b>文獻對策回饋：</b><br>${feedback2}</td>
-      <td><b>建議佐證資料／量表：</b><br>• PSY-12 團隊心理安全量表[cite: 3]<br>• OCAI 組織文化量表[cite: 3]</td>
-      <td><b>規劃建議與時程（顧問可調整）：</b><br>可盤點責任歸屬、決策權限與跨部門交接節點[cite: 5]。<br><b>建議時程：</b>0-30 天先蒐集基線資料；30-90 天追踪行動結果[cite: 5]。</td>
-    </tr>
-  `;
+  const lowItems = ordered.filter(d => d.score < LOW);
 
-  document.getElementById('stage3-sec').style.display = 'block';
-  let nav3 = document.getElementById('nav-stage3');
-  nav3.innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
-  setTimeout(() => { scrollToSection('stage3-sec'); }, 400);
+  // 若有低分構面，優先呈現；否則以最低分構面作為檢核起點。
+  const priorityItems = lowItems.length
+    ? lowItems
+    : ordered.filter(d => d.score === ordered[0].score);
+
+  const selected = priorityItems[0];
+  const action = actions[selected.key];
+
+  // 第一步：依本次分數確認優先問題。
+  const step1 = lowItems.length
+    ? `優先確認 ${priorityItems.map(d =>
+        `${d.name}（${d.score.toFixed(1)}/5）`
+      ).join('、')} 的實際工作情境。`
+    : `目前沒有構面低於 2.5/5，先檢核相對最低的 ${selected.name}（${selected.score.toFixed(1)}/5），確認是否存在未被平均分數呈現的問題。`;
+
+  // 第二步：針對優先構面分析原因。
+  const step2 = `${action.name}：${action.cause}`;
+
+  // 第三步：形成具體改善方案。
+  const step3 = `${action.plan} 建議追蹤指標：${action.metric}`;
+
+  // 第四步：以固定週期檢查改善成果。
+  const step4 = lowItems.length
+    ? `建議於 30 天內檢視改善進度，核對指標是否改善；若未改善，重新確認原因與措施。`
+    : `建議於 30 天內重新檢視工作事件與追蹤指標，確認現有做法是否有效，並持續改善。`;
+
+  const steps = [
+    ['問題確認', step1],
+    ['原因分析', step2],
+    ['改善計畫', step3],
+    ['追蹤評估', step4]
+  ];
+
+  // 將動態文字安全地插入 HTML。
+  const escapeHTML = text => String(text).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+
+  target.innerHTML = steps.map((step, index) => `
+    <div class="step">
+      <span class="n">${index + 1}</span>
+      <div>
+        <strong>${escapeHTML(step[0])}</strong>
+        ${escapeHTML(step[1])}
+      </div>
+    </div>
+  `).join('');
 }
 
-function unlockStage4() {
-  document.getElementById('stage4-sec').style.display = 'block';
-  let nav4 = document.getElementById('nav-stage4');
-  nav4.style.opacity = '1';
-  nav4.innerHTML = '<span>4</span>總結與建議 (已解鎖)';
-  setTimeout(() => { scrollToSection('stage4-sec'); }, 400);
-}
+/* //////////////////////////////////////////////////////////////
+   JS 模組 H 結束
+   ////////////////////////////////////////////////////////////// */
 
-window.onload = function() {
-  runSimulation();
-};
-</script></body></html>
-```[cite: 3, 5, 14]
+/* //////////////////////////////////////////////////////////////
+   JS 模組 G / 啟動區
+   一般只需呼叫各模組，不建議在此加入診斷內容。
+   ////////////////////////////////////////////////////////////// */
+drawQuadrant();drawRadar();drawBars();renderText();renderActionGuide();
+})();
+   
+/* 診斷日期：使用報告產生時的日期 */
+const now = new Date();
+const formattedDate =
+  `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+
+document.getElementById('diagnosisDate').textContent = formattedDate;
+
+</script>
+</body>
+</html>
+
