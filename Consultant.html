@@ -6,7 +6,7 @@
 .top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:16px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-bottom:4px solid #b67afb}
 .top h1{font-size:clamp(22px,2.5vw,32px);margin:0;white-space:nowrap}
 .tagline{border-left:1px solid #c99bfc;padding-left:15px;font-size:14px;line-height:1.6;flex:1}
-main{max-width:1600px;margin:auto;padding:16px}
+main{max-width:1450px;margin:auto;padding:16px}
 
 /* 階段按鈕與流程指引列 */
 .stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:12px;padding:12px 18px;margin-bottom:16px;gap:10px;flex-wrap:wrap}
@@ -31,10 +31,10 @@ main{max-width:1600px;margin:auto;padding:16px}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:15px;width:100%}
 
-/* 一排三張卡片版面：確保寬度分配平均、內容不擠壓 */
-.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.65fr;gap:16px;align-items:stretch}
+/* 💡 修正：改為彈性自適應網格，在 100% 標準比例下自動完美排版，絕不跑版溢出 */
+.report-panel-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(360px, 1fr));gap:16px;align-items:stretch}
 .r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:12px;padding:16px;display:flex;flex-direction:column;min-width:0}
-.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:10px 12px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:14px;margin-bottom:12px;border-radius:6px}
+.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:10px 12px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:13.5px;margin-bottom:12px;border-radius:6px}
 .r-num{width:26px;height:26px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:13px;flex-shrink:0}
 
 /* 診斷摘要內部排版 */
@@ -53,17 +53,17 @@ main{max-width:1600px;margin:auto;padding:16px}
 .sub-box{font-size:13px;line-height:1.5}
 .sub-box ul{padding-left:18px;margin:6px 0}
 
-/* 四構面列表：調整欄位比例防擠壓 */
-.dim-row{display:grid;grid-template-columns:85px 75px 65px minmax(0,1fr);gap:6px;align-items:center;padding:8px 6px;margin-bottom:8px;border-radius:8px;background:#fff;border:1px solid #ecdffc}
-.dim-name{padding:6px 4px;color:white;border-radius:6px;font-weight:bold;font-size:11.5px;text-align:center;word-break:break-all}
+/* 四構面列表：固定最佳比例防擠壓 */
+.dim-row{display:grid;grid-template-columns:90px 75px 65px minmax(0,1fr);gap:6px;align-items:center;padding:8px 6px;margin-bottom:8px;border-radius:8px;background:#fff;border:1px solid #ecdffc}
+.dim-name{padding:6px 4px;color:white;border-radius:6px;font-weight:bold;font-size:11.5px;text-align:center}
 .dim-score{font-size:12.5px;font-weight:900;text-align:center;line-height:1.2}
 .dim-pill{padding:4px 4px;text-align:center;color:white;font-weight:bold;border-radius:4px;font-size:11px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
-.dim-desc{font-size:11.5px;color:#444;padding-left:4px;line-height:1.4;word-break:break-word}
+.dim-desc{font-size:11.5px;color:#444;padding-left:4px;line-height:1.4}
 
 /* 第三張卡片 (象限圖) */
-.plot-wrap{width:100%;height:100%;display:flex;align-items:center}
-#quadrantChart{display:block;width:100%;height:auto;max-height:500px}
+.plot-wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#quadrantChart{display:block;width:100%;height:auto;max-height:480px}
 
 /* 質性填答欄位 */
 .qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -77,7 +77,7 @@ main{max-width:1600px;margin:auto;padding:16px}
 .analysis-table td{padding:10px;border:1px solid #ebdffc;vertical-align:top;background:#fff;line-height:1.5}
 
 /* 模組四 6 大繽紛區塊 */
-.report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.report-grid-6{display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:14px}
 .report-card{border-radius:12px;padding:16px;border:1px solid #e0ebf5}
 .rc-1{background:linear-gradient(145deg,#f0fff8,#fff);border-color:#bcebd7}
 .rc-2{background:linear-gradient(145deg,#f4fbff,#fff);border-color:#b9dfff}
@@ -89,8 +89,8 @@ main{max-width:1600px;margin:auto;padding:16px}
 .rc-title span{background:#521493;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px}
 .report-card p{font-size:13px;line-height:1.5;margin:0}
 
-@media(max-width:1400px){.report-panel-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:850px){.qual-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.inputs-grid{grid-template-columns:1fr 1fr}.qual-grid{grid-template-columns:1fr}}
+@media(max-width:550px){.inputs-grid{grid-template-columns:1fr}}
 </style></head><body>
 
 <header class="top">
@@ -126,7 +126,7 @@ main{max-width:1600px;margin:auto;padding:16px}
       <button class="gen-btn" onclick="runSimulation()">送出並更新報告 ⚡</button>
     </div>
 
-    <!-- 一排三張卡片 -->
+    <!-- 三張自適應卡片 -->
     <div class="report-panel-grid">
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">1</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
@@ -549,4 +549,3 @@ window.onload = function() {
 };
 </script></body></html>
 ```[cite: 3, 5]
-
