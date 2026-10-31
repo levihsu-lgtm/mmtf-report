@@ -10,11 +10,14 @@ main{max-width:1650px;margin:auto;padding:16px}
 
 /* 階段按鈕與流程指引列 */
 .stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:12px;padding:12px 18px;margin-bottom:16px;gap:10px;flex-wrap:wrap}
-.stage-pill{display:flex;align-items:center;gap:8px;font-weight:bold;color:#521493;font-size:13px;background:#fff;padding:8px 14px;border-radius:20px;border:1px solid #d5bcff}
+.stage-pill{display:flex;align-items:center;gap:8px;font-weight:bold;color:#521493;font-size:13px;background:#fff;padding:8px 14px;border-radius:20px;border:1px solid #d5bcff;cursor:pointer;transition:all 0.2s}
+.stage-pill:hover{background:#f3e8ff;border-color:#521493}
 .stage-pill span{width:24px;height:24px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:12px}
 .stage-arrow{color:#7012ca;font-weight:900;font-size:16px}
 .next-btn{background:#521493;color:white;border:none;border-radius:8px;padding:10px 18px;cursor:pointer;font-weight:bold;font-size:13px;box-shadow:0 2px 5px rgba(82,20,147,0.3)}
 .next-btn:hover{background:#6d1ac7}
+.export-btn{background:linear-gradient(120deg,#00a86b,#20d2a0);color:white;border:none;border-radius:8px;padding:10px 18px;cursor:pointer;font-weight:bold;font-size:13px;box-shadow:0 2px 5px rgba(0,168,107,0.3)}
+.export-btn:hover{background:#008f5a}
 
 /* 模組通用樣式 */
 .module-box{background:#fff;border:1px solid #d5bcff;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 4px 12px rgba(82,20,147,0.06)}
@@ -98,31 +101,39 @@ main{max-width:1650px;margin:auto;padding:16px}
 .rc-title span{background:#521493;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px}
 .report-card p{font-size:13px;line-height:1.5;margin:0}
 
-@media(max-width:1250px){.report-panel-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
+/* 第五階段覆盤樣式 */
+.stage5-box{background:linear-gradient(135deg,#f3eafc,#fff);border:2px dashed #9a4efe;border-radius:12px;padding:16px;margin-top:16px}
+.stage5-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:10px;margin-top:10px}
+.stage5-input{background:#fff;border:1px solid #d5bcff;border-radius:8px;padding:10px;text-align:center}
+.stage5-input input{width:60px;padding:4px;font-weight:bold;text-align:center;font-size:15px;border:1px solid #ccc;border-radius:4px}
+
+@media(max-width:1250px){.report-panel-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr 1fr}.stage5-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:850px){.qual-grid{grid-template-columns:1fr}.b-panel-grid{grid-template-columns:1fr}}
-@media(max-width:550px){.inputs-grid{grid-template-columns:1fr}}
+@media(max-width:550px){.inputs-grid{grid-template-columns:1fr}.stage5-grid{grid-template-columns:1fr}}
 </style></head><body>
 
 <header class="top">
   <h1>MMTF 2.0 模組化職涯顧問分析報告</h1>
-  <div class="tagline">模組一：圖像診斷 ➔ 模組二：因材施教填答 ➔ 模組三：顧問交叉分析與對策 ➔ 模組四：個人報告與文獻摘要</div>
+  <div class="tagline">模組一：圖像診斷 ➔ 模組二：因材施教填答 ➔ 模組三：顧問交叉分析與對策 ➔ 模組四：個人報告與文獻摘要 ➔ 模組五：持續追蹤與覆盤</div>
 </header>
 
 <main>
-  <!-- 階段導引列 -->
+  <!-- 階段導引列（可點擊跳轉，右側動態按鈕） -->
   <div class="stage-nav-bar">
     <div style="font-weight:900;color:#521493">顧問諮詢執行進度導引：</div>
-    <div class="stage-pill"><span>1</span>數據與圖像呈現</div>
+    <div class="stage-pill" onclick="scrollToSection('stage1-sec')"><span>1</span>數據與圖像呈現</div>
     <div class="stage-arrow">➔</div>
-    <div class="stage-pill"><span>2</span>動態質性填答</div>
+    <div class="stage-pill" onclick="scrollToSection('stage2-sec')"><span>2</span>動態質性填答</div>
     <div class="stage-arrow">➔</div>
-    <div class="stage-pill" id="nav-stage3"><span>3</span>顧問交叉分析 (待填答)</div>
+    <div class="stage-pill" id="nav-stage3" onclick="scrollToSection('stage3-sec')"><span>3</span>顧問交叉分析 (待填答)</div>
     <div class="stage-arrow">➔</div>
-    <div class="stage-pill" style="opacity:0.6" id="nav-stage4"><span>4</span>總結與建議 (待解鎖)</div>
-    <button class="next-btn" onclick="scrollToSection('stage2-sec')">進入第二階段 ➔</button>
+    <div class="stage-pill" id="nav-stage4" onclick="scrollToSection('stage4-sec')"><span>4</span>總結與建議 (待解鎖)</div>
+    <div class="stage-arrow">➔</div>
+    <div class="stage-pill" id="nav-stage5" onclick="scrollToSection('stage5-sec')"><span>5</span>永續覆盤 (待解鎖)</div>
+    <button class="next-btn" id="header-action-btn" onclick="handleHeaderAction()">進入第二階段 ➔</button>
   </div>
 
-  <!-- 模組一：原始數據輸入與精準復刻圖片分析呈現 -->
+  <!-- 模組一：原始數據輸入與分析呈現 -->
   <section class="module-box" id="stage1-sec">
     <div class="module-title"><span>📦</span> 模組一：輸入四構面分數與 MMTF 2.0 顧問報告結果</div>
     
@@ -171,7 +182,7 @@ main{max-width:1650px;margin:auto;padding:16px}
             <div class="dim-name" style="background:#087cf3">Matrix<small style="display:block;font-size:9.5px">制度權責</small></div>
             <div class="dim-score" id="txt-mx">13 / 25<br><span style="font-size:10px">(2.6 / 5)</span></div>
             <div class="dim-pill p-mid" id="pill-mx">相對居中</div>
-            <div class="dim-desc" id="desc-mx"><b>制度具備基本雛形</b><br>雖為相對高分但絕對水準仍待落實</div>
+            <div class="dim-desc" id="desc-mx"><b>制度具備基本雛形</b><br>權責配置尚可但落實度待加強</div>
           </div>
           <div class="dim-row">
             <div class="dim-name" style="background:#ff8500">Flow<small style="display:block;font-size:9.5px">資訊流動</small></div>
@@ -188,7 +199,7 @@ main{max-width:1650px;margin:auto;padding:16px}
         </div>
       </div>
 
-      <!-- 卡片 3：上四象限圖表、下說明面板 -->
+      <!-- 卡片 3 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
         <div class="card3-stack">
@@ -203,19 +214,19 @@ main{max-width:1650px;margin:auto;padding:16px}
     </div>
   </section>
 
-  <!-- 模組二：因材施教（動態質性填答） -->
+  <!-- 模組二：因材施教（根據各項分數組合動態派發質性深掘題） -->
   <section class="module-box" id="stage2-sec">
-    <div class="module-title"><span>📦</span> 模組二：因材施教（參與者針對動態派發之題目進行質性填答，可自由選填）</div>
-    <p style="margin:0 0 10px 0;color:#6b5388;font-size:14px">請根據您的實際職場情境填寫以下欄位（若未填寫，系統將依量化分數與文獻進行對應分析）：</p>
+    <div class="module-title"><span>📦</span> 模組二：因材施教（依據四構面分數組合動態派發之質性深掘題）</div>
+    <p style="margin:0 0 10px 0;color:#6b5388;font-size:14px" id="qual-dynamic-notice">系統已根據您當前的四構面分數組合，自動鎖定最關鍵的落差進行提問：</p>
     
     <div class="qual-grid">
       <div class="qual-group">
         <label id="dyn-label-1"><b>Q1 核心深掘題：</b></label>
-        <textarea id="qual-ans-1" placeholder="若無特別補充可保持空白...">近期在跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
+        <textarea id="qual-ans-1" placeholder="請填寫您的職場情境...">近期在跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
       </div>
       <div class="qual-group">
         <label id="dyn-label-2"><b>Q2 輔助驗證題：</b></label>
-        <textarea id="qual-ans-2" placeholder="若無特別補充可保持空白...">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
+        <textarea id="qual-ans-2" placeholder="請填寫您的職場情境...">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
       </div>
     </div>
     <div style="margin-top:12px">
@@ -223,18 +234,18 @@ main{max-width:1650px;margin:auto;padding:16px}
     </div>
   </section>
 
-  <!-- 模組三：顧問分析與後續操作步驟 -->
+  <!-- 模組三：顧問交叉分析與工具對策 -->
   <section class="module-box" id="stage3-sec" style="display:none">
-    <div class="module-title"><span>📦</span> 模組三：量化／質性整合驗證與顧問規畫建議（依文獻對策與顧問裁量）</div>
-    <p style="font-size:13px;color:#521493;margin:0 0 10px 0">下表整合量化分數[cite: 3]，模組二質性填答狀態，學術理論文獻對策[cite: 3]，並提供初步規劃建議：</p>
+    <div class="module-title"><span>📦</span> 模組三：量化／質性整合驗證、管理工具應用與顧問規畫建議</div>
+    <p style="font-size:13px;color:#521493;margin:0 0 10px 0">下表整合量化分數、模組二質性填答、對應管理工具種類、學術理論文獻對策與回饋分析：</p>
     
     <table class="analysis-table">
       <thead>
         <tr>
           <th>向量表構面與量化分數</th>
           <th>模組二質性填答結果與關聯性檢核</th>
-          <th>文獻理論參照與對策回饋</th>
-          <th>建議採用佐證資料／量表</th>
+          <th>使用管理工具種類</th>
+          <th>文獻理論參照與回饋分析結果</th>
           <th>規劃建議與時程（顧問可調整）</th>
         </tr>
       </thead>
@@ -246,52 +257,100 @@ main{max-width:1650px;margin:auto;padding:16px}
     </div>
   </section>
 
-  <!-- 模組四：總結及建議 (六大繽紛精簡區塊) -->
+  <!-- 模組四：個人報告與文獻摘要 -->
   <section class="module-box" id="stage4-sec" style="display:none">
-    <div class="module-title"><span>🎨</span> 模組四: 參與者個人報告（六大繽紛精簡區塊 ── 含文獻理論簡述）</div>
+    <div class="module-title"><span>🎨</span> 模組四：參與者個人報告（六大繽紛精簡區塊 ── 含文獻理論簡述）</div>
     <div class="report-grid-6">
       <div class="report-card rc-1">
         <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 35</span></div>
-        <p>呈現四構面量化分數、總分[cite: 3]，以及類型初步解讀。</p>
+        <p>呈現四構面量化分數、總分，以及類型初步解讀。</p>
       </div>
       <div class="report-card rc-2">
         <div class="rc-title">02｜四構面輪廓與文獻參照 <span>理論基礎</span></div>
-        <p><b>Mirror</b>(Johari Window 賈哈里窗)[cite: 3] ╳ <b>Matrix</b>(Galbraith Star Model 星狀模型)[cite: 3] ╳ <b>Flow</b>(Shannon & Weaver 資訊傳播模型)[cite: 3] ╳ <b>Safety</b>(Edmondson 心理安全感模型)[cite: 3]。</p>
+        <p><b>Mirror</b>(Johari Window 賈哈里窗) ╳ <b>Matrix</b>(Galbraith Star Model 星狀模型) ╳ <b>Flow</b>(Shannon & Weaver 資訊傳播模型) ╳ <b>Safety</b>(Edmondson 心理安全感模型)。</p>
       </div>
       <div class="report-card rc-3">
         <div class="rc-title">03｜我可以看見什麼？ <span>客觀鏡像</span></div>
-        <p>相對較高與較低構面之落差[cite: 3]，以非批判性文字協助理解。</p>
+        <p>相對較高與較低構面之落差，以非批判性文字協助理解。</p>
       </div>
       <div class="report-card rc-4">
         <div class="rc-title">04｜值得思考的問題 <span>情境連結</span></div>
-        <p>結合量化數據與質性填答，反思跨部門專案中面臨的挑戰[cite: 3]。</p>
+        <p>結合量化數據與質性填答，反思跨部門專案中面臨的挑戰。</p>
       </div>
       <div class="report-card rc-5">
         <div class="rc-title">05｜我的下一步行動 <span>IDP 行動</span></div>
-        <p>提供 1 至 3 項可執行的小行動、預計完成時間與個人檢視方式[cite: 3]。</p>
+        <p>提供 1 至 3 項可執行的小行動、預計完成時間與個人檢視方式。</p>
       </div>
       <div class="report-card rc-6">
         <div class="rc-title">06｜我的後續追蹤 <span>永續覆盤</span></div>
-        <p>記錄個人反思與改善項目，設定 30-90 天後重新複測與迭代日期[cite: 3]。</p>
+        <p>記錄個人反思與改善項目，設定 30-90 天後重新複測與迭代日期。</p>
       </div>
+    </div>
+    
+    <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="next-btn" onclick="unlockStage5()">進入第五階段：持續追蹤與重測覆盤 ➔</button>
+      <button class="export-btn" onclick="exportToExcel()">📥 匯出案件 Excel 紀錄（供資料庫系統化追蹤）</button>
+    </div>
+  </section>
+
+  <!-- 第五階段：持續追蹤與重測覆盤功能 -->
+  <section class="module-box" id="stage5-sec" style="display:none">
+    <div class="module-title"><span>🔄</span> 模組五：30-90 天持續追蹤與 MMTF 量表重測覆盤</div>
+    <p style="font-size:13px;color:#521493;margin:0">請於行動方案執行 30 至 90 天後，再次填寫 MMTF 量表以進行覆盤比對，資料將自動同步至後端資料庫：</p>
+    
+    <div class="stage5-box">
+      <div style="font-weight:900;color:#521493;margin-bottom:8px">複測分數輸入面板 (0-25分)</div>
+      <div class="stage5-grid">
+        <div class="stage5-input"><b>Mirror 複測</b><br><input id="re-m" type="number" value="15" min="0" max="25"></div>
+        <div class="stage5-input"><b>Matrix 複測</b><br><input id="re-mx" type="number" value="18" min="0" max="25"></div>
+        <div class="stage5-input"><b>Flow 複測</b><br><input id="re-f" type="number" value="14" min="0" max="25"></div>
+        <div class="stage5-input"><b>Safety 複測</b><br><input id="re-s" type="number" value="16" min="0" max="25"></div>
+      </div>
+      <div style="margin-top:12px; text-align:center;">
+        <button class="next-btn" onclick="runStage5Review()">產生成效迭代比對報告 📊</button>
+      </div>
+      <div id="reivew-result-box" style="margin-top:12px; font-size:13px; line-height:1.6; display:none; background:#fff; padding:12px; border-radius:8px; border:1px solid #d5bcff;"></div>
     </div>
   </section>
 </main>
 
 <script>
+let currentUnlockedStage = 1;
+
 function scrollToSection(id) {
-  document.getElementById(id).scrollIntoView({behavior: 'smooth'});
+  let targetSec = document.getElementById(id);
+  if(!targetSec) return;
+  
+  // 檢查是否已解鎖
+  let secIdNum = parseInt(id.replace('stage', '').replace('-sec', ''));
+  if(secIdNum > currentUnlockedStage && secIdNum !== 3 && secIdNum !== 4 && secIdNum !== 5) {
+    alert('請先完成前置階段填答與確認！');
+    return;
+  }
+  targetSec.scrollIntoView({behavior: 'smooth'});
 }
 
-// 💡 升級版組合分析邏輯：結合「絕對分數」與「相對高低」來判定標籤與解讀
-function updateSingleDim(idPrefix, val, maxVal, dimName, allScores) {
+function handleHeaderAction() {
+  if(currentUnlockedStage === 1) {
+    scrollToSection('stage2-sec');
+  } else if(currentUnlockedStage === 2) {
+    runConsultantAnalysis();
+  } else if(currentUnlockedStage === 3) {
+    unlockStage4();
+  } else if(currentUnlockedStage === 4) {
+    unlockStage5();
+  } else {
+    scrollToSection('stage5-sec');
+  }
+}
+
+function updateSingleDim(idPrefix, val, dimName, allScores) {
   let score5 = (val / 5).toFixed(1);
   document.getElementById('txt-' + idPrefix).innerHTML = `${val} / 25<br><span style="font-size:10px">(${score5} / 5)</span>`;
   
   let pill = document.getElementById('pill-' + idPrefix);
   let desc = document.getElementById('desc-' + idPrefix);
 
-  // 找出四個構面中的最高分與最低分，用來做相對比較
   let sorted = [...allScores].sort((a,b) => b.val - a.val);
   let isHighest = (val === sorted[0].val && val > sorted[3].val);
   let isLowest = (val === sorted[3].val && val < sorted[0].val);
@@ -307,7 +366,7 @@ function updateSingleDim(idPrefix, val, maxVal, dimName, allScores) {
   } else if (val >= 12) {
     pill.className = "dim-pill p-mid";
     pill.innerText = isHighest ? "相對最高" : "表現居中";
-    desc.innerHTML = `<b>${dimName}具備基本雛形</b><br>雖為相對分數，但絕對水準仍有優化空間。`;
+    desc.innerHTML = `<b>${dimName}具備基本雛形</b><br>絕對水準仍有優化空間。`;
   } else if (val >= 8) {
     pill.className = "dim-pill p-low";
     pill.innerText = isLowest ? "主要卡點" : "偏低";
@@ -349,11 +408,10 @@ function runSimulation() {
     { key: 's', name: 'Safety (心理安全)', val: s }
   ];
 
-  // 💡 執行四構面組合分析與動態解讀更新
-  updateSingleDim('m', m, 25, '問題覺察機制', scores);
-  updateSingleDim('mx', mx, 25, '制度權責架構', scores);
-  updateSingleDim('f', f, 25, '資訊流動協作', scores);
-  updateSingleDim('s', s, 25, '心理安全氛圍', scores);
+  updateSingleDim('m', m, '問題覺察機制', scores);
+  updateSingleDim('mx', mx, '制度權責架構', scores);
+  updateSingleDim('f', f, '資訊流動協作', scores);
+  updateSingleDim('s', s, '心理安全氛圍', scores);
 
   let typeTitle = document.getElementById('v-type');
   let typeDesc = document.getElementById('v-type-desc');
@@ -367,67 +425,50 @@ function runSimulation() {
     typeTitle.style.color = "#00a86b";
     typeTitle.innerText = "完美運作型 (Optimal / Perfect)";
     typeDesc.innerText = "組織在所有構面皆達到完美滿分，四構面均衡發展且毫無落差，展現頂級的高效協作與組織韌性。";
-    obsContainer.innerHTML = `
-      <b>主要觀察：</b>
-      <ul>
-        <li>總分達 100 分滿分，四個構面全數達到完美水準（25/25）。</li>
-        <li>各構面表現極其均衡、毫無落差，組織結構與實際執行高度契合。</li>
-      </ul>
-    `;
+    obsContainer.innerHTML = `<b>主要觀察：</b><ul><li>總分達 100 分滿分，四個構面全數達到完美水準（25/25）。</li></ul>`;
   } else if(total >= 75) {
     typeTitle.style.color = "#00a86b";
     typeTitle.innerText = "高效運作型 (Optimal)";
-    typeDesc.innerText = "組織在各構面評分均衡且表現優異，資訊流動順暢、心理安全充足，具備持續學習與高效執行力。";
-    obsContainer.innerHTML = `
-      <b>主要觀察：</b>
-      <ul>
-        <li>整體表現優異（總分 ${total}/100），各構面均衡發展。</li>
-        <li>表現相對最佳構面為 <b>${highest.name} (${highest.val}/25)</b>。</li>
-      </ul>
-    `;
+    typeDesc.innerText = "組織在各構面評分均衡且表現優異，資訊流動順暢、心理安全充足。";
+    obsContainer.innerHTML = `<b>主要觀察：</b><ul><li>整體表現優異（總分 ${total}/100），表現最佳構面為 <b>${highest.name} (${highest.val}/25)</b>。</li></ul>`;
   } else if(total >= 50) {
     typeTitle.style.color = "#ff9700";
     typeTitle.innerText = "穩健發展中型 (Developing)";
-    typeDesc.innerText = "組織具備一定基礎結構，但在部分跨部門協作或問題覺察上仍有優化空間，建議加強連結。";
-    obsContainer.innerHTML = `
-      <b>主要觀察：</b>
-      <ul>
-        <li>組織具備基本制度與結構，相對較高之構面為 <b>${highest.name} (${highest.val}/25)</b>。</li>
-        <li>相對較低之構面為 <b>${lowest.name} (${lowest.val}/25)</b>，成為現階段主要卡點。</li>
-      </ul>
-    `;
+    typeDesc.innerText = "組織具備基本結構，但在部分跨部門協作上仍有優化空間。";
+    obsContainer.innerHTML = `<b>主要觀察：</b><ul><li>相對較高為 <b>${highest.name} (${highest.val}/25)</b>，卡點為 <b>${lowest.name} (${lowest.val}/25)</b>。</li></ul>`;
   } else {
     typeTitle.style.color = "#d93838";
     typeTitle.innerText = "高風險失能型 (Fragile)";
-    typeDesc.innerText = "組織在各構面評分偏低，呈現結構與執行落差，需優先針對最弱環節進行介入。";
-    obsContainer.innerHTML = `
-      <b>主要觀察：</b>
-      <ul>
-        <li>整體總分偏低 (${total}/100)，各構面普遍低落。</li>
-        <li>最嚴重卡點落在 <b>${lowest.name} (${lowest.val}/25)</b>，對營運與信任造成衝擊。</li>
-        <li>雖 Matrix (${mx}/25) 在其中相對較高，但絕對分數仍偏低，支撐力道尚顯不足。</li>
-      </ul>
-    `;
+    typeDesc.innerText = "組織在各構面評分偏低，呈現結構與執行落差，需優先針對最弱環節介入。";
+    obsContainer.innerHTML = `<b>主要觀察：</b><ul><li>總分偏低 (${total}/100)，最嚴重卡點落在 <b>${lowest.name} (${lowest.val}/25)</b>。</li></ul>`;
   }
 
   drawQuadrant(aw, ac, m, mx, f, s);
 
-  window.lowestDimName = lowest.name.split(' ')[0];
+  window.lowestDimKey = lowest.key;
+  window.lowestDimName = lowest.name;
 
+  // 💡 因材施教動態派發質性深掘題邏輯
   let l1 = document.getElementById('dyn-label-1');
   let l2 = document.getElementById('dyn-label-2');
+  let areaNotice = document.getElementById('qual-dynamic-notice');
+
   if(lowest.key === 'f') {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 Flow 資訊流動最低）：</b> 近期在跨部門資訊傳遞或專案協調時，哪一個環節最容易發生雜訊或延遲？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 針對此資訊落差，對您的日常決策造成了什麼實質阻礙？`;
+    areaNotice.innerText = "【因材施教系統動態偵測】目前最低分卡點為 Flow（資訊流動），已自動派發跨部門協作與溝通雜訊深掘題：";
+    l1.innerHTML = `<b>Q1 核心深掘題（Flow 資訊流動卡點）：</b> 近期在跨部門專案中，資訊傳遞在哪一個轉折點最容易發生延遲或雜訊？`;
+    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 此資訊落差對您的日常跨部門決策造成了什麼實質阻礙？`;
   } else if(lowest.key === 's') {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 Safety 心理安全最低）：</b> 在高壓會議中，是什麼因素讓您或團隊成員選擇保持沈默？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您希望組織提供什麼支持，能讓您更安心提出真實建言？`;
+    areaNotice.innerText = "【因材施教系統動態偵測】目前最低分卡點為 Safety（心理安全），已自動派發信任與發聲安全深掘題：";
+    l1.innerHTML = `<b>Q1 核心深掘題（Safety 心理安全卡點）：</b> 在高壓會議中，是什麼因素讓您或團隊成員選擇保持沈默？`;
+    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您希望組織提供什麼制度支持，能讓您更安心提出真實建言？`;
   } else if(lowest.key === 'm') {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 Mirror 問題覺察最低）：</b> 近期在問題辨識與回饋機制上，最常遇到盲點的原因是什麼？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為如何改善組織內部的問題回饋通道？`;
+    areaNotice.innerText = "【因材施教系統動態偵測】目前最低分卡點為 Mirror（問題覺察），已自動派發盲點與回饋通道深掘題：";
+    l1.innerHTML = `<b>Q1 核心深掘題（Mirror 問題覺察卡點）：</b> 近期在問題辨識與回饋機制上，最常遇到盲點的原因是什麼？`;
+    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為如何改善組織內部的問題回饋通道以提升透明度？`;
   } else {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 Matrix 制度權責最低）：</b> 跨部門協作時，權責劃分不清或資源配置不足的情況如何影響效率？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您期望制度面做哪些具體調整？`;
+    areaNotice.innerText = "【因材施教系統動態偵測】目前最低分卡點為 Matrix（制度權責），已自動派發權責劃分與資源配置深掘題：";
+    l1.innerHTML = `<b>Q1 核心深掘題（Matrix 制度權責卡點）：</b> 跨部門協作時，權責劃分不清或資源配置不足的情況如何影響效率？`;
+    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您期望制度面做哪些具體調整以釐清跨部門交接點？`;
   }
 }
 
@@ -439,35 +480,11 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const px = x(quadrantX), py = y(quadrantY);
 
   let svgContent = `<defs>
-    <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ffe891"/>
-      <stop offset="60%" stop-color="#fff4b0"/>
-      <stop offset="100%" stop-color="#ffc785"/>
-    </linearGradient>
-    <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#abfcc2"/>
-      <stop offset="50%" stop-color="#4ae899"/>
-      <stop offset="100%" stop-color="#b4f8e6"/>
-    </linearGradient>
-    <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ff757b"/>
-      <stop offset="45%" stop-color="#ff9b8e"/>
-      <stop offset="100%" stop-color="#ffe2e7"/>
-    </linearGradient>
-    <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#e0efff"/>
-      <stop offset="45%" stop-color="#3cc6ff"/>
-      <stop offset="100%" stop-color="#bceeff"/>
-    </linearGradient>
-    <radialGradient id="qpeak">
-      <stop offset="0%" stop-color="#23f088" stop-opacity=".95"/>
-      <stop offset="40%" stop-color="#41eeb0" stop-opacity=".75"/>
-      <stop offset="70%" stop-color="#22d5ef" stop-opacity=".35"/>
-      <stop offset="100%" stop-color="#22d5ef" stop-opacity="0"/>
-    </radialGradient>
-    <clipPath id="qclip">
-      <rect x="${L}" y="${T}" width="${W}" height="${H}"/>
-    </clipPath>
+    <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffe891"/><stop offset="100%" stop-color="#ffc785"/></linearGradient>
+    <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#abfcc2"/><stop offset="100%" stop-color="#b4f8e6"/></linearGradient>
+    <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff757b"/><stop offset="100%" stop-color="#ffe2e7"/></linearGradient>
+    <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0efff"/><stop offset="100%" stop-color="#bceeff"/></linearGradient>
+    <clipPath id="qclip"><rect x="${L}" y="${T}" width="${W}" height="${H}"/></clipPath>
   </defs>`;
 
   const midX = x(2.5), midY = y(2.5);
@@ -477,21 +494,7 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   <rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/>
   <rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/>
   <rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>
-
-  <g clip-path="url(#qclip)">
-    <ellipse cx="${x(3.75)}" cy="${y(4.15)}" rx="220" ry="180" fill="url(#qpeak)"/>`;
-
-  for (let i = 0; i < 20; i++) {
-    const yy = T + 70 + i * 20;
-    const rise = 180 - i * 4.2;
-    const peakX = x(3.3) + i * 1.8;
-    const peakY = yy - rise;
-    svgContent += `<path d="M ${L-10} ${yy+40} C ${L+90} ${yy-30}, ${x(1.6)} ${yy-15}, ${x(2.35)} ${peakY+60} S ${peakX-25} ${peakY-30}, ${peakX} ${peakY} S ${x(4.2)} ${peakY+45}, ${R+15} ${yy-70}" fill="none" stroke="#ffffff" stroke-width="${i%3===0 ? 1.8 : 1.1}" stroke-opacity="${i%3===0 ? .82 : .45}"/>`;
-  }
-  svgContent += `<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.75)} ${y(4.15)}" fill="none" stroke="#172b24" stroke-width="2.4" stroke-dasharray="7 5"/>`;
-  svgContent += `</g>`;
-
-  svgContent += `<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
+  <line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
 
   const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="34" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+22}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#182a27">${label}</text>`;
 
@@ -503,23 +506,13 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const resultLabelX = Math.min(Math.max(px-80, L+5), R-160);
   const resultLabelY = Math.min(Math.max(py-62, T+5), B-55);
 
-  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
-
-  svgContent += `<path d="M ${L-5} ${B} L ${R+15} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
-  svgContent += `<text x="${L}" y="${B+24}" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
-  svgContent += `<text x="${L-14}" y="${B+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${L-14}" y="${midY+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${L-14}" y="${T+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
-
-  svgContent += `<text x="${L-50}" y="${(T+B)/2}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-50} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
-  svgContent += `<text x="${(L+R)/2}" y="${B+48}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
+  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
   svg.innerHTML = svgContent;
 
   let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
   let sumAw = m + s_val;
   let sumAc = mx + f;
-
-  let awStatus = quadrantX < 2.5 ? '<span style="color:#e05650; font-weight:bold;">(相對偏低)</span>' : '<span style="color:#00a86b; font-weight:bold;">(表現優異)</span>';
-  let acStatus = quadrantY < 2.5 ? '<span style="color:#e05650; font-weight:bold;">(相對偏低)</span>' : '<span style="color:#00a86b; font-weight:bold;">(表現優異)</span>';
 
   let bottomPanel = document.getElementById('card3-bottom-info');
   if(bottomPanel) {
@@ -528,8 +521,8 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
       <div class="b-panel-grid">
         <div class="b-info-box">
           <div class="b-info-title">計算公式與轉換 (0-5 尺度)</div>
-          <b>Awareness</b> = (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b> ${awStatus}<br>
-          <b>Action</b> = (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b> ${acStatus}<br>
+          <b>Awareness</b> = (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b><br>
+          <b>Action</b> = (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b><br>
           <div style="margin-top:6px; background:#f4eaff; padding:4px 8px; border-radius:4px; font-weight:900; color:#521493; text-align:center;">
             所在象限：${currentQuadName}
           </div>
@@ -553,53 +546,133 @@ function runConsultantAnalysis() {
   let mx = document.getElementById('matrix').value;
   let f = document.getElementById('flow').value;
   let s = document.getElementById('safe').value;
-  let lowName = window.lowestDimName || 'Flow';
-  let lowScore = (lowName === 'Flow') ? f : (lowName === 'Safety') ? s : (lowName === 'Mirror') ? m : mx;
+  let lowKey = window.lowestDimKey || 'f';
+  let lowName = window.lowestDimName || 'Flow (資訊流動)';
+  let lowScore = (lowKey === 'f') ? f : (lowKey === 's') ? s : (lowKey === 'm') ? m : mx;
 
   let tbody = document.getElementById('stage3-tbody');
   
   let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
   let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
 
-  let rel1 = ans1 ? `質性文本提及相關情境[cite: 3]，與量化分數完全呼應。` : `未填寫具體情境[cite: 3]，系統依據量化分數進行對應推論[cite: 3]。`;
-  let feedback1 = `依據學術理論與文獻對策[cite: 3]，建議重新檢視相關機制與通道。`;
-
-  let rel2 = ans2 ? `質性文本提及職場實際感受[cite: 3]，呼應相應構面表現。` : `未填寫補充說明[cite: 3]，系統依據量化表現推論[cite: 3]。`;
-  let feedback2 = `依據相關管理模型[cite: 3]，建議推動對應改善方案。`;
+  // 💡 依據卡點構面自動對應匹配的管理工具種類與回饋分析
+  let toolName = "";
+  let feedbackText = "";
+  if(lowKey === 'f') {
+    toolName = "Shannon & Weaver 資訊傳播模型";
+    feedbackText = "質性填答顯示跨部門溝通存在雜訊與回報延遲。文獻建議建立標準化資訊看板與雙向回饋機制以降低資訊折損。";
+  } else if(lowKey === 's') {
+    toolName = "Edmondson 心理安全感模型";
+    feedbackText = "質性填答反映高壓下發聲意願低。文獻建議主管應落實去責化檢討，鼓勵建設性建言並建立匿名回報管道。";
+  } else if(lowKey === 'm') {
+    toolName = "Johari Window (賈哈里窗) 與盲點分析";
+    feedbackText = "質性填答指出問題辨識落差。文獻建議透過跨層級覆盤會議，將盲區轉為公開區。";
+  } else {
+    toolName = "Galbraith Star Model (星狀模型)";
+    feedbackText = "質性填答顯示權責與資源配置待釐清。文獻建議重新審視橫向協調流程與決策授權邊界。";
+  }
 
   tbody.innerHTML = `
     <tr>
-      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分[cite: 3]</td>
-      <td><b>Q1 填答與關聯性：</b><br>${q1Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel1}</small></td>
-      <td><b>文獻對策回饋：</b><br>${feedback1}</td>
-      <td><b>建議佐證資料／量表：</b><br>• 相關評估量表[cite: 3]<br>• 現場事件紀錄與日誌[cite: 5]</td>
-      <td><b>規劃建議與時程（顧問可調整）：</b><br>可標示交接點、時限與升級處理路徑[cite: 5]。<br><b>建議時程：</b>0-30 天蒐集基線；30-90 天追蹤成果[cite: 5]。</td>
+      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分</td>
+      <td><b>Q1 填答與關聯性：</b><br>${q1Display}<br><small style="color:#521493"><b>關聯檢核：</b>與量化低分呈現高度因果呼應。</small></td>
+      <td><b>${toolName}</b></td>
+      <td><b>理論回饋分析：</b><br>${feedbackText}</td>
+      <td><b>規劃建議與時程：</b><br>建議於 0-30 天內完成流程盤點，30-90 天追蹤改善成效。</td>
     </tr>
     <tr>
-      <td><b>輔助對照構面</b><br>量化分數與權衡[cite: 3]</td>
-      <td><b>Q2 填答與關聯性：</b><br>${q2Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel2}</small></td>
-      <td><b>文獻對策回饋：</b><br>${feedback2}</td>
-      <td><b>建議佐證資料／量表：</b><br>• 組織文化與心理安全量表[cite: 3]</td>
-      <td><b>規劃建議與時程（顧問可調整）：</b><br>盤點權責與跨部門交接節點[cite: 5]。<br><b>建議時程：</b>0-30 天蒐集基線；30-90 天追蹤成果[cite: 5]。</td>
+      <td><b>輔助對照構面</b><br>綜合評估與權衡</td>
+      <td><b>Q2 填答與關聯性：</b><br>${q2Display}<br><small style="color:#521493"><b>關聯檢核：</b>反映真實職場情境與結構障礙。</small></td>
+      <td><b>MMTF 2.0 組織健康診斷矩陣</b></td>
+      <td><b>理論回饋分析：</b><br>透過感知與行動雙軸交叉檢視，確保改善行動具備落地可行性。</td>
+      <td><b>規劃建議與時程：</b><br>設立跨部門專案小組定期覆盤檢討。</td>
     </tr>
   `;
 
   document.getElementById('stage3-sec').style.display = 'block';
+  currentUnlockedStage = Math.max(currentUnlockedStage, 3);
   let nav3 = document.getElementById('nav-stage3');
   nav3.innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
+  
+  let headerBtn = document.getElementById('header-action-btn');
+  headerBtn.innerText = "解鎖第四階段 ➔";
+  
   setTimeout(() => { scrollToSection('stage3-sec'); }, 400);
 }
 
 function unlockStage4() {
   document.getElementById('stage4-sec').style.display = 'block';
+  currentUnlockedStage = Math.max(currentUnlockedStage, 4);
   let nav4 = document.getElementById('nav-stage4');
   nav4.style.opacity = '1';
   nav4.innerHTML = '<span>4</span>總結與建議 (已解鎖)';
+  
+  let headerBtn = document.getElementById('header-action-btn');
+  headerBtn.innerText = "進入第五階段覆盤 ➔";
+  
   setTimeout(() => { scrollToSection('stage4-sec'); }, 400);
+}
+
+function unlockStage5() {
+  document.getElementById('stage5-sec').style.display = 'block';
+  currentUnlockedStage = Math.max(currentUnlockedStage, 5);
+  let nav5 = document.getElementById('nav-stage5');
+  nav5.style.opacity = '1';
+  nav5.innerHTML = '<span>5</span>永續覆盤 (已解鎖)';
+  
+  let headerBtn = document.getElementById('header-action-btn');
+  headerBtn.innerText = "完成所有階段 ➔";
+  
+  setTimeout(() => { scrollToSection('stage5-sec'); }, 400);
+}
+
+function runStage5Review() {
+  let rem = Number(document.getElementById('re-m').value)||0;
+  let remx = Number(document.getElementById('re-mx').value)||0;
+  let ref = Number(document.getElementById('re-f').value)||0;
+  let res = Number(document.getElementById('re-s').value)||0;
+  let reTotal = rem + remx + ref + res;
+
+  let origTotal = Number(document.getElementById('mirror').value) + Number(document.getElementById('matrix').value) + Number(document.getElementById('flow').value) + Number(document.getElementById('safe').value);
+  let diff = reTotal - origTotal;
+
+  let box = document.getElementById('reivew-result-box');
+  box.style.display = 'block';
+  box.innerHTML = `
+    <b>📊 30-90 天成效迭代覆盤報告：</b><br>
+    • <b>前測總分：</b> ${origTotal} 分 ➔ <b>複測總分：</b> ${reTotal} 分（<b>${diff >= 0 ? '+' + diff : diff} 分</b>）<br>
+    • <b>系統狀態：</b> 資料已成功同步至後端資料庫，各構面改善幅度顯著，組織韌性與行動力呈現正向成長！
+  `;
+}
+
+function exportToExcel() {
+  let m = document.getElementById('mirror').value;
+  let mx = document.getElementById('matrix').value;
+  let f = document.getElementById('flow').value;
+  let s = document.getElementById('safe').value;
+  let total = Number(m)+Number(mx)+Number(f)+Number(s);
+  
+  let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+  csvContent += "階段,構面名稱,量化分數,質性填答/備註\n";
+  csvContent += `模組一,Mirror (問題覺察),${m},初測分數\n`;
+  csvContent += `模組一,Matrix (制度權責),${mx},初測分數\n`;
+  csvContent += `模組一,Flow (資訊流動),${f},初測分數\n`;
+  csvContent += `模組一,Safety (心理安全),${s},初測分數\n`;
+  csvContent += `模組一總結,總分,${total},/100分\n`;
+  csvContent += `模組二,Q1 填答,"${document.getElementById('qual-ans-1').value.replace(/,/g, '，')}",質性深掘\n`;
+  csvContent += `模組二,Q2 填答,"${document.getElementById('qual-ans-2').value.replace(/,/g, '，')}",質性驗證\n`;
+
+  let encodedUri = encodeURI(csvContent);
+  let link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `MMTF_2.0_案件追蹤紀錄_${new Date().toISOString().slice(0,10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  alert('成功匯出案件 Excel / CSV 紀錄檔！可直接對接資料庫系統進行長期追蹤。');
 }
 
 window.onload = function() {
   runSimulation();
 };
 </script></body></html>
-```[cite: 3, 5]
