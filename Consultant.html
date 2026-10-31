@@ -2,94 +2,93 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MMTF 2.0 模組化職涯顧問分析報告</title>
 <style>
 :root{--navy:#073f87;--purple:#521493;--green:#00a86b;--orange:#ff9700;--ink:#12345a;--pale:#faf5ff}
-*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:13px}
-.top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-bottom:4px solid #b67afb}
-.top h1{font-size:clamp(20px,2.5vw,30px);margin:0;white-space:nowrap}
-.tagline{border-left:1px solid #c99bfc;padding-left:15px;font-size:13px;line-height:1.6;flex:1}
-main{max-width:1600px;margin:auto;padding:12px}
+*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:"Microsoft JhengHei","PingFang TC",Arial,sans-serif;color:var(--ink);font-size:12px}
+.top{background:linear-gradient(110deg,#3b1468,#6824b0 70%,#281048);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;border-bottom:5px solid #b67afb}
+.top h1{font-size:clamp(20px,2.8vw,34px);margin:0;white-space:nowrap}
+.tagline{border-left:1px solid #c99bfc;padding-left:18px;font-size:13px;line-height:1.7;flex:1}
+main{max-width:1680px;margin:auto;padding:10px}
 
 /* 階段按鈕與流程指引列 */
-.stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;padding:10px 15px;margin-bottom:12px;gap:8px;flex-wrap:wrap}
-.stage-pill{display:flex;align-items:center;gap:6px;font-weight:bold;color:#521493;font-size:12px;background:#fff;padding:6px 12px;border-radius:20px;border:1px solid #d5bcff}
-.stage-pill span{width:22px;height:22px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:11px}
+.stage-nav-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f4eaff,#ebd4ff);border:1px solid #c89bff;border-radius:10px;padding:12px 15px;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.stage-pill{display:flex;align-items:center;gap:6px;font-weight:bold;color:#521493;font-size:11px;background:#fff;padding:6px 10px;border-radius:20px;border:1px solid #d5bcff}
+.stage-pill span{width:20px;height:20px;background:#521493;color:white;border-radius:50%;display:grid;place-items:center;font-size:10px}
 .stage-arrow{color:#7012ca;font-weight:900;font-size:14px}
-.next-btn{background:#521493;color:white;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:12px;box-shadow:0 2px 5px rgba(82,20,147,0.3)}
+.next-btn{background:#521493;color:white;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:bold;font-size:11px;box-shadow:0 2px 5px rgba(82,20,147,0.3)}
 .next-btn:hover{background:#6d1ac7}
 
 /* 模組通用樣式 */
 .module-box{background:#fff;border:1px solid #d5bcff;border-radius:12px;padding:15px;margin-bottom:12px;box-shadow:0 3px 10px rgba(82,20,147,0.05)}
-.module-title{font-size:17px;font-weight:900;color:#521493;margin-bottom:10px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #f3e8ff;padding-bottom:6px}
+.module-title{font-size:16px;font-weight:900;color:#521493;margin-bottom:10px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #f3e8ff;padding-bottom:6px}
 
 /* 輸入面板 */
-.inputs-container{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.inputs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.input-card{padding:10px 14px;border-radius:8px;color:#fff;display:flex;align-items:center;justify-content:space-between;font-size:13px}
-.input-card input{width:60px;padding:6px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:15px;color:#15365d;text-align:center}
+.inputs-grid{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr)) auto;gap:8px;align-items:center}
+.input-card{padding:8px;border-radius:8px;color:#fff;display:flex;align-items:center;gap:6px}
+.input-card input{width:55px;padding:5px;border:1px solid #ddd;border-radius:4px;font-weight:bold;font-size:14px;color:#15365d}
 .m-mirror{background:linear-gradient(110deg,#00a86b,#20d2a0)}
 .m-matrix{background:linear-gradient(110deg,#087cf3,#32b9ff)}
 .m-flow{background:linear-gradient(110deg,#ff8500,#ffc34e)}
 .m-safe{background:linear-gradient(110deg,#8a0bfa,#cf85ff)}
-.gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:10px;font-weight:900;cursor:pointer;font-size:14px;width:100%}
+.gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:14px}
 
-/* 一排三張卡片版面 */
-.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.65fr;gap:12px;align-items:stretch}
-.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:14px;display:flex;flex-direction:column}
-.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:8px 10px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:13px;margin-bottom:10px;border-radius:6px}
-.r-num{width:24px;height:24px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:12px}
+/* 圖形分析呈現區 (模組一：精準一排三張卡片對齊) */
+.report-panel-grid{display:grid;grid-template-columns:0.95fr 1.05fr 1.8fr;gap:10px;margin-top:10px;align-items:stretch}
+.r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:12px;display:flex;flex-direction:column}
+.r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:6px 8px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:6px;color:#521493;font-weight:900;font-size:12px;margin-bottom:8px;border-radius:6px}
+.r-num{width:22px;height:22px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:12px}
 
 /* 診斷摘要內部排版 */
-.summary-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.summary-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .ring{width:75px;height:75px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#8a0bfa 0 41%,#e2c2ff 41% 100%);position:relative;flex-shrink:0}
 .ring:before{content:"";position:absolute;inset:7px;background:white;border-radius:50%}
 .ring div{position:relative;text-align:center}
 .ring strong{font-size:22px;color:#7012ca;display:block;line-height:1}
-.ring small{font-size:12px;font-weight:bold}
-.fragile-box b{color:#d93838;font-size:14px;display:block}
-.fragile-box p{font-size:12px;color:#444;margin:4px 0 0;line-height:1.5}
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-.stat-box{background:#f4eaff;padding:8px;border-radius:6px;text-align:center;border:1px solid #e0c5ff}
-.stat-box b{display:block;font-size:11px;color:#521493}
+.ring small{font-size:11px;font-weight:bold}
+.fragile-box b{color:#d93838;font-size:13px;display:block}
+.fragile-box p{font-size:10px;color:#555;margin:2px 0 0;line-height:1.4}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
+.stat-box{background:#f4eaff;padding:5px;border-radius:6px;text-align:center;border:1px solid #e0c5ff}
+.stat-box b{display:block;font-size:10px;color:#521493}
 .stat-box strong{font-size:14px;color:#7012ca}
-.sub-box{font-size:12px;line-height:1.5}
-.sub-box ul{padding-left:16px;margin:4px 0}
+.sub-box{font-size:10px;line-height:1.4}
+.sub-box ul{padding-left:14px;margin:2px 0}
 
 /* 四構面列表 */
-.dim-row{display:grid;grid-template-columns:90px 65px 55px minmax(0,1fr);gap:6px;align-items:center;padding:6px;margin-bottom:6px;border-radius:6px;background:#fff;border:1px solid #ecdffc}
-.dim-name{padding:5px;color:white;border-radius:4px;font-weight:bold;font-size:11px;text-align:center}
-.dim-score{font-size:13px;font-weight:900;text-align:center}
-.dim-pill{padding:4px;text-align:center;color:white;font-weight:bold;border-radius:3px;font-size:10px}
+.dim-row{display:grid;grid-template-columns:85px 55px 50px minmax(0,1fr);gap:4px;align-items:center;padding:4px;margin-bottom:4px;border-radius:6px;background:#fff;border:1px solid #ecdffc}
+.dim-name{padding:4px;color:white;border-radius:4px;font-weight:bold;font-size:10px;text-align:center}
+.dim-score{font-size:12px;font-weight:900;text-align:center}
+.dim-pill{padding:3px 2px;text-align:center;color:white;font-weight:bold;border-radius:3px;font-size:9px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
-.dim-desc{font-size:11px;color:#444;padding-left:4px;line-height:1.4}
+.dim-desc{font-size:9px;color:#555;padding-left:2px}
 
-/* 第三張卡片 (象限圖) */
+/* 第三張卡片 (象限圖與側邊完整資訊同在一框內) */
 .plot-wrap{width:100%;height:100%;display:flex;align-items:center}
-#quadrantChart{display:block;width:100%;height:auto;max-height:460px}
+#quadrantChart{display:block;width:100%;height:auto;max-height:430px}
 
 /* 質性填答欄位 */
 .qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .qual-group{background:#f9f5ff;padding:10px;border-radius:8px;border:1px solid #e2cffc}
-.qual-group label{display:block;font-weight:bold;color:#521493;margin-bottom:4px;font-size:12px}
-.qual-group textarea{width:100%;height:75px;padding:8px;border:1px solid #d5bcff;border-radius:6px;font-family:inherit;font-size:12px}
+.qual-group label{display:block;font-weight:bold;color:#521493;margin-bottom:4px}
+.qual-group textarea{width:100%;height:75px;padding:8px;border:1px solid #d5bcff;border-radius:6px;font-family:inherit}
 
 /* 模組三表格 */
-.analysis-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
-.analysis-table th{background:#521493;color:white;padding:7px;text-align:left}
-.analysis-table td{padding:7px;border:1px solid #ebdffc;vertical-align:top;background:#fff}
+.analysis-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.analysis-table th{background:#521493;color:white;padding:6px;text-align:left}
+.analysis-table td{padding:6px;border:1px solid #ebdffc;vertical-align:top;background:#fff}
 
 /* 模組四 6 大繽紛區塊 */
 .report-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.report-card{border-radius:10px;padding:12px;border:1px solid #e0ebf5}
+.report-card{border-radius:12px;padding:12px;border:1px solid #e0ebf5}
 .rc-1{background:linear-gradient(145deg,#f0fff8,#fff);border-color:#bcebd7}
 .rc-2{background:linear-gradient(145deg,#f4fbff,#fff);border-color:#b9dfff}
 .rc-3{background:linear-gradient(145deg,#fff7e9,#fff);border-color:#f5d5a4}
 .rc-4{background:linear-gradient(145deg,#f6efff,#fff);border-color:#d7c8ff}
 .rc-5{background:linear-gradient(145deg,#fff0f4,#fff);border-color:#ffcbd8}
 .rc-6{background:linear-gradient(145deg,#f4f6ff,#fff);border-color:#c8d4ff}
-.rc-title{font-size:13px;font-weight:900;color:#174875;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
-.rc-title span{background:#521493;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px}
+.rc-title{font-size:12px;font-weight:900;color:#174875;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.rc-title span{background:#521493;color:#fff;padding:2px 5px;border-radius:4px;font-size:9px}
 
-@media(max-width:1250px){.report-panel-grid{grid-template-columns:1fr 1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:850px){.report-panel-grid{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.inputs-grid{grid-template-columns:1fr}}
+@media(max-width:1280px){.report-panel-grid{grid-template-columns:1fr 1fr}.inputs-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.report-panel-grid{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
 </style></head><body>
 
 <header class="top">
@@ -114,84 +113,80 @@ main{max-width:1600px;margin:auto;padding:12px}
   <!-- 模組一：原始數據輸入與精準復刻圖片分析呈現 -->
   <section class="module-box" id="stage1-sec">
     <div class="module-title"><span>📦</span> 模組一：輸入四構面分數與 MMTF 2.0 顧問報告結果</div>
-    
-    <div class="inputs-container">
-      <div class="inputs-grid">
-        <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small style="display:block;font-size:10px">問題覺察與回饋</small></div><input id="mirror" type="number" value="19" min="0" max="25" oninput="runSimulation()"></div>
-        <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small style="display:block;font-size:10px">制度與權責資源</small></div><input id="matrix" type="number" value="18" min="0" max="25" oninput="runSimulation()"></div>
-        <div class="input-card m-flow"><span>●</span><div><b>Flow</b><small style="display:block;font-size:10px">資訊流動與協作</small></div><input id="flow" type="number" value="20" min="0" max="25" oninput="runSimulation()"></div>
-        <div class="input-card m-safe"><span>♟</span><div><b>Safety</b><small style="display:block;font-size:10px">心理安全與員工意見</small></div><input id="safe" type="number" value="19" min="0" max="25" oninput="runSimulation()"></div>
-      </div>
+    <div class="inputs-grid">
+      <div class="input-card m-mirror"><span>◉</span><div><b>Mirror</b><small>問題覺察與回饋</small></div><input id="mirror" type="number" value="8" min="0" max="25" oninput="runSimulation()"></div>
+      <div class="input-card m-matrix"><span>♙</span><div><b>Matrix</b><small>制度與權責資源</small></div><input id="matrix" type="number" value="18" min="0" max="25" oninput="runSimulation()"></div>
+      <div class="input-card m-flow"><span>●</span><div><b>Flow</b><small>資訊流動與協作</small></div><input id="flow" type="number" value="6" min="0" max="25" oninput="runSimulation()"></div>
+      <div class="input-card m-safe"><span>♟</span><div><b>Safety</b><small>心理安全與員工意見</small></div><input id="safe" type="number" value="9" min="0" max="25" oninput="runSimulation()"></div>
       <button class="gen-btn" onclick="runSimulation()">送出並更新報告 ⚡</button>
     </div>
 
-    <!-- 三張卡片並排，右側面板字體與高寬擴增 -->
+    <!-- 一排三張卡片完全水平並排 -->
     <div class="report-panel-grid">
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">1</span>診斷摘要 <small>總分、四構面結果、主要觀察與限制</small></div>
         <div class="summary-top">
-          <div class="ring"><div><strong id="v-total">76</strong><small>/ 100</small></div></div>
+          <div class="ring"><div><strong id="v-total">41</strong><small>/ 100</small></div></div>
           <div class="fragile-box">
-            <b id="v-type">高效運作型 (Optimal)</b>
-            <p>組織在各構面評分均衡且表現優異，資訊流動順暢、心理安全充足，具備持續學習與高效執行力。</p>
+            <b id="v-type">高風險失能型 (Fragile)</b>
+            <p>組織在制度結構面評分中低，但在問題覺察、資訊流動與心理安全明顯不足，呈現結構與執行落差。</p>
           </div>
         </div>
         <div class="stats-row">
-          <div class="stat-box"><b>整體平均</b><strong id="v-avg">3.80 / 5</strong></div>
-          <div class="stat-box"><b>四構面總分</b><strong id="v-sum">76 / 100</strong></div>
+          <div class="stat-box"><b>整體平均</b><strong id="v-avg">2.05 / 5</strong></div>
+          <div class="stat-box"><b>四構面總分</b><strong id="v-sum">41 / 100</strong></div>
         </div>
         <div class="sub-box">
           <b>主要觀察：</b>
           <ul>
-            <li>制度結構具有一定基礎，且執行落差較小。</li>
-            <li>問題覺察與資訊流動良好。</li>
-            <li>心理安全得分高，員工表達意見順暢。</li>
+            <li>制度結構具有一定基礎，但執行落差明顯。</li>
+            <li>問題覺察與資訊流動較弱。</li>
+            <li>心理安全得分偏低，員工表達意見可能受限。</li>
           </ul>
         </div>
       </div>
 
-      <!-- 第二張卡片：四構面分析 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">2</span>四構面分析 <small>各構面分數與實際意義</small></div>
         <div id="dim-list">
           <div class="dim-row">
-            <div class="dim-name" style="background:#00a86b">Mirror<small style="display:block;font-size:10px">問題覺察</small></div>
-            <div class="dim-score" id="txt-m">19 / 25<br><span style="font-size:11px">(3.8 / 5)</span></div>
-            <div class="dim-pill p-high" id="pill-m">相對偏高</div>
-            <div class="dim-desc" id="desc-m"><b>問題覺察清晰</b><br>• 回饋機制完善</div>
+            <div class="dim-name" style="background:#00a86b">Mirror<small>問題覺察</small></div>
+            <div class="dim-score">8 / 25<br><span style="font-size:9px">(1.6 / 5)</span></div>
+            <div class="dim-pill p-low" id="pill-m">偏低</div>
+            <div class="dim-desc"><b>問題覺察不足</b><br>• 但願意回饋</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#087cf3">Matrix<small style="display:block;font-size:10px">制度權責</small></div>
-            <div class="dim-score" id="txt-mx">18 / 25<br><span style="font-size:11px">(3.6 / 5)</span></div>
+            <div class="dim-name" style="background:#087cf3">Matrix<small>制度權責</small></div>
+            <div class="dim-score">18 / 25<br><span style="font-size:9px">(3.6 / 5)</span></div>
             <div class="dim-pill p-high" id="pill-mx">相對偏高</div>
-            <div class="dim-desc" id="desc-mx"><b>制度結構較清晰</b><br>• 權責配置完整</div>
+            <div class="dim-desc"><b>制度結構較清晰</b><br>• 權責配置完整</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#ff8500">Flow<small style="display:block;font-size:10px">資訊流動</small></div>
-            <div class="dim-score" id="txt-f">20 / 25<br><span style="font-size:11px">(4.0 / 5)</span></div>
-            <div class="dim-pill p-high" id="pill-f">相對偏高</div>
-            <div class="dim-desc" id="desc-f"><b>資訊流動順暢</b><br>• 跨部門協作佳</div>
+            <div class="dim-name" style="background:#ff8500">Flow<small>資訊流動</small></div>
+            <div class="dim-score">6 / 25<br><span style="font-size:9px">(1.2 / 5)</span></div>
+            <div class="dim-pill p-low" id="pill-f">偏低</div>
+            <div class="dim-desc"><b>資訊傳遞受阻</b><br>• 跨部門協作弱</div>
           </div>
           <div class="dim-row">
-            <div class="dim-name" style="background:#9218ef">Safety<small style="display:block;font-size:10px">心理安全</small></div>
-            <div class="dim-score" id="txt-s">19 / 25<br><span style="font-size:11px">(3.8 / 5)</span></div>
-            <div class="dim-pill p-high" id="pill-s">相對偏高</div>
-            <div class="dim-desc" id="desc-s"><b>心理安全充足</b><br>• 鼓勵多元建言</div>
+            <div class="dim-name" style="background:#9218ef">Safety<small>心理安全</small></div>
+            <div class="dim-score">9 / 25<br><span style="font-size:9px">(1.8 / 5)</span></div>
+            <div class="dim-pill p-low" id="pill-s">偏低</div>
+            <div class="dim-desc"><b>表達意見保守</b><br>• 信任氛圍不足</div>
           </div>
         </div>
       </div>
 
-      <!-- 第三張卡片：四象限圖與右側落點判讀（完備數值計算與排版） -->
+      <!-- 第三張卡片：並排於右側，內容完全復刻第二張圖 -->
       <div class="r-card">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
         <div class="plot-wrap">
-          <svg id="quadrantChart" viewBox="0 0 1050 540" role="img" aria-label="依四構面分數動態定位的四象限圖與詳細落點面板"></svg>
+          <svg id="quadrantChart" viewBox="0 0 1020 520" role="img" aria-label="依四構面分數動態定位的四象限圖與詳細落點面板"></svg>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 模組二：因材施教 -->
+  <!-- 模組二：因材施教（動態質性填答，允許留空） -->
   <section class="module-box" id="stage2-sec">
     <div class="module-title"><span>📦</span> 模組二：因材施教（參與者針對動態派發之題目進行質性填答，可自由選填）</div>
     <p style="margin:0 0 8px 0;color:#6b5388">請根據您的實際職場情境填寫以下欄位（若未填寫，系統將依量化分數與文獻進行對應分析）：</p>
@@ -199,11 +194,11 @@ main{max-width:1600px;margin:auto;padding:12px}
     <div class="qual-grid">
       <div class="qual-group">
         <label id="dyn-label-1"><b>Q1 核心深掘題：</b></label>
-        <textarea id="qual-ans-1" placeholder="若無特別補充可保持空白...">近期在跨部門專案時，溝通順暢，能夠及時收到明確的回饋。</textarea>
+        <textarea id="qual-ans-1" placeholder="若無特別補充可保持空白...">近期在跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
       </div>
       <div class="qual-group">
         <label id="dyn-label-2"><b>Q2 輔助驗證題：</b></label>
-        <textarea id="qual-ans-2" placeholder="若無特別補充可保持空白...">在跨部門會議中，能安心直接指出結構性問題並共同解決。</textarea>
+        <textarea id="qual-ans-2" placeholder="若無特別補充可保持空白...">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
       </div>
     </div>
     <div style="margin-top:10px">
@@ -211,10 +206,10 @@ main{max-width:1600px;margin:auto;padding:12px}
     </div>
   </section>
 
-  <!-- 模組三：顧問分析與後續操作步驟 -->
+  <!-- 模組三：顧問分析與後續操作步驟（結合文獻對策與質性關係） -->
   <section class="module-box" id="stage3-sec" style="display:none">
     <div class="module-title"><span>📦</span> 模組三：量化／質性整合驗證與顧問規畫建議（依文獻對策與顧問裁量）</div>
-    <p style="font-size:12px;color:#521493;margin:0 0 8px 0">下表整合量化分數[cite: 3]、模組二質性填答狀態、學術理論文獻對策[cite: 3]，並提供初步規劃建議：</p>
+    <p style="font-size:11px;color:#521493;margin:0 0 8px 0">下表整合量化分數、模組二質性填答狀態、學術理論文獻對策，並提供初步規劃建議（最終執行與否由專業顧問評估決定）：</p>
     
     <table class="analysis-table">
       <thead>
@@ -235,13 +230,13 @@ main{max-width:1600px;margin:auto;padding:12px}
     </div>
   </section>
 
-  <!-- 模組四：總結及建議 -->
+  <!-- 模組四：總結及建議 (六大繽紛精簡區塊，內含文獻簡述) -->
   <section class="module-box" id="stage4-sec" style="display:none">
     <div class="module-title"><span>🎨</span> 模組四：參與者個人報告（六大繽紛精簡區塊 ── 含文獻理論簡述）</div>
     <div class="report-grid-6">
       <div class="report-card rc-1">
-        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 76</span></div>
-        <p>呈現四構面量化分數、總分[cite: 3]，以及高效運作型（Optimal）解讀。</p>
+        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 41</span></div>
+        <p>呈現四構面量化分數、總分 41/100 分，以及高風險失能型（Fragile）的初步解讀。</p>
       </div>
       <div class="report-card rc-2">
         <div class="rc-title">02｜四構面輪廓與文獻參照 <span>理論基礎</span></div>
@@ -249,19 +244,19 @@ main{max-width:1600px;margin:auto;padding:12px}
       </div>
       <div class="report-card rc-3">
         <div class="rc-title">03｜我可以看見什麼？ <span>客觀鏡像</span></div>
-        <p>呈現高感知與高行動能力，協助理解組織優勢與潛在維持對策[cite: 3]。</p>
+        <p>相對較高（Matrix 制度權責）與較低（Flow 資訊流動、Safety 心理安全）之落差，以非批判性文字協助理解[cite: 3]。</p>
       </div>
       <div class="report-card rc-4">
         <div class="rc-title">04｜值得思考的問題 <span>情境連結</span></div>
-        <p>結合量化數據與質性填答，反思如何進一步深化跨部門協作[cite: 3]。</p>
+        <p>結合量化數據與模組二質性填答，反思跨部門專案中面臨的資訊斷點與高壓沈默行為[cite: 3]。</p>
       </div>
       <div class="report-card rc-5">
         <div class="rc-title">05｜我的下一步行動 <span>IDP 行動</span></div>
-        <p>提供 1 至 3 項優勢延伸行動、預計完成時間與檢視方式[cite: 3]。</p>
+        <p>提供 1 至 3 項可執行的小行動（如建立安全回報管道、跨部門對齊）、預計完成時間與個人檢視方式[cite: 3]。</p>
       </div>
       <div class="report-card rc-6">
         <div class="rc-title">06｜我的後續追蹤 <span>永續覆盤</span></div>
-        <p>記錄個人反思與持續優化項目，設定 30-90 天後複測日期[cite: 3]。</p>
+        <p>記錄個人反思、改善項目，並設定 30-90 天後重新複測與迭代的日期[cite: 3]，確保組織變革持續落地。</p>
       </div>
     </div>
   </section>
@@ -270,24 +265,6 @@ main{max-width:1600px;margin:auto;padding:12px}
 <script>
 function scrollToSection(id) {
   document.getElementById(id).scrollIntoView({behavior: 'smooth'});
-}
-
-function updateDimRow(idPrefix, val, dimTitle, lowText, highText) {
-  let score5 = (val / 5).toFixed(1);
-  let isLow = val < 12.5;
-  document.getElementById('txt-' + idPrefix).innerHTML = `${val} / 25<br><span style="font-size:11px">(${score5} / 5)</span>`;
-  let pill = document.getElementById('pill-' + idPrefix);
-  let desc = document.getElementById('desc-' + idPrefix);
-  
-  if(isLow) {
-    pill.className = "dim-pill p-low";
-    pill.innerText = "偏低";
-    desc.innerHTML = `<b>${lowText}</b>`;
-  } else {
-    pill.className = "dim-pill p-high";
-    pill.innerText = "相對偏高";
-    desc.innerHTML = `<b>${highText}</b>`;
-  }
 }
 
 function runSimulation() {
@@ -304,29 +281,6 @@ function runSimulation() {
   document.getElementById('v-total').innerText = total;
   document.getElementById('v-sum').innerText = total + ' / 100';
   document.getElementById('v-avg').innerText = avg + ' / 5';
-  let r1Tag = document.getElementById('r1-tag');
-  if(r1Tag) r1Tag.innerText = '總分 ' + total;
-
-  updateDimRow('m', m, '問題覺察', '問題覺察不足<br>• 但願意回饋', '問題覺察清晰<br>• 回饋機制完善');
-  updateDimRow('mx', mx, '制度權責', '制度結構較弱<br>• 權責待釐清', '制度結構較清晰<br>• 權責配置完整');
-  updateDimRow('f', f, '資訊流動', '資訊傳遞受阻<br>• 跨部門協作弱', '資訊流動順暢<br>• 跨部門協作佳');
-  updateDimRow('s', s, '心理安全', '表達意見保守<br>• 信任氛圍不足', '心理安全充足<br>• 鼓勵多元建言');
-
-  let typeTitle = document.getElementById('v-type');
-  let typeDesc = document.querySelector('.fragile-box p');
-  if(total >= 75) {
-    typeTitle.style.color = "#00a86b";
-    typeTitle.innerText = "高效運作型 (Optimal)";
-    typeDesc.innerText = "組織在各構面評分均衡且表現優異，資訊流動順暢、心理安全充足，具備持續學習與高效執行力。";
-  } else if(total >= 50) {
-    typeTitle.style.color = "#ff9700";
-    typeTitle.innerText = "穩健發展中型 (Developing)";
-    typeDesc.innerText = "組織具備一定基礎結構，但在部分跨部門協作或問題覺察上仍有優化空間，建議加強連結。";
-  } else {
-    typeTitle.style.color = "#d93838";
-    typeTitle.innerText = "高風險失能型 (Fragile)";
-    typeDesc.innerText = "組織在制度結構面評分中低，但在問題覺察、資訊流動與心理安全明顯不足，呈現結構與執行落差。";
-  }
 
   drawQuadrant(aw, ac, m, mx, f, s);
 
@@ -343,19 +297,16 @@ function runSimulation() {
   } else if(lowest.name === 'Safety') {
     l1.innerHTML = `<b>Q1 核心深掘題（偵測 Safety 心理安全最低）：</b> 在高壓會議中，是什麼因素讓您或團隊成員選擇保持沈默？`;
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您希望組織提供什麼支持，能讓您更安心提出真實建言？`;
-  } else if(lowest.name === 'Mirror') {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 Mirror 問題覺察最低）：</b> 近期在問題辨識與回饋機制上，最常遇到盲點的原因是什麼？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為如何改善組織內部的問題回饋通道？`;
   } else {
-    l1.innerHTML = `<b>Q1 核心深掘題（偵測 Matrix 制度權責最低）：</b> 跨部門協作時，權責劃分不清或資源配置不足的情況如何影響效率？`;
-    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您期望制度面做哪些具體調整？`;
+    l1.innerHTML = `<b>Q1 核心深掘題（偵測 ${lowest.name} 最低）：</b> 請描述近期在該構面上遭遇的最具體卡點與感受。`;
+    l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為突破此卡點最需要調整的資源或心態是什麼？`;
   }
 }
 
 function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const svg = document.getElementById('quadrantChart');
   if(!svg) return;
-  const L=65, R=650, T=35, B=485, W=R-L, H=B-T;
+  const L=65, R=650, T=40, B=480, W=R-L, H=B-T;
   const x = v => L + (v/5)*W, y = v => B - (v/5)*H;
   const px = x(quadrantX), py = y(quadrantY);
 
@@ -441,50 +392,39 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   svgContent += `<text x="${(L+R)/2}" y="${B+46}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
 
   // ----------------------------------------------------
-  // 右側詳細分析面板（修正文字重疊與公式補全問題）
+  // 右側詳細分析面板
   // ----------------------------------------------------
-  const rx = 670, rw = 360;
-  let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
-  
-  let sumAw = m + s_val;
-  let sumAc = mx + f;
-
+  const rx = 670, rw = 330;
   svgContent += `
-    <rect x="${rx}" y="${T}" width="${rw}" height="${H+5}" rx="8" fill="#f8f4ff" stroke="#d5bcff" stroke-width="1.5"/>
-    <rect x="${rx}" y="${T}" width="${rw}" height="42" rx="8" fill="#521493"/>
-    <text x="${rx+rw/2}" y="${T+27}" text-anchor="middle" font-size="16" font-weight="900" fill="#fff">本次數據落點判讀</text>
+    <rect x="${rx}" y="${T}" width="${rw}" height="${H}" rx="8" fill="#f8f4ff" stroke="#d5bcff" stroke-width="1.5"/>
+    <rect x="${rx}" y="${T}" width="${rw}" height="40" rx="8" fill="#521493"/>
+    <text x="${rx+rw/2}" y="${T+26}" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">本次數據落點判讀</text>
     
-    <!-- 補全並放大計算公式區塊 -->
-    <rect x="${rx+12}" y="${T+52}" width="${rw-24}" height="126" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+22}" y="${T+74}" font-size="13" font-weight="900" fill="#521493">計算公式（分數轉換為 0-5 尺度）</text>
+    <rect x="${rx+12}" y="${T+52}" width="${rw-24}" height="116" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+22}" y="${T+72}" font-size="12" font-weight="900" fill="#521493">計算公式（分數轉換為 0-5 尺度）</text>
+    <text x="${rx+22}" y="${T+93}" font-size="11.5" font-weight="700" fill="#333">Awareness = (Mirror + Safety) / 2</text>
+    <text x="${rx+45}" y="${T+112}" font-size="11.5" font-weight="700" fill="#7012ca">= (${m} + ${s_val}) / 2 = <b>${m+s_val}</b> / 25 = <b>${quadrantX.toFixed(1)} / 5</b></text>
+    <text x="${rx+22}" y="${T+135}" font-size="11.5" font-weight="700" fill="#333">Action = (Matrix + Flow) / 2</text>
+    <text x="${rx+45}" y="${T+154}" font-size="11.5" font-weight="700" fill="#7012ca">= (${mx} + ${f}) / 2 = <b>${mx+f}</b> / 25 = <b>${quadrantY.toFixed(1)} / 5</b></text>
+
+    <rect x="${rx+12}" y="${T+178}" width="149" height="56" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+86}" y="${T+198}" text-anchor="middle" font-size="12" font-weight="900" fill="#521493">Awareness</text>
+    <text x="${rx+86}" y="${T+224}" text-anchor="middle" font-size="15" font-weight="900" fill="#d93838">${quadrantX.toFixed(1)} / 5 <tspan font-size="10.5" font-weight="700" fill="#e05650">${quadrantX<2.5?'相對偏低':'偏高'}</tspan></text>
+
+    <rect x="${rx+169}" y="${T+178}" width="149" height="56" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+243}" y="${T+198}" text-anchor="middle" font-size="12" font-weight="900" fill="#521493">Action</text>
+    <text x="${rx+243}" y="${T+224}" text-anchor="middle" font-size="15" font-weight="900" fill="#d93838">${quadrantY.toFixed(1)} / 5 <tspan font-size="10.5" font-weight="700" fill="#e05650">${quadrantY<2.5?'偏低':'偏高'}</tspan></text>
+
+    <rect x="${rx+12}" y="${T+244}" width="${rw-24}" height="35" rx="6" fill="#7012ca"/>
+    <text x="${rx+rw/2}" y="${T+267}" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">所在象限：${quadrantX<2.5?(quadrantY<2.5?'第三象限｜失衡風險區':'第二象限｜潛能未釋放區'):(quadrantY<2.5?'第四象限｜看見未轉化區':'第一象限｜最佳運作區')}</text>
+
+    <rect x="${rx+12}" y="${T+289}" width="${rw-24}" height="184" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+22}" y="${T+311}" font-size="12.5" font-weight="900" fill="#521493">數據落點解讀</text>
     
-    <text x="${rx+22}" y="${T+96}" font-size="12" font-weight="700" fill="#333">Awareness = (Mirror + Safety) / 2</text>
-    <text x="${rx+45}" y="${T+116}" font-size="12" font-weight="700" fill="#7012ca">= (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b>${quadrantX.toFixed(1)} / 5</b></text>
-    
-    <text x="${rx+22}" y="${T+140}" font-size="12" font-weight="700" fill="#333">Action = (Matrix + Flow) / 2</text>
-    <text x="${rx+45}" y="${T+160}" font-size="12" font-weight="700" fill="#7012ca">= (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b>${quadrantY.toFixed(1)} / 5</b></text>
-
-    <!-- 指標數值區塊 -->
-    <rect x="${rx+12}" y="${T+188}" width="162" height="58" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+93}" y="${T+209}" text-anchor="middle" font-size="13" font-weight="900" fill="#521493">Awareness</text>
-    <text x="${rx+93}" y="${T+235}" text-anchor="middle" font-size="16" font-weight="900" fill="#d93838">${quadrantX.toFixed(1)} / 5 <tspan font-size="11" font-weight="700" fill="${quadrantX<2.5?'#e05650':'#00a86b'}">${quadrantX<2.5?'相對偏低':'偏高'}</tspan></text>
-
-    <rect x="${rx+184}" y="${T+188}" width="164" height="58" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+266}" y="${T+209}" text-anchor="middle" font-size="13" font-weight="900" fill="#521493">Action</text>
-    <text x="${rx+266}" y="${T+235}" text-anchor="middle" font-size="16" font-weight="900" fill="#d93838">${quadrantY.toFixed(1)} / 5 <tspan font-size="11" font-weight="700" fill="${quadrantY<2.5?'#e05650':'#00a86b'}">${quadrantY<2.5?'偏低':'偏高'}</tspan></text>
-
-    <!-- 所在象限 -->
-    <rect x="${rx+12}" y="${T+256}" width="${rw-24}" height="36" rx="6" fill="#7012ca"/>
-    <text x="${rx+rw/2}" y="${T+279}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#fff">所在象限：${currentQuadName}</text>
-
-    <!-- 數據落點解讀（擴增高度防止遮擋） -->
-    <rect x="${rx+12}" y="${T+302}" width="${rw-24}" height="182" rx="6" fill="#fff" stroke="#ebdffc"/>
-    <text x="${rx+22}" y="${T+325}" font-size="13" font-weight="900" fill="#521493">數據落點解讀</text>
-    
-    <text x="${rx+22}" y="${T+349}" font-size="12" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">①</tspan> 整體感知與行動能力評估，落點於${currentQuadName}。</text>
-    <text x="${rx+22}" y="${T+382}" font-size="12" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">②</tspan> Matrix 與 Flow 交互作用，<tspan x="${rx+38}" dy="16">影響機制落實與跨部門協作。</tspan></text>
-    <text x="${rx+22}" y="${T+428}" font-size="12" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">③</tspan> Mirror 與 Safety 聯動，顯示問題<tspan x="${rx+38}" dy="16">辨識與心理安全氛圍狀況。</tspan></text>
-    <text x="${rx+22}" y="${T+474}" font-size="12" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">④</tspan> 建議依此數據優化跨部門行動力與資訊流動。</text>
+    <text x="${rx+22}" y="${T+335}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">①</tspan> 整體感知與行動能力均偏低，顯示組織存在明顯風險。</text>
+    <text x="${rx+22}" y="${T+366}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">②</tspan> Matrix 評分較高，但 Flow 仍偏低，<tspan x="${rx+38}" dy="15">可能影響機制落實與跨部門協作。</tspan></text>
+    <text x="${rx+22}" y="${T+410}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">③</tspan> Mirror 與 Safety 均偏低，顯示問題<tspan x="${rx+38}" dy="15">辨識與員工覺察不足。</tspan></text>
+    <text x="${rx+22}" y="${T+454}" font-size="11.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">④</tspan> 需進一步強化跨部門行動力，並優化資訊流動。</text>
   `;
 
   svg.innerHTML = svgContent;
@@ -506,26 +446,26 @@ function runConsultantAnalysis() {
   let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
   let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
 
-  let rel1 = ans1 ? `質性文本提及相關情境[cite: 3]，與量化分數完全呼應。` : `未填寫具體情境[cite: 3]，系統依據量化分數進行對應推論[cite: 3]。`;
-  let feedback1 = `依據學術理論與文獻對策[cite: 3]，建議重新檢視相關機制與通道。`;
+  let rel1 = ans1 ? `質性文本提及「專案時程延遲、缺乏即時回饋」[cite: 3]，與 Flow 低分（${f}分）完全呼應。` : `未填寫具體情境，系統依據 Flow 量化低分推論：跨部門溝通存在雜訊與版本落差[cite: 3]。`;
+  let feedback1 = `依據 <b>Shannon & Weaver (1949) 資訊傳播模型</b>[cite: 3]，建議重新檢視通道雜訊與編解碼機制。`;
 
-  let rel2 = ans2 ? `質性文本提及職場實際感受[cite: 3]，呼應相應構面表現。` : `未填寫補充說明[cite: 3]，系統依據量化表現推論[cite: 3]。`;
-  let feedback2 = `依據相關管理模型[cite: 3]，建議推動對應改善方案。`;
+  let rel2 = ans2 ? `質性文本提及「高壓主管在場、不敢指出結構性問題」[cite: 3]，直接呼應 Safety 低分（${s}分）。` : `未填寫補充說明，系統依據 Safety 量化低分推論：組織內部存在防禦性發聲障礙[cite: 3]。`;
+  let feedback2 = `依據 <b>Edmondson (1999) 心理安全感模型</b>[cite: 3]，建議推動無咎責機制，降低發聲焦慮。`;
 
   tbody.innerHTML = `
     <tr>
-      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分[cite: 3]</td>
+      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分 (偏低)[cite: 3]</td>
       <td><b>Q1 填答與關聯性：</b><br>${q1Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel1}</small></td>
       <td><b>文獻對策回饋：</b><br>${feedback1}</td>
-      <td><b>建議佐證資料／量表：</b><br>• 相關評估量表[cite: 3]<br>• 現場事件紀錄與日誌[cite: 5]</td>
-      <td><b>規劃建議與時程（顧問可調整）：</b><br>可標示交接點、時限與升級處理路徑[cite: 5]。<br><b>建議時程：</b>0-30 天蒐集基線；30-90 天追蹤成果[cite: 5]。</td>
+      <td><b>建議佐證資料／量表：</b><br>• EVQ 資訊流動量表[cite: 3]<br>• 跨部門事件紀錄與交接日誌[cite: 5]</td>
+      <td><b>規劃建議與時程（顧問可調整）：</b><br>可標示資訊交接點、回覆時限、責任人與升級處理路徑[cite: 5]。<br><b>建議時程：</b>0-30 天先蒐集基線資料；30-90 天追踪行動結果[cite: 5]。</td>
     </tr>
     <tr>
-      <td><b>輔助對照構面</b><br>量化分數與權衡[cite: 3]</td>
+      <td><b>輔助對照構面 (Matrix & Safety)</b><br>量化分數：Matrix(${mx}) / Safety(${s})[cite: 3]</td>
       <td><b>Q2 填答與關聯性：</b><br>${q2Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel2}</small></td>
       <td><b>文獻對策回饋：</b><br>${feedback2}</td>
-      <td><b>建議佐證資料／量表：</b><br>• 組織文化與心理安全量表[cite: 3]</td>
-      <td><b>規劃建議與時程（顧問可調整）：</b><br>盤點權責與跨部門交接節點[cite: 5]。<br><b>建議時程：</b>0-30 天蒐集基線；30-90 天追蹤成果[cite: 5]。</td>
+      <td><b>建議佐證資料／量表：</b><br>• PSY-12 團隊心理安全量表[cite: 3]<br>• OCAI 組織文化量表[cite: 3]</td>
+      <td><b>規劃建議與時程（顧問可調整）：</b><br>可盤點責任歸屬、決策權限與跨部門交接節點[cite: 5]。<br><b>建議時程：</b>0-30 天先蒐集基線資料；30-90 天追踪行動結果[cite: 5]。</td>
     </tr>
   `;
 
@@ -547,4 +487,4 @@ window.onload = function() {
   runSimulation();
 };
 </script></body></html>
-```[cite: 3, 5]
+```[cite: 3, 5, 14]
