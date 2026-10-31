@@ -333,6 +333,17 @@ function runSimulation() {
   let typeDesc = document.getElementById('v-type-desc');
   let obsContainer = document.getElementById('v-observations');
 
+  // 💡 根據總分與各項分數動態生成「主要觀察」，不再一層不變
+  let scores = [
+    { name: 'Mirror (問題覺察)', val: m },
+    { name: 'Matrix (制度權責)', val: mx },
+    { name: 'Flow (資訊流動)', val: f },
+    { name: 'Safety (心理安全)', val: s }
+  ];
+  scores.sort((a, b) => b.val - a.val); // 由高到低排序
+  let highest = scores[0];
+  let lowest = scores[3];
+
   if(total >= 75) {
     typeTitle.style.color = "#00a86b";
     typeTitle.innerText = "高效運作型 (Optimal)";
@@ -340,9 +351,9 @@ function runSimulation() {
     obsContainer.innerHTML = `
       <b>主要觀察：</b>
       <ul>
-        <li>各構面表現均衡且位居高標，組織運作具備高度韌性。</li>
-        <li>資訊流動順暢，跨部門協作與心理安全機制健全。</li>
-        <li>持續維持優良的回饋與權責配置。</li>
+        <li>整體表現優異（總分 ${total}/100），各構面均衡發展。</li>
+        <li>表現最佳構面為 <b>${highest.name} (${highest.val}/25)</b>，支撐組織高效運作。</li>
+        <li>資訊流動與心理安全機制健全，具備高度協作韌性。</li>
       </ul>
     `;
   } else if(total >= 50) {
@@ -352,9 +363,9 @@ function runSimulation() {
     obsContainer.innerHTML = `
       <b>主要觀察：</b>
       <ul>
-        <li>組織具備基本制度框架，但執行力道尚有提升空間。</li>
-        <li>部分構面（如資訊流動或問題覺察）呈現中等水準。</li>
-        <li>建議加強跨部門溝通鏈結與回饋機制。</li>
+        <li>組織具備基本制度與結構，相對較高之構面為 <b>${highest.name} (${highest.val}/25)</b>。</li>
+        <li>相對較低之構面為 <b>${lowest.name} (${lowest.val}/25)</b>，成為現階段主要卡點。</li>
+        <li>建議針對較弱構面加強溝通鏈結與回饋機制。</li>
       </ul>
     `;
   } else {
@@ -364,29 +375,26 @@ function runSimulation() {
     obsContainer.innerHTML = `
       <b>主要觀察：</b>
       <ul>
-        <li>制度結構具有一定基礎，但執行落差明顯。</li>
-        <li>問題覺察與資訊流動較弱。</li>
-        <li>心理安全得分偏低，員工表達意見可能受限。</li>
+        <li>整體總分偏低 (${total}/100)，各構面落差顯著。</li>
+        <li>最低分卡點落在 <b>${lowest.name} (${lowest.val}/25)</b>，直接影響日常執行效率。</li>
+        <li>現階段在問題覺察、資訊流動或心理安全上明顯不足，建構調整機制的急迫性高。</li>
       </ul>
     `;
   }
 
   drawQuadrant(aw, ac, m, mx, f, s);
 
-  let scores = [{name:'Mirror', val:m}, {name:'Matrix', val:mx}, {name:'Flow', val:f}, {name:'Safety', val:s}];
-  scores.sort((a,b)=>a.val - b.val);
-  let lowest = scores[0];
-  window.lowestDimName = lowest.name;
+  window.lowestDimName = lowest.name.split(' ')[0];
 
   let l1 = document.getElementById('dyn-label-1');
   let l2 = document.getElementById('dyn-label-2');
-  if(lowest.name === 'Flow') {
+  if(lowest.name.includes('Flow')) {
     l1.innerHTML = `<b>Q1 核心深掘題（偵測 Flow 資訊流動最低）：</b> 近期在跨部門資訊傳遞或專案協調時，哪一個環節最容易發生雜訊或延遲？`;
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 針對此資訊落差，對您的日常決策造成了什麼實質阻礙？`;
-  } else if(lowest.name === 'Safety') {
+  } else if(lowest.name.includes('Safety')) {
     l1.innerHTML = `<b>Q1 核心深掘題（偵測 Safety 心理安全最低）：</b> 在高壓會議中，是什麼因素讓您或團隊成員選擇保持沈默？`;
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您希望組織提供什麼支持，能讓您更安心提出真實建言？`;
-  } else if(lowest.name === 'Mirror') {
+  } else if(lowest.name.includes('Mirror')) {
     l1.innerHTML = `<b>Q1 核心深掘題（偵測 Mirror 問題覺察最低）：</b> 近期在問題辨識與回饋機制上，最常遇到盲點的原因是什麼？`;
     l2.innerHTML = `<b>Q2 輔助驗證題：</b> 您認為如何改善組織內部的問題回饋通道？`;
   } else {
@@ -461,4 +469,120 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 
   svgContent += pill(L+10, T+10, 245, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
   svgContent += pill(midX+10, T+10, 245, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
-  svgContent += pill(L+10, midY+10, 245, 'Ⅲ
+  svgContent += pill(L+10, midY+10, 245, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
+  svgContent += pill(midX+10, midY+10, 245, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
+
+  svgContent += `<g font-size="13.5" font-weight="700" fill="#22332e">
+    <text x="${L+14}" y="${T+64}"><tspan x="${L+14}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+14}" dy="20">• 但對風險與問題覺察不足</tspan><tspan x="${L+14}" dy="20">• 需補足感知面機制</tspan></text>
+    <text x="${midX+14}" y="${T+64}"><tspan x="${midX+14}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+14}" dy="20">• 流程順暢、發聲安全</tspan><tspan x="${midX+14}" dy="20">• 支持協作與持續學習</tspan></text>
+    <text x="${L+14}" y="${midY+64}"><tspan x="${L+14}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+14}" dy="20">• 流動受阻、發聲不足</tspan><tspan x="${L+14}" dy="20">• 優先建立回報與支持</tspan></text>
+    <text x="${midX+14}" y="${midY+64}"><tspan x="${midX+14}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+14}" dy="20">• 但未有效轉化為行動</tspan><tspan x="${midX+14}" dy="20">• 強化資源配置與追蹤</tspan></text>
+  </g>`;
+
+  const resultLabelX = Math.min(Math.max(px-80, L+5), R-160);
+  const resultLabelY = Math.min(Math.max(py-62, T+5), B-55);
+
+  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+
+  svgContent += `<path d="M ${L-5} ${B} L ${R+15} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
+  svgContent += `<text x="${L}" y="${B+24}" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+24}" text-anchor="middle" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+24}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
+  svgContent += `<text x="${L-14}" y="${B+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">0</text><text x="${L-14}" y="${midY+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">2</text><text x="${L-14}" y="${T+4}" text-anchor="end" font-size="13.5" font-weight="700" fill="#263746">5 (高)</text>`;
+
+  svgContent += `<text x="${L-50}" y="${(T+B)/2}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-50} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
+  svgContent += `<text x="${(L+R)/2}" y="${B+48}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
+
+  svg.innerHTML = svgContent;
+
+  // ----------------------------------------------------
+  // 卡片 3 下方說明面板（根據分數動態調整高分/低分回饋字眼）
+  // ----------------------------------------------------
+  let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
+  let sumAw = m + s_val;
+  let sumAc = mx + f;
+
+  // 💡 分數高時顯示「表現優異」，分數低時顯示「相對偏高/偏低」
+  let awStatus = quadrantX < 2.5 ? '<span style="color:#e05650; font-weight:bold;">(相對偏低)</span>' : '<span style="color:#00a86b; font-weight:bold;">(表現優異)</span>';
+  let acStatus = quadrantY < 2.5 ? '<span style="color:#e05650; font-weight:bold;">(相對偏低)</span>' : '<span style="color:#00a86b; font-weight:bold;">(表現優異)</span>';
+
+  let bottomPanel = document.getElementById('card3-bottom-info');
+  if(bottomPanel) {
+    bottomPanel.innerHTML = `
+      <div class="b-panel-head">本次數據落點判讀</div>
+      <div class="b-panel-grid">
+        <div class="b-info-box">
+          <div class="b-info-title">計算公式與轉換 (0-5 尺度)</div>
+          <b>Awareness</b> = (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b> ${awStatus}<br>
+          <b>Action</b> = (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b> ${acStatus}<br>
+          <div style="margin-top:6px; background:#f4eaff; padding:4px 8px; border-radius:4px; font-weight:900; color:#521493; text-align:center;">
+            所在象限：${currentQuadName}
+          </div>
+        </div>
+        <div class="b-info-box">
+          <div class="b-info-title">數據落點解讀與觀察</div>
+          <div>① 綜合感知與行動落點於 <b>${currentQuadName}</b>。</div>
+          <div>② 評估 Matrix 與 Flow 對跨部門協作的驅動成效。</div>
+          <div>③ 檢視 Mirror 與 Safety 對問題回饋與信任氛圍的影響。</div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function runConsultantAnalysis() {
+  let ans1 = document.getElementById('qual-ans-1').value.trim();
+  let ans2 = document.getElementById('qual-ans-2').value.trim();
+
+  let m = document.getElementById('mirror').value;
+  let mx = document.getElementById('matrix').value;
+  let f = document.getElementById('flow').value;
+  let s = document.getElementById('safe').value;
+  let lowName = window.lowestDimName || 'Flow';
+  let lowScore = (lowName === 'Flow') ? f : (lowName === 'Safety') ? s : (lowName === 'Mirror') ? m : mx;
+
+  let tbody = document.getElementById('stage3-tbody');
+  
+  let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
+  let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
+
+  let rel1 = ans1 ? `質性文本提及相關情境[cite: 3]，與量化分數完全呼應。` : `未填寫具體情境[cite: 3]，系統依據量化分數進行對應推論[cite: 3]。`;
+  let feedback1 = `依據學術理論與文獻對策[cite: 3]，建議重新檢視相關機制與通道。`;
+
+  let rel2 = ans2 ? `質性文本提及職場實際感受[cite: 3]，呼應相應構面表現。` : `未填寫補充說明[cite: 3]，系統依據量化表現推論[cite: 3]。`;
+  let feedback2 = `依據相關管理模型[cite: 3]，建議推動對應改善方案。`;
+
+  tbody.innerHTML = `
+    <tr>
+      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分[cite: 3]</td>
+      <td><b>Q1 填答與關聯性：</b><br>${q1Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel1}</small></td>
+      <td><b>文獻對策回饋：</b><br>${feedback1}</td>
+      <td><b>建議佐證資料／量表：</b><br>• 相關評估量表[cite: 3]<br>• 現場事件紀錄與日誌[cite: 5]</td>
+      <td><b>規劃建議與時程（顧問可調整）：</b><br>可標示交接點、時限與升級處理路徑[cite: 5]。<br><b>建議時程：</b>0-30 天蒐集基線；30-90 天追蹤成果[cite: 5]。</td>
+    </tr>
+    <tr>
+      <td><b>輔助對照構面</b><br>量化分數與權衡[cite: 3]</td>
+      <td><b>Q2 填答與關聯性：</b><br>${q2Display}<br><small style="color:#521493"><b>關聯檢核：</b>${rel2}</small></td>
+      <td><b>文獻對策回饋：</b><br>${feedback2}</td>
+      <td><b>建議佐證資料／量表：</b><br>• 組織文化與心理安全量表[cite: 3]</td>
+      <td><b>規劃建議與時程（顧問可調整）：</b><br>盤點權責與跨部門交接節點[cite: 5]。<br><b>建議時程：</b>0-30 天蒐集基線；30-90 天追蹤成果[cite: 5]。</td>
+    </tr>
+  `;
+
+  document.getElementById('stage3-sec').style.display = 'block';
+  let nav3 = document.getElementById('nav-stage3');
+  nav3.innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
+  setTimeout(() => { scrollToSection('stage3-sec'); }, 400);
+}
+
+function unlockStage4() {
+  document.getElementById('stage4-sec').style.display = 'block';
+  let nav4 = document.getElementById('nav-stage4');
+  nav4.style.opacity = '1';
+  nav4.innerHTML = '<span>4</span>總結與建議 (已解鎖)';
+  setTimeout(() => { scrollToSection('stage4-sec'); }, 400);
+}
+
+window.onload = function() {
+  runSimulation();
+};
+</script></body></html>
+```[cite: 3, 5]
