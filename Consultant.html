@@ -31,7 +31,7 @@ main{max-width:1600px;margin:auto;padding:10px}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:14px}
 
 /* 圖形分析呈現區 (模組一) */
-.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:10px;margin-top:10px}
+.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:10px;margin-top:10px}
 .r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:10px;padding:12px}
 .r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:6px 8px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:6px;color:#521493;font-weight:900;font-size:12px;margin-bottom:8px;border-radius:6px}
 .r-num{width:22px;height:22px;display:inline-grid;place-items:center;border-radius:50%;background:#521493;color:white;font-size:12px}
@@ -60,10 +60,23 @@ main{max-width:1600px;margin:auto;padding:10px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
 .dim-desc{font-size:9px;color:#555;padding-left:2px}
 
-/* SVG 四象限圖專用樣式 */
+/* 第三張卡片左右分割（左側放象限圖，右側放詳細側邊分析面板） */
+.quad-layout{display:grid;grid-template-columns:1.25fr 1fr;gap:10px;align-items:start}
 .plot-wrap{padding:2px 0 0;width:100%;box-sizing:border-box}
-#quadrantChart{display:block;width:100%;height:auto;min-height:310px}
-.axis-note{text-align:center;font-size:11px;color:#284764;font-weight:700;padding:4px 0 2px}
+#quadrantChart{display:block;width:100%;height:auto;min-height:300px}
+.axis-note{text-align:center;font-size:10px;color:#284764;font-weight:700;padding:4px 0 2px}
+
+/* 右側詳細分析面板樣式 */
+.side-analysis-panel{background:#f8f4ff;border:1px solid #d5bcff;border-radius:8px;padding:10px;font-size:11px;line-height:1.5}
+.side-analysis-panel h4{margin:0 0 6px 0;color:#521493;font-size:12px;border-bottom:1px solid #e2cffc;padding-bottom:4px}
+.calc-box{background:#fff;padding:6px;border-radius:6px;border:1px solid #ebdffc;margin-bottom:8px;font-size:10.5px}
+.score-cards-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.sc-box{background:#fff;padding:6px;border-radius:6px;text-align:center;border:1px solid #ebdffc}
+.sc-box b{display:block;color:#521493;font-size:10px}
+.sc-box strong{font-size:14px;color:#d93838}
+.quad-tag{background:#7012ca;color:#fff;padding:4px;text-align:center;border-radius:4px;font-weight:bold;margin-bottom:8px}
+.interpret-list{padding-left:14px;margin:0;font-size:10px;color:#333}
+.interpret-list li{margin-bottom:4px}
 
 /* 質性填答欄位 */
 .qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -88,7 +101,7 @@ main{max-width:1600px;margin:auto;padding:10px}
 .rc-title{font-size:12px;font-weight:900;color:#174875;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 .rc-title span{background:#521493;color:#fff;padding:2px 5px;border-radius:4px;font-size:9px}
 
-@media(max-width:1100px){.inputs-grid{grid-template-columns:1fr 1fr}.report-panel-grid{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
+@media(max-width:1200px){.inputs-grid{grid-template-columns:1fr 1fr}.report-panel-grid{grid-template-columns:1fr}.quad-layout{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
 </style></head><body>
 
 <header class="top">
@@ -175,16 +188,40 @@ main{max-width:1600px;margin:auto;padding:10px}
         </div>
       </div>
 
-      <div class="r-card">
+      <!-- 第三張卡片：左側放象限圖，右側放詳細側邊分析面板 -->
+      <div class="r-card" style="grid-column: span 1;">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖與落點判讀</div>
-        <div class="plot-wrap">
-          <svg id="quadrantChart" viewBox="0 0 680 430" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
-        </div>
-        <div class="axis-note">橫軸：資訊與感知基礎（Awareness） ｜ 縱軸：組織回應與行動能力（Action）</div>
-        <div style="font-size:11px;line-height:1.45;margin-top:6px;background:#f8f4ff;padding:6px;border-radius:6px;border:1px solid #e3d3fc">
-          <b>本次數據落點判讀：</b><br>
-          Awareness = <span id="calc-aw">1.7 / 5</span> | Action = <span id="calc-ac">2.4 / 5</span><br>
-          <b>所在象限：<span id="v-quad-name" style="color:#7012ca">第三象限｜失衡風險區</span></b>
+        <div class="quad-layout">
+          <div>
+            <div class="plot-wrap">
+              <svg id="quadrantChart" viewBox="0 0 680 430" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
+            </div>
+            <div class="axis-note">橫軸：資訊與感知基礎（Awareness） ｜ 縱軸：組織回應與行動能力（Action）</div>
+          </div>
+          
+          <!-- 右側詳細分析面板 (仿第二張圖) -->
+          <div class="side-analysis-panel">
+            <h4>本次數據落點判讀</h4>
+            <div class="calc-box">
+              <b>計算公式（分數轉換為 0-5 尺度）</b><br>
+              Awareness = (Mirror + Safety) / 2<br>
+               = (<span id="txt-m">8</span> + <span id="txt-s">9</span>) / 2 = <span id="calc-aw">1.7</span> / 5<br>
+              Action = (Matrix + Flow) / 2<br>
+               = (<span id="txt-mx">18</span> + <span id="txt-f">6</span>) / 2 = <span id="calc-ac">2.4</span> / 5
+            </div>
+            <div class="score-cards-row">
+              <div class="sc-box"><b>Awareness</b><strong id="sc-aw">1.7 / 5</strong><small style="color:#d93838">相對偏低</small></div>
+              <div class="sc-box"><b>Action</b><strong id="sc-ac">2.4 / 5</strong><small style="color:#d93838">偏低</small></div>
+            </div>
+            <div class="quad-tag" id="v-quad-name">第三象限｜失衡風險區</div>
+            <div style="font-weight:bold;color:#521493;margin-bottom:3px">數據落點解讀</div>
+            <ul class="interpret-list">
+              <li><b>①</b>整體感知與行動能力均偏低，顯示組織存在明顯風險。</li>
+              <li><b>②</b>Matrix 制度權責評分較高，但 Flow 資訊流動偏低，可能影響機制落實與跨部門協作。</li>
+              <li><b>③</b>Mirror 與 Safety 均偏低，顯示問題辨識與員工覺察不足。</li>
+              <li><b>④</b>需進一步強化跨部門行動力，並優化資訊流動。</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -285,8 +322,17 @@ function runSimulation() {
   document.getElementById('v-total').innerText = total;
   document.getElementById('v-sum').innerText = total + ' / 100';
   document.getElementById('v-avg').innerText = avg + ' / 5';
-  document.getElementById('calc-aw').innerText = aw + ' / 5';
-  document.getElementById('calc-ac').innerText = ac + ' / 5';
+  
+  // 更新右側側邊面板數值
+  document.getElementById('txt-m').innerText = m;
+  document.getElementById('txt-s').innerText = s;
+  document.getElementById('txt-mx').innerText = mx;
+  document.getElementById('txt-f').innerText = f;
+  
+  document.getElementById('calc-aw').innerText = aw;
+  document.getElementById('calc-ac').innerText = ac;
+  document.getElementById('sc-aw').innerText = aw + ' / 5';
+  document.getElementById('sc-ac').innerText = ac + ' / 5';
 
   let quadName = (aw < 2.5) ? ((ac < 2.5) ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : ((ac < 2.5) ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
   document.getElementById('v-quad-name').innerText = quadName;
@@ -456,3 +502,4 @@ window.onload = function() {
   runSimulation();
 };
 </script></body></html>
+```[cite: 3, 5]
