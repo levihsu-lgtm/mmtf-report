@@ -60,23 +60,9 @@ main{max-width:1600px;margin:auto;padding:10px}
 .p-low{background:#f34550}.p-high{background:#00a86b}
 .dim-desc{font-size:9px;color:#555;padding-left:2px}
 
-/* 第三張卡片左右分割（左側放象限圖，右側放詳細側邊分析面板） */
-.quad-layout{display:grid;grid-template-columns:1.25fr 1fr;gap:10px;align-items:start}
+/* 第三張卡片：完全復刻第二張圖片的大型詳細圖表區塊 */
 .plot-wrap{padding:2px 0 0;width:100%;box-sizing:border-box}
-#quadrantChart{display:block;width:100%;height:auto;min-height:300px}
-.axis-note{text-align:center;font-size:10px;color:#284764;font-weight:700;padding:4px 0 2px}
-
-/* 右側詳細分析面板樣式 */
-.side-analysis-panel{background:#f8f4ff;border:1px solid #d5bcff;border-radius:8px;padding:10px;font-size:11px;line-height:1.5}
-.side-analysis-panel h4{margin:0 0 6px 0;color:#521493;font-size:12px;border-bottom:1px solid #e2cffc;padding-bottom:4px}
-.calc-box{background:#fff;padding:6px;border-radius:6px;border:1px solid #ebdffc;margin-bottom:8px;font-size:10.5px}
-.score-cards-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
-.sc-box{background:#fff;padding:6px;border-radius:6px;text-align:center;border:1px solid #ebdffc}
-.sc-box b{display:block;color:#521493;font-size:10px}
-.sc-box strong{font-size:14px;color:#d93838}
-.quad-tag{background:#7012ca;color:#fff;padding:4px;text-align:center;border-radius:4px;font-weight:bold;margin-bottom:8px}
-.interpret-list{padding-left:14px;margin:0;font-size:10px;color:#333}
-.interpret-list li{margin-bottom:4px}
+#quadrantChart{display:block;width:100%;height:auto;min-height:500px}
 
 /* 質性填答欄位 */
 .qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -101,7 +87,7 @@ main{max-width:1600px;margin:auto;padding:10px}
 .rc-title{font-size:12px;font-weight:900;color:#174875;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 .rc-title span{background:#521493;color:#fff;padding:2px 5px;border-radius:4px;font-size:9px}
 
-@media(max-width:1200px){.inputs-grid{grid-template-columns:1fr 1fr}.report-panel-grid{grid-template-columns:1fr}.quad-layout{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
+@media(max-width:1200px){.inputs-grid{grid-template-columns:1fr 1fr}.report-panel-grid{grid-template-columns:1fr}.qual-grid{grid-template-columns:1fr}.report-grid-6{grid-template-columns:1fr}}
 </style></head><body>
 
 <header class="top">
@@ -188,40 +174,11 @@ main{max-width:1600px;margin:auto;padding:10px}
         </div>
       </div>
 
-      <!-- 第三張卡片：左側放象限圖，右側放詳細側邊分析面板 -->
+      <!-- 第三張卡片：完全復刻第二張圖片樣式，左側大型象限圖，右側完整計算與解讀 -->
       <div class="r-card" style="grid-column: span 1;">
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖與落點判讀</div>
-        <div class="quad-layout">
-          <div>
-            <div class="plot-wrap">
-              <svg id="quadrantChart" viewBox="0 0 680 430" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
-            </div>
-            <div class="axis-note">橫軸：資訊與感知基礎（Awareness） ｜ 縱軸：組織回應與行動能力（Action）</div>
-          </div>
-          
-          <!-- 右側詳細分析面板 (仿第二張圖) -->
-          <div class="side-analysis-panel">
-            <h4>本次數據落點判讀</h4>
-            <div class="calc-box">
-              <b>計算公式（分數轉換為 0-5 尺度）</b><br>
-              Awareness = (Mirror + Safety) / 2<br>
-               = (<span id="txt-m">8</span> + <span id="txt-s">9</span>) / 2 = <span id="calc-aw">1.7</span> / 5<br>
-              Action = (Matrix + Flow) / 2<br>
-               = (<span id="txt-mx">18</span> + <span id="txt-f">6</span>) / 2 = <span id="calc-ac">2.4</span> / 5
-            </div>
-            <div class="score-cards-row">
-              <div class="sc-box"><b>Awareness</b><strong id="sc-aw">1.7 / 5</strong><small style="color:#d93838">相對偏低</small></div>
-              <div class="sc-box"><b>Action</b><strong id="sc-ac">2.4 / 5</strong><small style="color:#d93838">偏低</small></div>
-            </div>
-            <div class="quad-tag" id="v-quad-name">第三象限｜失衡風險區</div>
-            <div style="font-weight:bold;color:#521493;margin-bottom:3px">數據落點解讀</div>
-            <ul class="interpret-list">
-              <li><b>①</b>整體感知與行動能力均偏低，顯示組織存在明顯風險。</li>
-              <li><b>②</b>Matrix 制度權責評分較高，但 Flow 資訊流動偏低，可能影響機制落實與跨部門協作。</li>
-              <li><b>③</b>Mirror 與 Safety 均偏低，顯示問題辨識與員工覺察不足。</li>
-              <li><b>④</b>需進一步強化跨部門行動力，並優化資訊流動。</li>
-            </ul>
-          </div>
+        <div class="plot-wrap">
+          <svg id="quadrantChart" viewBox="0 0 980 520" role="img" aria-label="依四構面分數動態定位的四象限圖與詳細落點面板"></svg>
         </div>
       </div>
     </div>
@@ -322,22 +279,11 @@ function runSimulation() {
   document.getElementById('v-total').innerText = total;
   document.getElementById('v-sum').innerText = total + ' / 100';
   document.getElementById('v-avg').innerText = avg + ' / 5';
-  
-  // 更新右側側邊面板數值
-  document.getElementById('txt-m').innerText = m;
-  document.getElementById('txt-s').innerText = s;
-  document.getElementById('txt-mx').innerText = mx;
-  document.getElementById('txt-f').innerText = f;
-  
-  document.getElementById('calc-aw').innerText = aw;
-  document.getElementById('calc-ac').innerText = ac;
-  document.getElementById('sc-aw').innerText = aw + ' / 5';
-  document.getElementById('sc-ac').innerText = ac + ' / 5';
 
   let quadName = (aw < 2.5) ? ((ac < 2.5) ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : ((ac < 2.5) ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
-  document.getElementById('v-quad-name').innerText = quadName;
+  document.getElementById('v-quad-name') ? document.getElementById('v-quad-name').innerText = quadName : null;
 
-  drawQuadrant(aw, ac);
+  drawQuadrant(aw, ac, m, mx, f, s);
 
   let scores = [{name:'Mirror', val:m}, {name:'Matrix', val:mx}, {name:'Flow', val:f}, {name:'Safety', val:s}];
   scores.sort((a,b)=>a.val - b.val);
@@ -358,39 +304,39 @@ function runSimulation() {
   }
 }
 
-function drawQuadrant(quadrantX, quadrantY) {
+function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const svg = document.getElementById('quadrantChart');
   if(!svg) return;
-  const L=55, R=645, T=30, B=390, W=R-L, H=B-T;
+  const L=55, R=625, T=35, B=480, W=R-L, H=B-T;
   const x = v => L + (v/5)*W, y = v => B - (v/5)*H;
   const px = x(quadrantX), py = y(quadrantY);
 
-  let s = `<defs>
+  let svgContent = `<defs>
     <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ffd65c"/>
-      <stop offset="55%" stop-color="#fff18d"/>
-      <stop offset="100%" stop-color="#ffb16a"/>
+      <stop offset="0%" stop-color="#ffe891"/>
+      <stop offset="60%" stop-color="#fff4b0"/>
+      <stop offset="100%" stop-color="#ffc785"/>
     </linearGradient>
     <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#9af59d"/>
-      <stop offset="50%" stop-color="#23dc83"/>
-      <stop offset="100%" stop-color="#a4f4df"/>
+      <stop offset="0%" stop-color="#abfcc2"/>
+      <stop offset="50%" stop-color="#4ae899"/>
+      <stop offset="100%" stop-color="#b4f8e6"/>
     </linearGradient>
     <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ff555d"/>
-      <stop offset="45%" stop-color="#ff8877"/>
-      <stop offset="100%" stop-color="#ffd3db"/>
+      <stop offset="0%" stop-color="#ff757b"/>
+      <stop offset="45%" stop-color="#ff9b8e"/>
+      <stop offset="100%" stop-color="#ffe2e7"/>
     </linearGradient>
     <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#d4eaff"/>
-      <stop offset="45%" stop-color="#12b8f4"/>
-      <stop offset="100%" stop-color="#a6e7ff"/>
+      <stop offset="0%" stop-color="#e0efff"/>
+      <stop offset="45%" stop-color="#3cc6ff"/>
+      <stop offset="100%" stop-color="#bceeff"/>
     </linearGradient>
     <radialGradient id="qpeak">
-      <stop offset="0%" stop-color="#13e878" stop-opacity=".95"/>
-      <stop offset="38%" stop-color="#31e9a6" stop-opacity=".75"/>
-      <stop offset="70%" stop-color="#12c9ef" stop-opacity=".38"/>
-      <stop offset="100%" stop-color="#12c9ef" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#23f088" stop-opacity=".95"/>
+      <stop offset="40%" stop-color="#41eeb0" stop-opacity=".75"/>
+      <stop offset="70%" stop-color="#22d5ef" stop-opacity=".35"/>
+      <stop offset="100%" stop-color="#22d5ef" stop-opacity="0"/>
     </radialGradient>
     <clipPath id="qclip">
       <rect x="${L}" y="${T}" width="${W}" height="${H}"/>
@@ -399,50 +345,97 @@ function drawQuadrant(quadrantX, quadrantY) {
 
   const midX = x(2.5), midY = y(2.5);
 
-  s += `
+  svgContent += `
   <rect x="${L}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q2bg)"/>
   <rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/>
   <rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/>
   <rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>
 
   <g clip-path="url(#qclip)">
-    <ellipse cx="${x(3.65)}" cy="${y(4.05)}" rx="235" ry="190" fill="url(#qpeak)"/>`;
+    <ellipse cx="${x(3.75)}" cy="${y(4.15)}" rx="220" ry="180" fill="url(#qpeak)"/>`;
 
-  for (let i = 0; i < 18; i++) {
-    const yy = T + 90 + i * 18;
-    const rise = 175 - i * 4.5;
-    const peakX = x(3.25) + i * 1.8;
+  for (let i = 0; i < 20; i++) {
+    const yy = T + 70 + i * 20;
+    const rise = 180 - i * 4.2;
+    const peakX = x(3.3) + i * 1.8;
     const peakY = yy - rise;
-    s += `<path d="M ${L-15} ${yy+45} C ${L+100} ${yy-30}, ${x(1.6)} ${yy-15}, ${x(2.35)} ${peakY+60} S ${peakX-25} ${peakY-30}, ${peakX} ${peakY} S ${x(4.2)} ${peakY+45}, ${R+20} ${yy-70}" fill="none" stroke="#ffffff" stroke-width="${i%3===0 ? 1.7 : 1.05}" stroke-opacity="${i%3===0 ? .78 : .43}"/>`;
+    svgContent += `<path d="M ${L-10} ${yy+40} C ${L+90} ${yy-30}, ${x(1.6)} ${yy-15}, ${x(2.35)} ${peakY+60} S ${peakX-25} ${peakY-30}, ${peakX} ${peakY} S ${x(4.2)} ${peakY+45}, ${R+15} ${yy-70}" fill="none" stroke="#ffffff" stroke-width="${i%3===0 ? 1.8 : 1.1}" stroke-opacity="${i%3===0 ? .82 : .45}"/>`;
   }
-  s += `<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.65)} ${y(4.05)}" fill="none" stroke="#172b24" stroke-width="2.3" stroke-dasharray="7 5"/>`;
-  s += `</g>`;
+  svgContent += `<path d="M ${x(.75)} ${y(.55)} C ${x(1.55)} ${y(1.4)}, ${x(2.15)} ${y(3.15)}, ${x(3.75)} ${y(4.15)}" fill="none" stroke="#172b24" stroke-width="2.4" stroke-dasharray="7 5"/>`;
+  svgContent += `</g>`;
 
-  s += `<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.2" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.5"/>`;
+  svgContent += `<line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
 
-  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="32" rx="7" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+21}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#182a27">${label}</text>`;
+  // 象限標題與內容卡片 (完整復刻第二張圖)
+  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="30" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+20}" text-anchor="middle" font-size="13" font-weight="900" fill="#182a27">${label}</text>`;
 
-  s += pill(L+10, T+10, 165, 'Ⅱ 潛能未釋放區', '#fff8e8', '#c98237');
-  s += pill(R-175, T+10, 165, 'Ⅰ 最佳運作區', '#e5ffe5', '#4a9c55');
-  s += pill(L+10, midY+10, 165, 'Ⅲ 失衡風險區', '#fff0ee', '#d75b54');
-  s += pill(R-175, midY+10, 165, 'Ⅳ 看見未轉化區', '#eef8ff', '#5485d9');
+  svgContent += pill(L+12, T+12, 225, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
+  svgContent += pill(midX+12, T+12, 225, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
+  svgContent += pill(L+12, midY+12, 225, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
+  svgContent += pill(midX+12, midY+12, 225, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
 
-  s += `<g font-size="11.5" font-weight="600" fill="#26332f">
-    <text x="${L+14}" y="${T+58}"><tspan x="${L+14}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+14}" dy="17">• 但資訊基礎與問題覺察不足</tspan><tspan x="${L+14}" dy="17">• 需補足透明回饋機制</tspan></text>
-    <text x="${R-14}" y="${T+58}" text-anchor="end"><tspan x="${R-14}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${R-14}" dy="17">• 流程順暢、發聲安全</tspan><tspan x="${R-14}" dy="17">• 支持協作與持續學習</tspan></text>
-    <text x="${L+14}" y="${midY+58}"><tspan x="${L+14}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+14}" dy="17">• 流動受阻、發聲不足</tspan><tspan x="${L+14}" dy="17">• 優先建立回報與支持</tspan></text>
-    <text x="${R-14}" y="${midY+58}" text-anchor="end"><tspan x="${R-14}" dy="0">• 能看見問題與風險</tspan><tspan x="${R-14}" dy="17">• 但未有效轉化為行動</tspan><tspan x="${R-14}" dy="17">• 強化資源配置與追蹤</tspan></text>
+  svgContent += `<g font-size="11.5" font-weight="600" fill="#22332e">
+    <text x="${L+16}" y="${T+62}"><tspan x="${L+16}" dy="0">• 具備回應與執行能力</tspan><tspan x="${L+16}" dy="17">• 但對風險與問題覺察不足</tspan><tspan x="${L+16}" dy="17">• 需補足感知面機制</tspan></text>
+    <text x="${midX+16}" y="${T+62}"><tspan x="${midX+16}" dy="0">• 資訊透明、權責明確</tspan><tspan x="${midX+16}" dy="17">• 流程順暢、發聲安全</tspan><tspan x="${midX+16}" dy="17">• 支持協作與持續學習</tspan></text>
+    <text x="${L+16}" y="${midY+62}"><tspan x="${L+16}" dy="0">• 資訊不透明、權責不清</tspan><tspan x="${L+16}" dy="17">• 流動受阻、發聲不足</tspan><tspan x="${L+16}" dy="17">• 優先建立回報與支持</tspan></text>
+    <text x="${midX+16}" y="${midY+62}"><tspan x="${midX+16}" dy="0">• 能看見問題但風險</tspan><tspan x="${midX+16}" dy="17">• 但未有效轉化為行動</tspan><tspan x="${midX+16}" dy="17">• 強化資源配置與追蹤</tspan></text>
   </g>`;
 
+  // 定位紅點與置頂紅色標籤
   const resultLabelX = Math.min(Math.max(px-65, L+5), R-135);
-  const resultLabelY = Math.min(Math.max(py-48, T+5), B-45);
+  const resultLabelY = Math.min(Math.max(py-52, T+5), B-45);
 
-  s += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-18}" stroke="#b31324" stroke-width="2.2"/><circle cx="${px}" cy="${py}" r="9" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="130" height="36" rx="6" fill="#b80c20" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+65}" y="${resultLabelY+14}" text-anchor="middle" font-size="11" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+65}" y="${resultLabelY+28}" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-22}" stroke="#c90020" stroke-width="2.3"/><circle cx="${px}" cy="${py}" r="9.5" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="130" height="38" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+65}" y="${resultLabelY+15}" text-anchor="middle" font-size="11" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+65}" y="${resultLabelY+30}" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
-  s += `<path d="M ${L-5} ${B} L ${R+10} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
-  s += `<text x="${L}" y="${B+20}" font-size="11.5" font-weight="700" fill="#263746">0</text><text x="${R}" y="${B+20}" text-anchor="end" font-size="11.5" font-weight="700" fill="#263746">5 (高)</text><text x="${L-10}" y="${T}" text-anchor="end" font-size="11.5" font-weight="700" fill="#263746">5 (高)</text><text x="${L-10}" y="${B}" text-anchor="end" font-size="11.5" font-weight="700" fill="#263746">0</text>`;
+  // 坐標軸外框與刻度標籤
+  svgContent += `<path d="M ${L-5} ${B} L ${R+10} ${B} l -8 -4 m 8 4 l -8 4" fill="none" stroke="#111827" stroke-width="2"/><path d="M ${L} ${B+5} L ${L} ${T-10} l -4 8 m 4 -8 l 4 8" fill="none" stroke="#111827" stroke-width="2"/>`;
+  svgContent += `<text x="${L}" y="${B+22}" font-size="11" font-weight="700" fill="#263746">0</text><text x="${midX}" y="${B+22}" text-anchor="middle" font-size="11" font-weight="700" fill="#263746">2</text><text x="${R}" y="${B+22}" text-anchor="end" font-size="11" font-weight="700" fill="#263746">5 (高)</text>`;
+  svgContent += `<text x="${L-10}" y="${B}" text-anchor="end" font-size="11" font-weight="700" fill="#263746">0</text><text x="${L-10}" y="${midY}" text-anchor="end" font-size="11" font-weight="700" fill="#263746">2</text><text x="${L-10}" y="${T}" text-anchor="end" font-size="11" font-weight="700" fill="#263746">5 (高)</text>`;
 
-  svg.innerHTML = s;
+  svgContent += `<text x="${L-38}" y="${(T+B)/2}" text-anchor="middle" font-size="12" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-38} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
+  svgContent += `<text x="${(L+R)/2}" y="${B+42}" text-anchor="middle" font-size="12" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
+
+  // ----------------------------------------------------
+  // 右側詳細分析面板 (完全復刻第二張圖的右側區塊與排版)
+  // ----------------------------------------------------
+  const rx = 645, rw = 325;
+  svgContent += `
+    <rect x="${rx}" y="${T}" width="${rw}" height="${H}" rx="8" fill="#f8f4ff" stroke="#d5bcff" stroke-width="1.5"/>
+    <rect x="${rx}" y="${T}" width="${rw}" height="36" rx="8" fill="#521493"/>
+    <text x="${rx+rw/2}" y="${T+23}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#fff">本次數據落點判讀</text>
+    
+    <!-- 計算公式區 -->
+    <rect x="${rx+10}" y="${T+46}" width="${rw-20}" height="110" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+20}" y="${T+65}" font-size="11" font-weight="900" fill="#521493">計算公式（分數轉換為 0-5 尺度）</text>
+    <text x="${rx+20}" y="${T+85}" font-size="11" font-weight="700" fill="#333">Awareness = (Mirror + Safety) / 2</text>
+    <text x="${rx+45}" y="${T+102}" font-size="11" font-weight="700" fill="#7012ca">= (${m} + ${s_val}) / 2 = <b>${m+s_val}</b> / 25 = <b>${quadrantX.toFixed(1)} / 5</b></text>
+    <text x="${rx+20}" y="${T+124}" font-size="11" font-weight="700" fill="#333">Action = (Matrix + Flow) / 2</text>
+    <text x="${rx+45}" y="${T+142}" font-size="11" font-weight="700" fill="#7012ca">= (${mx} + ${f}) / 2 = <b>${mx+f}</b> / 25 = <b>${quadrantY.toFixed(1)} / 5</b></text>
+
+    <!-- 分數卡片 -->
+    <rect x="${rx+10}" y="${T+164}" width="148" height="52" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+84}" y="${T+182}" text-anchor="middle" font-size="10.5" font-weight="900" fill="#521493">Awareness</text>
+    <text x="${rx+84}" y="${T+206}" text-anchor="middle" font-size="14" font-weight="900" fill="#d93838">${quadrantX.toFixed(1)} / 5 <tspan font-size="9.5" font-weight="700" fill="#e05650">${quadrantX<2.5?'相對偏低':'偏高'}</tspan></text>
+
+    <rect x="${rx+168}" y="${T+164}" width="148" height="52" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+242}" y="${T+182}" text-anchor="middle" font-size="10.5" font-weight="900" fill="#521493">Action</text>
+    <text x="${rx+242}" y="${T+206}" text-anchor="middle" font-size="14" font-weight="900" fill="#d93838">${quadrantY.toFixed(1)} / 5 <tspan font-size="9.5" font-weight="700" fill="#e05650">${quadrantY<2.5?'偏低':'偏高'}</tspan></text>
+
+    <!-- 所在象限標題 -->
+    <rect x="${rx+10}" y="${T+224}" width="${rw-20}" height="32" rx="6" fill="#7012ca"/>
+    <text x="${rx+rw/2}" y="${T+244}" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">所在象限：${quadrantX<2.5?(quadrantY<2.5?'第三象限｜失衡風險區':'第二象限｜潛能未釋放區'):(quadrantY<2.5?'第四象限｜看見未轉化區':'第一象限｜最佳運作區')}</text>
+
+    <!-- 數據落點解讀清單 -->
+    <rect x="${rx+10}" y="${T+264}" width="${rw-20}" height="202" rx="6" fill="#fff" stroke="#ebdffc"/>
+    <text x="${rx+20}" y="${T+284}" font-size="11.5" font-weight="900" fill="#521493">數據落點解讀</text>
+    
+    <text x="${rx+20}" y="${T+306}" font-size="10.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">①</tspan> 整體感知與行動能力均偏低，顯示組織存在明顯風險。</text>
+    <text x="${rx+20}" y="${T+335}" font-size="10.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">②</tspan> Matrix 評分較高，但 Flow 仍偏低，<tspan x="${rx+36}" dy="14">可能影響機制落實與跨部門協作。</tspan></text>
+    <text x="${rx+20}" y="${T+374}" font-size="10.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">③</tspan> Mirror 與 Safety 均偏低，顯示問題<tspan x="${rx+36}" dy="14">辨識與員工覺察不足。</tspan></text>
+    <text x="${rx+20}" y="${T+413}" font-size="10.5" font-weight="700" fill="#333"><tspan font-weight="900" fill="#7012ca">④</tspan> 需進一步強化跨部門行動力，並優化資訊流動。</text>
+  `;
+
+  svg.innerHTML = svgContent;
 }
 
 function runConsultantAnalysis() {
