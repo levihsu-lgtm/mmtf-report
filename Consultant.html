@@ -35,7 +35,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:15px;width:100%}
 
 /* 一排三張卡片區塊 */
-.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:16px;align-items:stretch}
+.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.45fr;gap:16px;align-items:stretch}
 .r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:12px;padding:16px;display:flex;flex-direction:column;min-width:0}
 
 .r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:10px 12px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:13.5px;margin-bottom:12px;border-radius:6px}
@@ -68,7 +68,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 /* 第三張卡片內部：上圖表、下說明 */
 .card3-stack{display:flex;flex-direction:column;gap:14px;height:100%}
 .plot-wrap-stacked{width:100%;display:flex;align-items:center;justify-content:center}
-#quadrantChart{display:block;width:100%;height:auto;max-height:420px}
+#quadrantChart{display:block;width:100%;height:auto;max-height:480px}
 
 /* 下方說明面板 */
 .bottom-info-panel{background:#f8f4ff;border:1.5px solid #d5bcff;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}
@@ -204,7 +204,7 @@ main{max-width:1650px;margin:auto;padding:16px}
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
         <div class="card3-stack">
           <div class="plot-wrap-stacked">
-            <svg id="quadrantChart" viewBox="0 0 660 540" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
+            <svg id="quadrantChart" viewBox="0 0 760 580" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
           </div>
           <div class="bottom-info-panel" id="card3-bottom-info">
             <!-- JS 動態更新 -->
@@ -222,12 +222,17 @@ main{max-width:1650px;margin:auto;padding:16px}
     <div class="qual-grid">
       <div class="qual-group">
         <label id="dyn-label-1"><b>Q1 核心深掘題：</b></label>
-        <textarea id="qual-ans-1" placeholder="請填寫您的職場情境...">近期在跨部門專案時，常發現時程延遲，但第一時間未收到明確的檢討回饋。</textarea>
+        <textarea id="qual-ans-1" placeholder="請填寫您的職場情境..."></textarea>
       </div>
       <div class="qual-group">
         <label id="dyn-label-2"><b>Q2 輔助驗證題：</b></label>
-        <textarea id="qual-ans-2" placeholder="請填寫您的職場情境...">在高壓與跨部門主管在場時，基於組織氛圍，較不敢直接指出結構性問題。</textarea>
+        <textarea id="qual-ans-2" placeholder="請填寫您的職場情境..."></textarea>
       </div>
+    </div>
+    <div class="module-box" id="lpa-preview" style="margin-top:14px;border-color:#8b5cf6">
+      <div class="module-title">🔎 MMTF-LPA｜語言線索與語態分析</div>
+      <p style="font-size:12px;color:#6b5388">分析原始文字中的構面關鍵詞、否定／不確定／絕對化語句、主動／被動表述及具體事件線索。這是規則式文字提示，不判斷人格、心理狀態或真實意圖；所有結論仍須由顧問核對。</p>
+      <div id="lpa-live-result" style="background:#faf7ff;border:1px solid #e3d5ff;border-radius:8px;padding:10px">提交填答後，系統將顯示語言線索、證據等級及需要追問的地方。</div>
     </div>
     <div style="margin-top:12px">
       <button class="next-btn" onclick="runConsultantAnalysis()">提交填答並生成模組三顧問交叉分析表 ➔</button>
@@ -243,7 +248,7 @@ main{max-width:1650px;margin:auto;padding:16px}
       <thead>
         <tr>
           <th>向量表構面與量化分數</th>
-          <th>模組二質性填答結果與關聯性檢核</th>
+          <th>質性填答、語言線索與證據等級</th>
           <th>使用管理工具種類</th>
           <th>文獻理論參照與回饋分析結果</th>
           <th>規劃建議與時程（顧問可調整）</th>
@@ -258,18 +263,105 @@ main{max-width:1650px;margin:auto;padding:16px}
       <div id="scale-recommendations" class="report-grid-6"></div>
     </div>
     <div class="module-box" style="margin-top:16px;border-color:#087cf3">
-      <div class="module-title">📝 外部量表施測結果回填（T1 基線）</div>
-      <p style="font-size:13px;color:#6b5388">請依正式量表手冊記錄原始分數及計分方式，再依研究預先訂定且有理據的轉換規則轉為 0～25 同方向尺度。不可為了與 MMTF 接近而任意轉換；不同構念只可作概念對照，不宜直接比較差值。</p>
-      <div class="inputs-grid" style="grid-template-columns:repeat(4,1fr)">
-        <div class="qual-group"><label for="scale-score-m">Mirror 對應量表分數（0～25）</label><input id="scale-score-m" type="number" min="0" max="25" step="0.1" placeholder="回填分數" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px"><input id="scale-name-m" type="text" placeholder="量表名稱／版本" style="width:100%;margin-top:7px;padding:8px;border:1px solid #d5bcff;border-radius:6px"></div>
-        <div class="qual-group"><label for="scale-score-mx">Matrix 對應量表分數（0～25）</label><input id="scale-score-mx" type="number" min="0" max="25" step="0.1" placeholder="回填分數" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px"><input id="scale-name-mx" type="text" placeholder="量表名稱／版本" style="width:100%;margin-top:7px;padding:8px;border:1px solid #d5bcff;border-radius:6px"></div>
-        <div class="qual-group"><label for="scale-score-f">Flow 對應量表分數（0～25）</label><input id="scale-score-f" type="number" min="0" max="25" step="0.1" placeholder="回填分數" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px"><input id="scale-name-f" type="text" placeholder="量表名稱／版本" style="width:100%;margin-top:7px;padding:8px;border:1px solid #d5bcff;border-radius:6px"></div>
-        <div class="qual-group"><label for="scale-score-s">Safety 對應量表分數（0～25）</label><input id="scale-score-s" type="number" min="0" max="25" step="0.1" placeholder="回填分數" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px"><input id="scale-name-s" type="text" placeholder="量表名稱／版本" style="width:100%;margin-top:7px;padding:8px;border:1px solid #d5bcff;border-radius:6px"></div>
+  <div class="module-title">📊 外部量表選擇、指標設定與 MMTF 實證對照（T1）</div>
+  <p style="font-size:13px;color:#6b5388">
+    本區不是把外部量表換算成 MMTF 分數。請先選擇實際施測的量表，再依該量表正式版本保留原有構面、分量表與計分規則；匯入匿名受試者逐筆資料後，系統才將外部量表指標與同一受試者第一次 MMTF 分數配對分析。PSC-12 與 Edmondson 團隊心理安全量表可同時施測、同時納入分析，兩者分別代表心理社會安全氣候與團隊心理安全感，不互相替代。
+  </p>
+
+  <div class="qual-group" style="border:1px solid #cbb5f4;border-radius:9px;padding:13px;margin-bottom:12px">
+    <b>① 選擇本次實際使用的外部量表</b>
+    <div class="inputs-grid" style="grid-template-columns:repeat(2,1fr);margin-top:9px">
+      <div>
+        <label for="ext-select-m">Mirror｜回饋接收與回饋導向</label>
+        <select id="ext-select-m" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px">
+          <option value="">本次未施測</option>
+          <option value="fos">Feedback Orientation Scale（FOS）</option>
+          <option value="custom_m">其他經確認的回饋相關量表</option>
+        </select>
+        <small>外部指標：FOS 正式版本的總分或分量表分數；依該版本手冊定義，不自行合併分量表。</small>
       </div>
-      <div style="margin-top:12px"><button class="gen-btn" type="button" onclick="runScaleCombinationAnalysis()">回填完成，進行量表 × MMTF 組合分析</button></div>
-      <div id="scale-combination-result" style="display:none;margin-top:14px;background:#f8f4ff;border:1px solid #d5bcff;border-radius:10px;padding:14px"></div>
+      <div>
+        <label for="ext-select-mx">Matrix｜角色與制度配置</label>
+        <select id="ext-select-mx" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px">
+          <option value="">本次未施測</option>
+          <option value="role">Role Conflict and Ambiguity Scale</option>
+          <option value="custom_mx">其他經確認的角色／制度相關量表</option>
+        </select>
+        <small>外部指標：角色衝突、角色模糊分量表分開保留，不可未經依據合併成單一分數。</small>
+      </div>
+      <div>
+        <label for="ext-select-f">Flow｜溝通與資訊流動</label>
+        <select id="ext-select-f" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px">
+          <option value="">本次未施測</option>
+          <option value="csq">Communication Satisfaction Questionnaire（CSQ）</option>
+          <option value="custom_f">其他經確認的溝通相關量表</option>
+        </select>
+        <small>外部指標：依正式版本保留各溝通面向分量表；總分僅在量表手冊允許時使用。</small>
+      </div>
+      <div style="border:1px solid #a9d8c7;border-radius:8px;padding:10px;background:#f5fcf8">
+        <b>Safety｜兩種工具可同時選擇</b>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="ext-select-edm"> Edmondson 7-item Team Psychological Safety Scale</label>
+        <small>團隊層次的心理安全感指標。</small>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input type="checkbox" id="ext-select-psc"> PSC-12 Psychosocial Safety Climate</label>
+        <small>組織／群體層次的心理社會安全氣候指標。</small>
+        <p style="font-size:12px;color:#47735f;margin:8px 0 0">可同時勾選兩者。分析時各自保留獨立欄位、分數與結果，不合併成 Safety 單一外部分數。</p>
+      </div>
     </div>
-    <div class="module-box" style="margin-top:16px;border-color:#e59b35">
+    <div style="margin-top:10px">
+      <label for="ext-version-notes">實際量表版本、語言、授權或計分備註</label>
+      <textarea id="ext-version-notes" rows="2" placeholder="例如：中文版來源、版本年份、使用授權、反向題處理、正式計分手冊版本"></textarea>
+    </div>
+  </div>
+
+  <div class="qual-group" style="border:1px solid #cbb5f4;border-radius:9px;padding:13px;margin-bottom:12px">
+    <b>② 設定分析條件</b>
+    <div class="inputs-grid" style="grid-template-columns:repeat(2,1fr);margin-top:9px">
+      <div><label for="validity-method">統計方法</label>
+        <select id="validity-method" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px">
+          <option value="pearson">Pearson 積差相關（連續變項且符合適用條件）</option>
+          <option value="spearman">Spearman 等級相關（序位／非正態或單調關係）</option>
+        </select>
+      </div>
+      <div><label for="validity-alpha">顯著水準 α</label>
+        <select id="validity-alpha" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px">
+          <option value="0.05">0.05</option><option value="0.01">0.01</option><option value="0.10">0.10（探索性）</option>
+        </select>
+      </div>
+      <div><label for="validity-missing">缺失值處理</label>
+        <select id="validity-missing" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px">
+          <option value="pairwise">逐組配對刪除（每項分析使用有效配對）</option>
+          <option value="listwise">整列刪除（任一分析欄位缺失即排除）</option>
+        </select>
+      </div>
+      <div><label for="validity-level">研究資料層級</label>
+        <select id="validity-level" style="width:100%;padding:9px;border:1px solid #d5bcff;border-radius:6px">
+          <option value="individual">個別受試者配對資料</option>
+          <option value="team">團隊／部門彙整資料（需說明聚合依據）</option>
+        </select>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#765b8c;margin:8px 0 0">方法選擇須依研究假設、變項尺度、分布、離群值、獨立性及資料層級決定。此模組先提供相關分析；信度、EFA、CFA、HTMT、迴歸及多層次分析仍須依完整原始題項資料與研究設計另行執行。</p>
+  </div>
+
+  <div class="qual-group" style="border:1px solid #cbb5f4;border-radius:9px;padding:13px">
+    <b>③ 匯入第一次 MMTF 與外部量表的匿名配對資料</b>
+    <p style="font-size:12px;color:#6b5388">每一列代表一位受試者（或一個已定義的分析單位）。必須使用匿名配對碼，確保該列 MMTF T1 與外部量表分數來自同一受試者／分析單位。不要匯入姓名、身分證字號、Email 或其他直接識別資料。</p>
+    <div style="background:#f7f4fb;border-radius:7px;padding:10px;font-size:12px;line-height:1.7">
+      **CSV 欄位格式（第一列為欄名）：**<br>
+      `case_id,mmtf_mirror,mmtf_matrix,mmtf_flow,mmtf_safety,fos_total,role_conflict,role_ambiguity,csq_total,edmondson_total,psc12_total`<br>
+      若未施測某工具，該欄留空即可。角色衝突與角色模糊分開輸入；Edmondson 與 PSC-12 各自獨立輸入。若正式版本有多個分量表，請另加欄位並保留清楚欄名，不要把分量表任意加總。
+    </div>
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <input id="validity-csv-file" type="file" accept=".csv,text/csv">
+      <button class="gen-btn" type="button" onclick="downloadMMTFValidityTemplate()">下載 CSV 範本</button>
+    </div>
+    <div id="validity-file-status" style="font-size:12px;color:#65527c;margin-top:8px">尚未匯入資料。</div>
+    <div style="margin-top:12px"><button class="gen-btn" type="button" onclick="runMMTFExternalValidity()">依選定量表與分析條件執行 MMTF 對照分析</button></div>
+    <div id="validity-analysis-result" style="display:none;margin-top:14px;background:#f8f4ff;border:1px solid #d5bcff;border-radius:10px;padding:14px"></div>
+  </div>
+  <input id="scale-score-m" type="hidden"><input id="scale-score-mx" type="hidden"><input id="scale-score-f" type="hidden"><input id="scale-score-s" type="hidden">
+</div>
+<div class="module-box" style="margin-top:16px;border-color:#e59b35">
       <div class="module-title">🧭 顧問回饋與改善介入紀錄</div>
       <p style="font-size:13px;color:#6b5388">顧問需將診斷發現轉化為具體回饋及可追蹤的改善行動。請區分「觀察事實」「顧問判讀」與「改善建議」，避免把量表分數直接當成個人能力或績效判定。</p>
       <div class="qual-group"><label for="consultant-feedback">顧問分析與回饋內容</label><textarea id="consultant-feedback" rows="4" placeholder="記錄：MMTF 與外部量表對照結果、質性資料佐證、差異可能原因、顧問回饋重點"></textarea></div>
@@ -282,18 +374,14 @@ main{max-width:1650px;margin:auto;padding:16px}
     </div>
     <div class="module-box" style="margin-top:16px;border-color:#159b76">
       <div class="module-title">📈 改善後追蹤施測（T2）與成效檢核</div>
-      <p style="font-size:13px;color:#6b5388">改善措施執行一段預先設定的期間後，使用相同版本、相同計分方向及盡可能相同的填答對象重新施測。以下回填 MMTF T2 四構面分數；外部量表若有追測，也請填入同一轉換尺度的 T2 分數。未追測者可留空。</p>
+      <p style="font-size:13px;color:#6b5388">改善措施執行一段預先設定的期間後，使用相同版本、相同計分方向及盡可能相同的填答對象重新施測。此處回填 MMTF T2 四構面分數，採 0～25 整數計分；不接受小數。外部量表 T2 應依各量表自己的計分架構另行保存，不可換算成 MMTF 0～25 分後混合比較。</p>
       <div class="inputs-grid" style="grid-template-columns:repeat(4,1fr)">
-        <div class="qual-group"><label for="t2-m">Mirror T2（0～25）</label><input id="t2-m" type="number" min="0" max="25" step="0.1" placeholder="改善後分數" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
-        <div class="qual-group"><label for="t2-mx">Matrix T2（0～25）</label><input id="t2-mx" type="number" min="0" max="25" step="0.1" placeholder="改善後分數" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
-        <div class="qual-group"><label for="t2-f">Flow T2（0～25）</label><input id="t2-f" type="number" min="0" max="25" step="0.1" placeholder="改善後分數" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
-        <div class="qual-group"><label for="t2-s">Safety T2（0～25）</label><input id="t2-s" type="number" min="0" max="25" step="0.1" placeholder="改善後分數" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
+        <div class="qual-group"><label for="t2-m">Mirror T2（0～25）</label><input id="t2-m" type="number" min="0" max="25" step="1" placeholder="0～25 整數" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
+        <div class="qual-group"><label for="t2-mx">Matrix T2（0～25）</label><input id="t2-mx" type="number" min="0" max="25" step="1" placeholder="0～25 整數" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
+        <div class="qual-group"><label for="t2-f">Flow T2（0～25）</label><input id="t2-f" type="number" min="0" max="25" step="1" placeholder="0～25 整數" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
+        <div class="qual-group"><label for="t2-s">Safety T2（0～25）</label><input id="t2-s" type="number" min="0" max="25" step="1" placeholder="0～25 整數" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
       </div>
       <div class="inputs-grid" style="grid-template-columns:repeat(4,1fr);margin-top:8px">
-        <div class="qual-group"><label for="ext-t2-m">Mirror 外部量表 T2</label><input id="ext-t2-m" type="number" min="0" max="25" step="0.1" placeholder="選填" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
-        <div class="qual-group"><label for="ext-t2-mx">Matrix 外部量表 T2</label><input id="ext-t2-mx" type="number" min="0" max="25" step="0.1" placeholder="選填" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
-        <div class="qual-group"><label for="ext-t2-f">Flow 外部量表 T2</label><input id="ext-t2-f" type="number" min="0" max="25" step="0.1" placeholder="選填" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
-        <div class="qual-group"><label for="ext-t2-s">Safety 外部量表 T2</label><input id="ext-t2-s" type="number" min="0" max="25" step="0.1" placeholder="選填" style="width:100%;padding:9px;border:1px solid #b8e4d5;border-radius:6px"></div>
       </div>
       <div class="qual-group" style="margin-top:10px"><label for="improvement-evidence">改善執行證據／參與者回饋</label><textarea id="improvement-evidence" rows="3" placeholder="例如：流程文件、會議紀錄、主管回饋、參與者具體經驗與未改善事項"></textarea></div>
       <div style="margin-top:12px"><button class="gen-btn" type="button" onclick="runInterventionEvaluation()">產生顧問介入與前後測成效分析</button></div>
@@ -368,7 +456,6 @@ function scrollToSection(id) {
   let targetSec = document.getElementById(id);
   if(!targetSec) return;
   
-  // 檢查是否已解鎖
   let secIdNum = parseInt(id.replace('stage', '').replace('-sec', ''));
   if(secIdNum > currentUnlockedStage && secIdNum !== 3 && secIdNum !== 4 && secIdNum !== 5) {
     alert('請先完成前置階段填答與確認！');
@@ -495,7 +582,6 @@ function runSimulation() {
   window.lowestDimKey = lowest.key;
   window.lowestDimName = lowest.name;
 
-  // 依四構面分數排序及兩個主要弱項的文獻脈絡，動態組合質性問題
   renderCombinationQuestions(scores);
 }
 
@@ -554,83 +640,170 @@ function renderScaleRecommendations() {
   box.innerHTML=dims.map(d=>`<div class="report-card rc-2"><div class="rc-title">${d.name}｜${d.score}/25 <span>${level(d)}</span></div><p><b>理論參照：</b>${d.theory}</p><p style="margin-top:6px"><b>候選量表／工具：</b>${d.scale}</p><p style="margin-top:6px"><b>建議理由：</b>${d.score<12?'目前分數偏低，建議優先使用相對應工具進一步釐清問題來源。':d.score<18?'目前分數居中，可使用工具確認是否存在特定情境或子面向落差。':'目前分數相對較高，可作為交叉驗證或優勢面向基準。'}</p></div>`).join('');
 }
 
-function runScaleCombinationAnalysis() {
-  const dims=getCurrentDimensionScores();
-  const keys=['m','mx','f','s'];
-  const results=[];
-  for(const d of dims){
-    const input=document.getElementById('scale-score-'+d.key);
-    const name=document.getElementById('scale-name-'+d.key).value.trim();
-    const raw=input.value.trim();
-    if(raw==='') continue;
-    const val=Number(raw);
-    if(!Number.isFinite(val)||val<0||val>25){alert(`${d.name} 回填分數必須介於 0～25。`);input.focus();return;}
-    results.push({key:d.key,name:d.name,mmtf:d.score,external:val,scale:name||'未填量表名稱',delta:Number((val-d.score).toFixed(1))});
+let mmtfValidityRows = [];
+let mmtfValidityHeaders = [];
+
+function parseMMTFCsv(text) {
+  const lines=[]; let row=[], cell='', quoted=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i], next=text[i+1];
+    if(ch==='"' && quoted && next==='"'){cell+='"';i++;}
+    else if(ch==='"'){quoted=!quoted;}
+    else if(ch===',' && !quoted){row.push(cell);cell='';}
+    else if((ch==='\n'||ch==='\r')&&!quoted){
+      if(ch==='\r'&&next==='\n')i++;
+      row.push(cell); if(row.some(v=>String(v).trim()!==''))lines.push(row);
+      row=[];cell='';
+    } else cell+=ch;
   }
-  const out=document.getElementById('scale-combination-result');
-  if(!results.length){alert('請至少回填一個構面的外部量表標準化分數。');return;}
-  const avgDelta=results.reduce((a,b)=>a+b.delta,0)/results.length;
-  const rows=results.map(r=>{
-    const status=Math.abs(r.delta)<2?'兩種資料大致接近':r.delta>0?'外部量表結果高於 MMTF 自評分數':'外部量表結果低於 MMTF 自評分數';
-    return `<tr><td>${r.name}</td><td>${r.mmtf.toFixed(1)}/25</td><td>${r.external.toFixed(1)}/25</td><td>${r.delta>0?'+':''}${r.delta.toFixed(1)}</td><td>${status}</td><td>${escapeHtml(r.scale)}</td></tr>`;
-  }).join('');
-  const overall=avgDelta>1?'外部量表標準化分數整體較高，建議檢視自評與工具測量情境、題項及評估對象是否不同。':avgDelta< -1?'外部量表標準化分數整體較低，建議進一步檢視是否存在自我感受與特定面向測量結果的落差。':'已回填構面之兩種資料整體接近，但仍應逐構面檢視差異。';
-  out.style.display='block';
-  out.innerHTML=`<b>量表 × MMTF 交叉分析</b><p>本分析僅比較已回填構面；不將不同量表原始分數直接相加，也不把差異解讀為因果。</p><div style="overflow-x:auto"><table class="analysis-table"><thead><tr><th>構面</th><th>MMTF 分數</th><th>外部量表轉換分數</th><th>差值</th><th>交叉觀察</th><th>量表名稱</th></tr></thead><tbody>${rows}</tbody></table></div><p><b>整體組合觀察：</b>${overall}</p><p><b>顧問下一步：</b>針對差值較大的構面核對量表版本、計分方向、填答對象、施測時間與題項涵蓋範圍，再結合第二階段質性回答進行解釋。</p><small>注意：輸入值必須先依各量表正式手冊轉換成 0～25 且高分代表較佳的同方向尺度；不同量表的測量構念不完全相同，差值僅作探索性對照。</small>`;
-  window.mmtfScaleReturn=results;
+  row.push(cell); if(row.some(v=>String(v).trim()!==''))lines.push(row);
+  if(!lines.length) throw new Error('CSV 沒有資料');
+  const headers=lines[0].map(h=>h.trim().replace(/^\uFEFF/,''));
+  const rows=lines.slice(1).map(r=>{
+    const obj={}; headers.forEach((h,i)=>obj[h]=(r[i]??'').trim()); return obj;
+  });
+  return {headers,rows};
 }
 
+function downloadMMTFValidityTemplate() {
+  const header='case_id,mmtf_mirror,mmtf_matrix,mmtf_flow,mmtf_safety,fos_total,role_conflict,role_ambiguity,csq_total,edmondson_total,psc12_total';
+  const sample='P001,18,14,12,17,3.8,2.4,2.1,3.6,4.1,3.2';
+  const blob=new Blob(['\uFEFF'+header+'\n'+sample+'\n'],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url;a.download='MMTF_外部量表配對資料範本.csv';a.click();URL.revokeObjectURL(url);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const file=document.getElementById('validity-csv-file');
+  if(file) file.addEventListener('change',async e=>{
+    const f=e.target.files[0]; if(!f)return;
+    try{
+      const parsed=parseMMTFCsv(await f.text());
+      mmtfValidityHeaders=parsed.headers;mmtfValidityRows=parsed.rows;
+      const status=document.getElementById('validity-file-status');
+      status.textContent=`已載入 ${f.name}：${parsed.rows.length} 筆資料；欄位：${parsed.headers.join('、')}`;
+    }catch(err){alert('CSV 讀取失敗：'+err.message);}
+  });
+});
+
+function rankValues(values){
+  const sorted=values.map((v,i)=>({v,i})).sort((a,b)=>a.v-b.v);
+  const ranks=Array(values.length);let i=0;
+  while(i<sorted.length){let j=i+1;while(j<sorted.length&&sorted[j].v===sorted[i].v)j++;
+    const rank=(i+1+j)/2;for(let k=i;k<j;k++)ranks[sorted[k].i]=rank;i=j;
+  }return ranks;
+}
+function pearsonR(x,y){
+  const n=x.length;if(n<3)return null;
+  const mx=x.reduce((a,b)=>a+b,0)/n,my=y.reduce((a,b)=>a+b,0)/n;
+  let num=0,dx=0,dy=0;
+  for(let i=0;i<n;i++){const a=x[i]-mx,b=y[i]-my;num+=a*b;dx+=a*a;dy+=b*b;}
+  if(dx===0||dy===0)return null;
+  return num/Math.sqrt(dx*dy);
+}
+function corrValue(x,y,method){return method==='spearman'?pearsonR(rankValues(x),rankValues(y)):pearsonR(x,y);}
+function correlationLabel(r){
+  if(r===null)return '無法計算（樣本不足或變異為零）';
+  const a=Math.abs(r);return a>=.7?'高度相關':a>=.4?'中度相關':a>=.2?'低度相關':'極低相關／接近無相關';
+}
+function getSelectedExternalMeasures(){
+  const a=[];
+  if(document.getElementById('ext-select-m').value==='fos')a.push({label:'FOS 總分／指定分量表',column:'fos_total',mmtf:'mmtf_mirror',construct:'Mirror'});
+  if(document.getElementById('ext-select-mx').value==='role'){
+    a.push({label:'角色衝突',column:'role_conflict',mmtf:'mmtf_matrix',construct:'Matrix'});
+    a.push({label:'角色模糊',column:'role_ambiguity',mmtf:'mmtf_matrix',construct:'Matrix'});
+  }
+  if(document.getElementById('ext-select-f').value==='csq')a.push({label:'CSQ 總分／指定分量表',column:'csq_total',mmtf:'mmtf_flow',construct:'Flow'});
+  if(document.getElementById('ext-select-edm').checked)a.push({label:'Edmondson 團隊心理安全',column:'edmondson_total',mmtf:'mmtf_safety',construct:'Safety'});
+  if(document.getElementById('ext-select-psc').checked)a.push({label:'PSC-12 心理社會安全氣候',column:'psc12_total',mmtf:'mmtf_safety',construct:'Safety'});
+  return a;
+}
+function runMMTFExternalValidity(){
+  if(!mmtfValidityRows.length){alert('請先匯入匿名受試者配對 CSV 資料。');return;}
+  const measures=getSelectedExternalMeasures();
+  if(!measures.length){alert('請先選擇本次實際施測的外部量表；Safety 可同時選擇 Edmondson 與 PSC-12。');return;}
+  const required=['case_id','mmtf_mirror','mmtf_matrix','mmtf_flow','mmtf_safety'];
+  const selectedCols=[...new Set(measures.map(m=>m.column))];
+  const missing=[...required.filter(c=>!mmtfValidityHeaders.includes(c)),...selectedCols.filter(c=>!mmtfValidityHeaders.includes(c))];
+  if(missing.length){alert('CSV 缺少必要欄位：'+missing.join(', '));return;}
+  const method=document.getElementById('validity-method').value;
+  const alpha=Number(document.getElementById('validity-alpha').value);
+  const missingMode=document.getElementById('validity-missing').value;
+  const results=[];
+  for(const measure of measures){
+    const pairs=[];
+    mmtfValidityRows.forEach(row=>{
+      const id=row.case_id;
+      const x=Number(row[measure.mmtf]), y=Number(row[measure.column]);
+      const valid=String(id||'').trim()!==''&&row[measure.mmtf]!==''&&row[measure.column]!==''&&Number.isFinite(x)&&Number.isFinite(y);
+      if(valid)pairs.push({id,x,y});
+    });
+    if(missingMode==='listwise'){
+      const list=mmtfValidityRows.filter(r=>required.every(c=>r[c]!==''&&Number.isFinite(Number(r[c])))&&selectedCols.every(c=>r[c]!==''&&Number.isFinite(Number(r[c]))));
+      const allowed=new Set(list.map(r=>r.case_id));
+      const filtered=pairs.filter(p=>allowed.has(p.id));pairs.length=0;pairs.push(...filtered);
+    }
+    const r=corrValue(pairs.map(p=>p.x),pairs.map(p=>p.y),method);
+    results.push({...measure,n:pairs.length,r,label:correlationLabel(r)});
+  }
+  const methodName=method==='pearson'?'Pearson 積差相關':'Spearman 等級相關';
+  const rows=results.map(v=>`<tr><td>${v.construct}</td><td>${v.label}</td><td>${v.n}</td><td>${v.r===null?'—':v.r.toFixed(3)}</td><td>${v.label}</td></tr>`).join('');
+  const safetyBoth=document.getElementById('ext-select-edm').checked&&document.getElementById('ext-select-psc').checked;
+  const caution=safetyBoth?'Safety 同時納入 Edmondson 與 PSC-12，兩份量表分別分析；其測量層次不同，結果不可合併或互相替代。':'外部量表依其自身計分架構保留，未將原始分數轉換成 MMTF 0～25 分。';
+  const out=document.getElementById('validity-analysis-result');out.style.display='block';
+  out.innerHTML=`<b>MMTF T1 × 外部量表配對分析結果</b>
+  <p>分析方法：${methodName}；設定顯著水準 α=${alpha}；缺失值處理：${missingMode==='pairwise'?'逐組配對刪除':'整列刪除'}。</p>
+  <div style="overflow-x:auto"><table class="analysis-table"><thead><tr><th>MMTF 構面</th><th>外部量表指標</th><th>有效配對 N</th><th>相關係數</th><th>相關程度描述</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <p><b>解讀提醒：</b>${caution} 相關係數方向須依外部指標計分方向與研究假設判讀；例如角色衝突／角色模糊若高分代表問題較嚴重，預期方向可能與正向能力指標不同。</p>
+  <p>本頁計算相關係數 r 或 ρ，未計算 p 值、信賴區間、多重比較校正或因素模型；不能僅依相關係數宣稱收斂效度、建構效度或 MMTF 已有效。正式論文應使用完整統計軟體及原始題項資料，檢查量表信度、因素結構、測量層次、樣本獨立性及研究假設。</p>
+  <p><b>研究判讀紀錄：</b><textarea id="validity-research-interpretation" rows="3" placeholder="記錄各項假設是否符合預期、可能原因、未支持結果及後續模型修正方向。"></textarea></p>
+  <small>資料筆數：CSV ${mmtfValidityRows.length} 筆；有效配對數依各指標分別計算。結果為研究分析輔助，不是自動效度判定。</small>`;
+  window.mmtfExternalValidityResults=results;
+}
 function runInterventionEvaluation() {
   const dims=getCurrentDimensionScores();
-  const labels={m:'Mirror',mx:'Matrix',f:'Flow',s:'Safety'};
   const rows=[]; let invalid=false;
   dims.forEach(d=>{
-    const el=document.getElementById('t2-'+d.key), extT1=document.getElementById('scale-score-'+d.key), extT2=document.getElementById('ext-t2-'+d.key);
+    const el=document.getElementById('t2-'+d.key);
     const raw=el.value.trim();
     if(raw==='') return;
     const t2=Number(raw);
-    if(!Number.isFinite(t2)||t2<0||t2>25){alert(d.name+' T2 分數必須介於 0～25。');el.focus();invalid=true;return;}
-    const delta=Number((t2-d.score).toFixed(1));
-    let extDelta=null;
-    if(extT1.value.trim()!=='' && extT2.value.trim()!==''){
-      const a=Number(extT1.value), b=Number(extT2.value);
-      if(!Number.isFinite(b)||b<0||b>25){alert(d.name+' 外部量表 T2 必須介於 0～25。');extT2.focus();invalid=true;return;}
-      extDelta=Number((b-a).toFixed(1));
-    }
-    rows.push({name:d.name,t1:d.score,t2,delta,extDelta});
+    if(!Number.isInteger(t2)||t2<0||t2>25){alert(d.name+' T2 分數必須是 0～25 的整數，不能輸入小數。');el.focus();invalid=true;return;}
+    const delta=t2-d.score;
+    rows.push({name:d.name,t1:d.score,t2,delta,extDelta:null});
   });
   if(invalid)return;
   if(!rows.length){alert('請至少回填一個 MMTF 構面的 T2 分數。');return;}
   const sum1=dims.reduce((a,d)=>a+d.score,0), sum2=rows.reduce((a,r)=>a+r.t2,0)+dims.filter(d=>!rows.some(r=>r.name===d.name)).reduce((a,d)=>a+d.score,0);
-  const body=rows.map(r=>`<tr><td>${r.name}</td><td>${r.t1.toFixed(1)}</td><td>${r.t2.toFixed(1)}</td><td>${r.delta>0?'+':''}${r.delta.toFixed(1)}</td><td>${r.delta>0?'分數上升':r.delta<0?'分數下降':'未變動'}</td><td>${r.extDelta===null?'未完成外部量表追測':(r.extDelta>0?'+':'')+r.extDelta.toFixed(1)}</td></tr>`).join('');
+  const body=rows.map(r=>`<tr><td>${r.name}</td><td>${r.t1}</td><td>${r.t2}</td><td>${r.delta>0?'+':''}${r.delta}</td><td>${r.delta>0?'分數上升':r.delta<0?'分數下降':'未變動'}</td><td>外部量表應依各自正式量尺另行分析</td></tr>`).join('');
   const feedback=document.getElementById('consultant-feedback').value.trim();
   const action=document.getElementById('improvement-action').value.trim();
   const owner=document.getElementById('improvement-owner').value.trim();
   const status=document.getElementById('improvement-status').value;
   const evidence=document.getElementById('improvement-evidence').value.trim();
   const complete=dims.every(d=>document.getElementById('t2-'+d.key).value.trim()!=='');
-  const overall=complete?`MMTF 總分 T1 ${sum1.toFixed(1)} → T2 ${sum2.toFixed(1)}，變化 ${(sum2-sum1)>0?'+':''}${(sum2-sum1).toFixed(1)} 分。`:'目前僅完成部分構面 T2，總分不宜直接作為完整前後測比較。';
+  const overall=complete?`MMTF 總分 T1 ${sum1} → T2 ${sum2}，變化 ${(sum2-sum1)>0?'+':''}${sum2-sum1} 分。`:'目前僅完成部分構面 T2，總分不宜直接作為完整前後測比較。';
   const out=document.getElementById('intervention-result');
   out.style.display='block';
-  out.innerHTML=`<b>顧問介入與改善成效檢核</b><p>${overall}</p><div style="overflow-x:auto"><table class="analysis-table"><thead><tr><th>構面</th><th>MMTF T1</th><th>MMTF T2</th><th>變化</th><th>觀察</th><th>外部量表 T1→T2 變化</th></tr></thead><tbody>${body}</tbody></table></div><p><b>顧問回饋：</b>${escapeHtml(feedback||'尚未填寫')}</p><p><b>改善措施：</b>${escapeHtml(action||'尚未填寫')}</p><p><b>責任單位／負責人：</b>${escapeHtml(owner||'尚未填寫')}；<b>執行狀態：</b>${escapeHtml(status)}</p><p><b>改善證據／參與者回饋：</b>${escapeHtml(evidence||'尚未填寫')}</p><p><b>解讀提醒：</b>分數變化代表前後測觀察結果，不足以單獨證明顧問介入造成改善。應同時檢視措施是否落實、樣本是否一致、施測間隔、外部環境變化及質性證據。若外部量表測量不同層次或構念，不應直接把分數變化視為相互驗證。</p>`;
+  out.innerHTML=`<b>顧問介入與改善成效檢核</b><p>${overall}</p><div style="overflow-x:auto"><table class="analysis-table"><thead><tr><th>構面</th><th>MMTF T1</th><th>MMTF T2</th><th>變化</th><th>觀察</th><th>外部量表追測</th></tr></thead><tbody>${body}</tbody></table></div><p><b>顧問回饋：</b>${escapeHtml(feedback||'尚未填寫')}</p><p><b>改善措施：</b>${escapeHtml(action||'尚未填寫')}</p><p><b>責任單位／負責人：</b>${escapeHtml(owner||'尚未填寫')}；<b>執行狀態：</b>${escapeHtml(status)}</p><p><b>改善證據／參與者回饋：</b>${escapeHtml(evidence||'尚未填寫')}</p><p><b>解讀提醒：</b>分數變化代表前後測觀察結果，不足以單獨證明顧問介入造成改善。應同時檢視措施是否落實、樣本是否一致、施測間隔、外部環境變化及質性證據。若外部量表測量不同層次或構念，不應直接把分數變化視為相互驗證。</p>`;
   window.mmtfInterventionEvaluation={rows,feedback,action,owner,status,evidence,complete,totalT1:sum1,totalT2:complete?sum2:null};
 }
 
-function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));}
 
 function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const svg = document.getElementById('quadrantChart');
   if(!svg) return;
-  const L=75, R=620, T=35, B=485, W=R-L, H=B-T;
+  const L=85, R=710, T=45, B=510, W=R-L, H=B-T;
   const x = v => L + (v/5)*W, y = v => B - (v/5)*H;
+  // 此處將 quadrantX/Y (0-5分) 直接對應到圖表像素位置
   const px = x(quadrantX), py = y(quadrantY);
 
   let svgContent = `<defs>
-    <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffe891"/><stop offset="100%" stop-color="#ffc785"/></linearGradient>
-    <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#abfcc2"/><stop offset="100%" stop-color="#b4f8e6"/></linearGradient>
-    <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff757b"/><stop offset="100%" stop-color="#ffe2e7"/></linearGradient>
-    <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0efff"/><stop offset="100%" stop-color="#bceeff"/></linearGradient>
-    <clipPath id="qclip"><rect x="${L}" y="${T}" width="${W}" height="${H}"/></clipPath>
+    <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff8d6"/><stop offset="100%" stop-color="#ffe6b8"/></linearGradient>
+    <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e1fce7"/><stop offset="100%" stop-color="#c6f6d5"/></linearGradient>
+    <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffebee"/><stop offset="100%" stop-color="#ffcdd2"/></linearGradient>
+    <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e3f2fd"/><stop offset="100%" stop-color="#bbdefb"/></linearGradient>
   </defs>`;
 
   const midX = x(2.5), midY = y(2.5);
@@ -640,23 +813,78 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   <rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/>
   <rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/>
   <rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>
-  <line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
+  <line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="2"/>`;
 
-  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="34" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+22}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#182a27">${label}</text>`;
+  // 四象限內部豐富標題與描述（對應參考圖二）
+  const qWidth = W / 2 - 12;
+  const qHeight = H / 2 - 12;
 
-  svgContent += pill(L+10, T+10, 245, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
-  svgContent += pill(midX+10, T+10, 245, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
-  svgContent += pill(L+10, midY+10, 245, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
-  svgContent += pill(midX+10, midY+10, 245, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
+  // II 象限 (左上)
+  svgContent += `
+  <rect x="${L+6}" y="${T+6}" width="${qWidth}" height="${qHeight}" rx="6" fill="#fff" fill-opacity="0.6" stroke="#f6ad55" stroke-width="1"/>
+  <text x="${L+18}" y="${T+28}" font-size="13.5" font-weight="900" fill="#b45309">Ⅱ 制度主導型（高行動、低感知）</text>
+  <text x="${L+18}" y="${T+48}" font-size="11.5" font-weight="700" fill="#2d3748">• 具備回應與執行能力</text>
+  <text x="${L+18}" y="${T+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 但資訊基礎與問題覺察不足</text>
+  <text x="${L+18}" y="${T+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 需補足透明回饋機制</text>`;
 
-  const resultLabelX = Math.min(Math.max(px-80, L+5), R-160);
-  const resultLabelY = Math.min(Math.max(py-62, T+5), B-55);
+  // I 象限 (右上)
+  svgContent += `
+  <rect x="${midX+6}" y="${T+6}" width="${qWidth}" height="${qHeight}" rx="6" fill="#fff" fill-opacity="0.6" stroke="#48bb78" stroke-width="1"/>
+  <text x="${midX+18}" y="${T+28}" font-size="13.5" font-weight="900" fill="#22543d">Ⅰ 高效協同發展區（高行動、高感知）</text>
+  <text x="${midX+18}" y="${T+48}" font-size="11.5" font-weight="700" fill="#2d3748">• 資訊透明，權責明確</text>
+  <text x="${midX+18}" y="${T+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 流程順暢，發聲安全</text>
+  <text x="${midX+18}" y="${T+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 支持協作與持續學習</text>`;
 
-  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
+  // III 象限 (左下)
+  svgContent += `
+  <rect x="${L+6}" y="${midY+6}" width="${qWidth}" height="${qHeight}" rx="6" fill="#fff" fill-opacity="0.6" stroke="#f56565" stroke-width="1"/>
+  <text x="${L+18}" y="${midY+28}" font-size="13.5" font-weight="900" fill="#9b2c2c">Ⅲ 失衡風險區（低行動、低感知）</text>
+  <text x="${L+18}" y="${midY+48}" font-size="11.5" font-weight="700" fill="#2d3748">• 資訊不透明、權責不清</text>
+  <text x="${L+18}" y="${midY+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 流動受阻、發聲不足</text>
+  <text x="${L+18}" y="${midY+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 優先建立回報與支持</text>`;
+
+  // IV 象限 (右下)
+  svgContent += `
+  <rect x="${midX+6}" y="${midY+6}" width="${qWidth}" height="${qHeight}" rx="6" fill="#fff" fill-opacity="0.6" stroke="#3182ce" stroke-width="1"/>
+  <text x="${midX+18}" y="${midY+28}" font-size="13.5" font-weight="900" fill="#2b6cb0">Ⅳ 看見未轉化區（低行動、高感知）</text>
+  <text x="${midX+18}" y="${midY+48}" font-size="11.5" font-weight="700" fill="#2d3748">• 能看見問題與風險</text>
+  <text x="${midX+18}" y="${midY+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 但未有效轉化為行動</text>
+  <text x="${midX+18}" y="${midY+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 強化資源配置與追蹤</text>`;
+
+  // 繪製 0 到 25 的軸刻度與數值標籤（對應圖二風格）
+  const ticks = [0, 5, 10, 15, 20, 25];
+  ticks.forEach(val => {
+    // X軸對應 (0-25 映射到 0-5 分)
+    const tx = x(val / 5);
+    svgContent += `<line x1="${tx}" y1="${B}" x2="${tx}" y2="${B+6}" stroke="#111" stroke-width="1.2"/>`;
+    svgContent += `<text x="${tx}" y="${B+22}" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">${val}</text>`;
+
+    // Y軸對應 (0-25 映射到 0-5 分)
+    const ty = y(val / 5);
+    svgContent += `<line x1="${L-6}" y1="${ty}" x2="${L}" y2="${ty}" stroke="#111" stroke-width="1.2"/>`;
+    svgContent += `<text x="${L-12}" y="${ty+4}" text-anchor="end" font-size="12" font-weight="bold" fill="#333">${val}</text>`;
+  });
+
+  // 軸標題
+  svgContent += `<text x="${L-50}" y="${(T+B)/2}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-50} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
+  svgContent += `<text x="${(L+R)/2}" y="${B+46}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
+
+  // 標註本次結果位置（紅點與紅標籤框）
+  const resultLabelX = Math.min(Math.max(px - 75, L + 10), R - 160);
+  const resultLabelY = Math.min(Math.max(py - 55, T + 10), B - 60);
+
+  svgContent += `
+  <circle cx="${px}" cy="${py}" r="12" fill="#c90020" opacity="0.3"/>
+  <circle cx="${px}" cy="${py}" r="7" fill="#c90020" stroke="#fff" stroke-width="2"/>
+  <rect x="${resultLabelX}" y="${resultLabelY}" width="150" height="42" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/>
+  <text x="${resultLabelX + 75}" y="${resultLabelY + 17}" text-anchor="middle" font-size="12" fill="#fff" font-weight="900">本次結果位置</text>
+  <text x="${resultLabelX + 75}" y="${resultLabelY + 34}" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">(${(quadrantX*5).toFixed(1)}, ${(quadrantY*5).toFixed(1)})</text>`;
 
   svg.innerHTML = svgContent;
 
-  let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
+  let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜制度主導型') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜高效協同發展區');
   let sumAw = m + s_val;
   let sumAc = mx + f;
 
@@ -685,66 +913,93 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 }
 
 function runConsultantAnalysis() {
-  let ans1 = document.getElementById('qual-ans-1').value.trim();
-  let ans2 = document.getElementById('qual-ans-2').value.trim();
-
-  let m = document.getElementById('mirror').value;
-  let mx = document.getElementById('matrix').value;
-  let f = document.getElementById('flow').value;
-  let s = document.getElementById('safe').value;
-  let lowKey = window.lowestDimKey || 'f';
-  let lowName = window.lowestDimName || 'Flow (資訊流動)';
-  let lowScore = (lowKey === 'f') ? f : (lowKey === 's') ? s : (lowKey === 'm') ? m : mx;
-
-  let tbody = document.getElementById('stage3-tbody');
-  
-  let q1Display = ans1 ? `"${ans1}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
-  let q2Display = ans2 ? `"${ans2}"` : `<span style="color:#d93838;font-style:italic">【參與者未填寫質性回饋】</span>`;
-
-  // 💡 依據卡點構面自動對應匹配的管理工具種類與回饋分析
-  let toolName = "";
-  let feedbackText = "";
-  if(lowKey === 'f') {
-    toolName = "Shannon & Weaver 資訊傳播模型";
-    feedbackText = "質性填答顯示跨部門溝通存在雜訊與回報延遲。文獻建議建立標準化資訊看板與雙向回饋機制以降低資訊折損。";
-  } else if(lowKey === 's') {
-    toolName = "Edmondson 心理安全感模型";
-    feedbackText = "質性填答反映高壓下發聲意願低。文獻建議主管應落實去責化檢討，鼓勵建設性建言並建立匿名回報管道。";
-  } else if(lowKey === 'm') {
-    toolName = "Johari Window (賈哈里窗) 與盲點分析";
-    feedbackText = "質性填答指出問題辨識落差。文獻建議透過跨層級覆盤會議，將盲區轉為公開區。";
-  } else {
-    toolName = "Galbraith Star Model (星狀模型)";
-    feedbackText = "質性填答顯示權責與資源配置待釐清。文獻建議重新審視橫向協調流程與決策授權邊界。";
-  }
-
-  tbody.innerHTML = `
+  const ans1=document.getElementById('qual-ans-1').value.trim();
+  const ans2=document.getElementById('qual-ans-2').value.trim();
+  const dims=getCurrentDimensionScores();
+  const sorted=[...dims].sort((a,b)=>a.score-b.score);
+  const low=sorted[0], second=sorted[1];
+  const lpa1=analyzeMMTFLanguage(ans1);
+  const lpa2=analyzeMMTFLanguage(ans2);
+  const safe=(v)=>escapeHtml(v||'（未填答）');
+  const lpaHtml=(r)=>`
+    <div><b>文字線索：</b>${r.hits.length?r.hits.map(h=>`<span style="display:inline-block;background:#eee5ff;border-radius:4px;padding:2px 5px;margin:2px">${escapeHtml(h.term)}（${escapeHtml(h.type)}）</span>`).join(''):'未命中目前詞庫中的明確線索'}</div>
+    <div><b>語態特徵：</b>${r.features.length?r.features.map(escapeHtml).join('、'):'無法由文字判定'}</div>
+    <div><b>可能對應構面：</b>${r.dimensions.length?r.dimensions.map(escapeHtml).join('、'):'目前無明確構面線索'}</div>
+    <div><b>證據等級：</b><b style="color:${r.level==='E0'?'#b45309':r.level==='E1'?'#9a6700':'#166534'}">${r.level}｜${escapeHtml(r.levelName)}</b></div>
+    <div><b>判讀限制：</b>${escapeHtml(r.limit)}</div>
+    <div><b>建議追問：</b>${escapeHtml(r.followup)}</div>`;
+  const q1Display=ans1?`「${safe(ans1)}」`:'【未填答】';
+  const q2Display=ans2?`「${safe(ans2)}」`:'【未填答】';
+  const tbody=document.getElementById('stage3-tbody');
+  tbody.innerHTML=`
     <tr>
-      <td><b>${lowName} (重點卡點構面)</b><br>量化分數：${lowScore}/25 分</td>
-      <td><b>Q1 填答與關聯性：</b><br>${q1Display}<br><small style="color:#521493"><b>關聯檢核：</b>與量化低分呈現主題上的一致性，仍需質性內容確認。</small></td>
-      <td><b>${toolName}</b></td>
-      <td><b>理論回饋分析：</b><br>${feedbackText}</td>
-      <td><b>規劃建議與時程：</b><br>建議於 0-30 天內完成流程盤點，30-90 天追蹤改善成效。</td>
+      <td><b>${escapeHtml(low.name)}（最低分構面）</b><br>量化分數：${low.score}/25</td>
+      <td><b>Q1 原始回答：</b><br>${q1Display}<hr>${lpaHtml(lpa1)}</td>
+      <td><b>${escapeHtml(low.theory)}</b><br>${escapeHtml(low.tool)}</td>
+      <td><b>量化 × 質性檢核：</b><br>${escapeHtml(buildMMTFConsistencyStatement(low,lpa1))}<br><b>理論參照：</b>${escapeHtml(low.scale)}</td>
+      <td><b>顧問下一步：</b><br>${escapeHtml(lpa1.followup)}<br>待取得具體事件及其他資料後，再確認改善措施與時程。</td>
     </tr>
     <tr>
-      <td><b>輔助對照構面</b><br>綜合評估與權衡</td>
-      <td><b>Q2 填答與關聯性：</b><br>${q2Display}<br><small style="color:#521493"><b>關聯檢核：</b>反映真實職場情境與結構障礙。</small></td>
-      <td><b>MMTF 2.0 組織健康診斷矩陣</b></td>
-      <td><b>理論回饋分析：</b><br>透過感知與行動雙軸交叉檢視，確保改善行動具備落地可行性。</td>
-      <td><b>規劃建議與時程：</b><br>設立跨部門專案小組定期覆盤檢討。</td>
-    </tr>
-  `;
-
+      <td><b>${escapeHtml(second.name)}（第二低分構面）</b><br>量化分數：${second.score}/25</td>
+      <td><b>Q2 原始回答：</b><br>${q2Display}<hr>${lpaHtml(lpa2)}</td>
+      <td><b>MMTF ${escapeHtml(second.name)} × ${escapeHtml(low.name)} 組合檢視</b></td>
+      <td><b>交叉檢核：</b><br>${escapeHtml(buildMMTFConsistencyStatement(second,lpa2))}<br>兩題若未指向同一事件，不直接合併成共同原因。</td>
+      <td><b>顧問下一步：</b><br>${escapeHtml(lpa2.followup)}<br>由顧問確認是否需要補充訪談、文件或流程紀錄。</td>
+    </tr>`;
+  const preview=document.getElementById('lpa-live-result');
+  preview.innerHTML=`<b>Q1 語言分析</b>${lpaHtml(lpa1)}<hr><b>Q2 語言分析</b>${lpaHtml(lpa2)}<p style="font-size:11px;color:#765b8c;margin-bottom:0">提醒：關鍵詞命中只是文字線索；未命中不代表沒有問題，命中也不代表問題已被證實。</p>`;
+  window.mmtfLPAResults={q1:lpa1,q2:lpa2};
   renderScaleRecommendations();
-  document.getElementById('stage3-sec').style.display = 'block';
-  currentUnlockedStage = Math.max(currentUnlockedStage, 3);
-  let nav3 = document.getElementById('nav-stage3');
-  nav3.innerHTML = '<span>3</span>顧問交叉分析 (已完成)';
-  
-  let headerBtn = document.getElementById('header-action-btn');
-  headerBtn.innerText = "解鎖第四階段 ➔";
-  
-  setTimeout(() => { scrollToSection('stage3-sec'); }, 400);
+  document.getElementById('stage3-sec').style.display='block';
+  currentUnlockedStage=Math.max(currentUnlockedStage,3);
+  const nav3=document.getElementById('nav-stage3');
+  if(nav3)nav3.innerHTML='<span>3</span>顧問交叉分析 (已完成)';
+  const headerBtn=document.getElementById('header-action-btn');
+  if(headerBtn)headerBtn.innerText="解鎖第四階段 ➔";
+  setTimeout(()=>scrollToSection('stage3-sec'),400);
+}
+
+function analyzeMMTFLanguage(text) {
+  const t=String(text||'').trim();
+  if(!t) return {hits:[],features:['未填答'],dimensions:[],level:'E0',levelName:'無資料',limit:'沒有文字資料，不能進行語言判讀。',followup:'請確認是否願意補充具體工作經驗；不願回答亦應尊重。'};
+  const lexicon=[
+    {dim:'Mirror',terms:['不知道自己','沒注意到','沒想過','不了解自己','別人怎麼看','回饋','提醒我','自我認知']},
+    {dim:'Matrix',terms:['權責不清','不知道誰負責','沒有權限','流程不清楚','制度規定','沒人處理','資源不足','分工不清']},
+    {dim:'Flow',terms:['沒通知','沒有通知','沒有回覆','訊息落差','資訊不清楚','傳達錯誤','資訊不完整','交接延遲','沒有收到']},
+    {dim:'Safety',terms:['不敢說','不敢提出','怕被罵','擔心被責備','不方便反映','講了也沒用','不敢反映','害怕提出','怕主管','不會有人聽'] }
+  ];
+  const hits=[];
+  lexicon.forEach(group=>group.terms.forEach(term=>{if(t.includes(term))hits.push({term,type:'構面詞彙',dimension:group.dim});}));
+  const featureRules=[
+    {name:'否定／限制表述',terms:['不敢','不能','不會','沒有','沒辦法','無法','不方便','不想']},
+    {name:'不確定表述',terms:['可能','大概','好像','應該','不太確定','或許']},
+    {name:'絕對化／概括表述',terms:['都不','每次','永遠','從來','全部','大家都','一定']},
+    {name:'主動行動表述',terms:['我主動','我提出','我反映','我詢問','我曾經回報','我會提出']},
+    {name:'被動／外部處置表述',terms:['被要求','被告知','被忽略','被退回','被責備','被通知']},
+    {name:'無效感／無力表述',terms:['沒用','沒有用','沒辦法改變','講了也沒用','不會改善']},
+    {name:'具體事件線索',terms:['昨天','上週','上個月','某次','當時','會議','專案','主管','同事','部門','流程','客戶']}
+  ];
+  const features=[];
+  featureRules.forEach(rule=>{if(rule.terms.some(term=>t.includes(term)))features.push(rule.name);});
+  if(!features.length)features.push('未辨識到明確語態特徵');
+  const negatedHits=hits.filter(h=>['不怕被罵','不擔心被責備','沒有不敢','並非不敢'].some(p=>t.includes(p)));
+  const activeHits=hits.filter(h=>!negatedHits.includes(h));
+  const dimensions=[...new Set(activeHits.map(h=>h.dimension))];
+  const concrete=featureRules[6].terms.some(term=>t.includes(term));
+  const explicitRisk=activeHits.some(h=>h.dimension==='Safety'&&['不敢說','不敢提出','怕被罵','擔心被責備','不方便反映','講了也沒用','不敢反映','害怕提出','怕主管','不會有人聽'].includes(h.term));
+  const level=concrete&&activeHits.length?'E2':activeHits.length?'E1':'E0';
+  const levelName=level==='E2'?'有具體情境線索（仍待查證）':level==='E1'?'初步語言線索':'資訊不足／未辨識明確線索';
+  let limit='規則式詞彙比對無法理解完整語境、反諷、台語／口語變體或受試者真正意圖；須由顧問閱讀原文確認。';
+  if(!activeHits.length)limit='目前回答沒有可支持構面判讀的明確詞彙；不能將簡短回答、沉默或未命中詞庫解讀為不願發聲或心理安全不足。';
+  else if(explicitRisk)limit='出現與發聲受限相關的字詞，只能列為待查證線索；須確認事件、對象、頻率、後果及受試者原意。';
+  const followup=explicitRisk?'請描述最近一次發生的具體情境：當時發生什麼事、你如何回應、擔心什麼後果，最後結果如何？':!activeHits.length?'你回答「'+(t.length>24?t.slice(0,24)+'…':t)+'」，可以再說明一個最近的工作例子嗎？若確實沒有相關經驗，也可以直接說明。':'請補充最近一次具體事件、涉及的工作流程／角色、當時採取的行動，以及後續處理結果。';
+  return {hits:activeHits,features,dimensions,level,levelName,limit,followup};
+}
+
+function buildMMTFConsistencyStatement(dim,result){
+  if(result.level==='E0')return `目前 ${dim.name} 分數為 ${dim.score}/25，但質性文字未提供足夠的構面證據；無法判定量化低分與回答是否一致。`;
+  if(result.dimensions.includes(dim.name))return `文字中出現與 ${dim.name} 相關的語言線索，與量化結果呈現初步主題對應；目前僅為規則式辨識，仍須顧問核對原文與事件。`;
+  return `目前辨識到的文字線索未明確對應 ${dim.name}；不能因此認定量化結果錯誤，應追問情境並檢查量表題項、受試者理解及其他資料來源。`;
 }
 
 function unlockStage4() {
