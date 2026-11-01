@@ -265,7 +265,7 @@ main{max-width:1650px;margin:auto;padding:16px}
     <div class="module-box" style="margin-top:16px;border-color:#087cf3">
   <div class="module-title">📊 外部量表選擇、指標設定與 MMTF 實證對照（T1）</div>
   <p style="font-size:13px;color:#6b5388">
-    本區不是把外部量表換算成 MMTF 分數。請先選擇實際施測的量表，再依該量表正式版本保留原有構面、分量表與計分規則;匯入匿名受試者逐筆資料後，系統才將外部量表指標與同一受試者第一次 MMTF 分數配對分析。PSC-12 與 Edmondson 團隊心理安全量表可同時施測、同時納入分析，兩者分別代表心理社會安全氣候與團隊心理安全感，不互相替代。
+    本區不是把外部量表換算成 MMTF 分數。請先選擇實際施測的量表，再依該量表正式版本保留原有構面、分量表與計分規則；匯入匿名受試者逐筆資料後，系統才將外部量表指標與同一受試者第一次 MMTF 分數配對分析。PSC-12 與 Edmondson 團隊心理安全量表可同時施測、同時納入分析，兩者分別代表心理社會安全氣候與團隊心理安全感，不互相替代。
   </p>
 
   <div class="qual-group" style="border:1px solid #cbb5f4;border-radius:9px;padding:13px;margin-bottom:12px">
@@ -616,7 +616,7 @@ function renderCombinationQuestions() {
   const pairPrompts={
     'm-s':'當問題被發現或提出時，團隊是否因擔心負面反應而選擇不回饋？請描述「看見問題」到「敢於說出」之間的阻礙。',
     'm-mx':'當員工已察覺問題時，是否因權責不清或缺乏正式處理機制，導致問題無法被確認及追蹤？',
-    'f-m':'問題訊息從被察覺、回報到跨部門接收的過程，在哪個環節最容易遺漏或失真？',
+    'f-m':'問題訊息從被察覺、回報到跨部門接收的過程，在哪個節點最容易遺漏或失真？',
     'f-mx':'即使已有制度與權責分工，資訊交接、決策回覆或跨部門協作是否仍然延遲？請舉例說明。',
     'mx-s':'制度規範或主管權威是否影響員工提出異議、反映資源不足或要求釐清責任？',
     'f-s':'資訊是否能順利傳遞，是否也取決於員工敢不敢提出錯誤、不同意見或壞消息？請描述具體情境。'
@@ -668,7 +668,7 @@ function parseMMTFCsv(text) {
 function downloadMMTFValidityTemplate() {
   const header='case_id,mmtf_mirror,mmtf_matrix,mmtf_flow,mmtf_safety,fos_total,role_conflict,role_ambiguity,csq_total,edmondson_total,psc12_total';
   const sample='P001,18,14,12,17,3.8,2.4,2.1,3.6,4.1,3.2';
-  const blob=new Blob(['\uFEFF'+header+'\n'+sample+'\n'],{type:'text/csv;charset=utf-8;'});
+  const blob=new Blob(['\uFEFF'+header+'\n'+sample+'\n'],{type: 'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob); const a=document.createElement('a');
   a.href=url;a.download='MMTF_外部量表配對資料範本.csv';a.click();URL.revokeObjectURL(url);
 }
@@ -684,6 +684,9 @@ document.addEventListener('DOMContentLoaded',()=>{
       status.textContent=`已載入 ${f.name}：${parsed.rows.length} 筆資料；欄位：${parsed.headers.join('、')}`;
     }catch(err){alert('CSV 讀取失敗：'+err.message);}
   });
+  
+  // 確保網頁完全載入後立即執行一次初始化與繪圖
+  runSimulation();
 });
 
 function rankValues(values){
@@ -873,7 +876,7 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   <circle cx="${px}" cy="${py}" r="7" fill="#c90020" stroke="#fff" stroke-width="2"/>
   <rect x="${resultLabelX}" y="${resultLabelY}" width="150" height="42" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/>
   <text x="${resultLabelX + 75}" y="${resultLabelY + 17}" text-anchor="middle" font-size="12" fill="#fff" font-weight="900">本次結果位置</text>
-  <text x="${resultLabelX + 75}" y="${resultLabelY + 34}" text-anchor="middle" font-size="12" font-weight="700">(${(quadrantX*5).toFixed(1)}, ${(quadrantY*5).toFixed(1)})</text>`;
+  <text x="${resultLabelX + 75}" y="${resultLabelY + 34}" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">(${(quadrantX*5).toFixed(1)}, ${(quadrantY*5).toFixed(1)})</text>`;
 
   svg.innerHTML = svgContent;
 
@@ -990,8 +993,8 @@ function analyzeMMTFLanguage(text) {
 }
 
 function buildMMTFConsistencyStatement(dim,result){
-  if(result.level==='E0')return `目前 ${dim.name} 分數為 ${dim.score}/25，但質性文字未提供足夠的構面證據;無法判定量化低分與回答是否一致。`;
-  if(result.dimensions.includes(dim.name))return `文字中出現與 ${dim.name} 相關的語言線索，與量化結果呈現初步主題對應;目前僅為規則式辨識，仍須顧問核對原文與事件。`;
+  if(result.level==='E0')return `目前 ${dim.name} 分數為 ${dim.score}/25，但質性文字未提供足夠的構面證據；無法判定量化低分與回答是否一致。`;
+  if(result.dimensions.includes(dim.name))return `文字中出現與 ${dim.name} 相關的語言線索，與量化結果呈現初步主題對應；目前僅為規則式辨識，仍須顧問核對原文與事件。`;
   return `目前辨識到的文字線索未明確對應 ${dim.name}；不能因此認定量化結果錯誤，應追問情境並檢查量表題項、受試者理解及其他資料來源。`;
 }
 
@@ -1066,8 +1069,4 @@ function exportToExcel() {
   document.body.removeChild(link);
   alert('成功匯出案件 Excel / CSV 紀錄檔！可直接對接資料庫系統進行長期追蹤。');
 }
-
-window.onload = function() {
-  runSimulation();
-};
 </script></body></html>
