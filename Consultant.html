@@ -76,6 +76,17 @@ main{max-width:1650px;margin:auto;padding:16px}
 .b-panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .b-info-box{background:#fff;border:1px solid #ebdffc;border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.5}
 .b-info-title{font-size:12.5px;font-weight:900;color:#521493;margin-bottom:4px;border-bottom:1px solid #f3e8ff;padding-bottom:2px}
+.b-formula-box{padding:10px 12px;font-size:12.5px;line-height:1.55}
+.b-formula-detail{padding-left:14px;color:#65409a}
+.b-score-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.b-score-card{background:#fff;border:1px solid #ebdffc;border-radius:7px;padding:8px;text-align:center}
+.b-score-label{font-size:12px;color:#6b5388;font-weight:800;font-style:italic}
+.b-score-value{font-size:22px;line-height:1.25;color:#c94b61;font-weight:900}
+.b-score-value small{font-size:11px;color:#9b7180}
+.b-current-quad{background:#7012ca;color:#fff;border-radius:6px;padding:8px 10px;text-align:center;font-size:13px;font-weight:900}
+.b-reading-box{padding:9px 11px}
+.b-reading-line{display:flex;gap:6px;margin:5px 0;line-height:1.45;font-size:11.8px}
+.b-reading-line span{color:#7b35c9;font-weight:900;flex:0 0 auto}
 
 /* 質性填答欄位 */
 .qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -825,6 +836,27 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   svgContent += pill(L+10, midY+10, 245, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
   svgContent += pill(midX+10, midY+10, 245, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
 
+  // 弧形線為視覺輔助，並非統計迴歸或因果曲線。
+  svgContent += `<g clip-path="url(#qclip)" fill="none" stroke="#ffffff" stroke-width="1.35" opacity=".72">
+    <path d="M ${L} ${B-18} C ${L+95} ${B-80}, ${L+145} ${midY+55}, ${midX} ${midY+5}"/>
+    <path d="M ${L} ${B-42} C ${L+90} ${B-105}, ${L+155} ${midY+80}, ${midX} ${midY+28}"/>
+    <path d="M ${midX} ${B-18} C ${midX+85} ${B-90}, ${R-100} ${midY+70}, ${R} ${midY+8}"/>
+    <path d="M ${midX} ${B-45} C ${midX+95} ${B-120}, ${R-95} ${midY+42}, ${R} ${midY-18}"/>
+    <path d="M ${L} ${T+75} C ${L+95} ${T+5}, ${L+150} ${midY-20}, ${midX} ${T+15}"/>
+    <path d="M ${midX} ${T+65} C ${midX+90} ${T-5}, ${R-90} ${midY-15}, ${R} ${T+12}"/>
+  </g>
+  <g clip-path="url(#qclip)" fill="none" stroke="#263238" stroke-width="1.6" stroke-dasharray="5 5" opacity=".72">
+    <path d="M ${L+8} ${B-8} C ${L+115} ${B-120}, ${midX-55} ${midY+110}, ${midX+10} ${midY-5}"/>
+    <path d="M ${midX+8} ${B-8} C ${midX+110} ${B-125}, ${R-80} ${midY+105}, ${R-5} ${midY-5}"/>
+    <path d="M ${L+8} ${midY-5} C ${L+110} ${midY-105}, ${midX-75} ${T+100}, ${midX+8} ${T+8}"/>
+  </g>
+  <g font-size="12" fill="#263238" text-anchor="middle">
+    <text x="${L}" y="${B+17}">0</text><text x="${midX}" y="${B+17}">2.5</text><text x="${R}" y="${B+17}">5</text>
+    <text x="${L-14}" y="${B+4}">0</text><text x="${L-14}" y="${midY+4}">2.5</text><text x="${L-14}" y="${T+4}">5</text>
+    <text x="${(L+R)/2}" y="${B+42}" font-weight="700">Awareness 覺察感知程度（Mirror＋Safety）/ 2</text>
+  </g>
+  <text x="18" y="${(T+B)/2}" transform="rotate(-90 18 ${(T+B)/2})" text-anchor="middle" font-size="12" font-weight="700" fill="#263238">Action 行動執行程度（Matrix＋Flow）/ 2</text>`;
+
   const resultLabelX = Math.min(Math.max(px-80, L+5), R-160);
   const resultLabelY = Math.min(Math.max(py-62, T+5), B-55);
 
@@ -838,23 +870,33 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
 
   let bottomPanel = document.getElementById('card3-bottom-info');
   if(bottomPanel) {
+    const awarenessText = `(${(m/5).toFixed(1)} + ${(s_val/5).toFixed(1)}) / 2`;
+    const actionText = `(${(mx/5).toFixed(1)} + ${(f/5).toFixed(1)}) / 2`;
+    const awarenessValue = quadrantX.toFixed(1);
+    const actionValue = quadrantY.toFixed(1);
+    const interpretation = [
+      `目前落點為 ${currentQuadName}，代表感知與行動的相對位置。`,
+      `Matrix 與 Flow：檢視權責配置、資源支持及跨部門資訊流動是否足以支撐行動。`,
+      `Mirror 與 Safety：檢視自我覺察、回饋接收及提出問題的心理安全條件。`,
+      `此圖為 MMTF 構面分數的管理判讀，不是因果證明或個人心理診斷。`
+    ];
     bottomPanel.innerHTML = `
       <div class="b-panel-head">本次數據落點判讀</div>
-      <div class="b-panel-grid">
-        <div class="b-info-box">
-          <div class="b-info-title">計算公式與轉換 (0-5 尺度)</div>
-          <b>Awareness</b> = (${m} + ${s_val}) / 2 = <b>${sumAw}</b> / 25 = <b style="color:#7012ca">${quadrantX.toFixed(1)} / 5</b><br>
-          <b>Action</b> = (${mx} + ${f}) / 2 = <b>${sumAc}</b> / 25 = <b style="color:#7012ca">${quadrantY.toFixed(1)} / 5</b><br>
-          <div style="margin-top:6px; background:#f4eaff; padding:4px 8px; border-radius:4px; font-weight:900; color:#521493; text-align:center;">
-            所在象限：${currentQuadName}
-          </div>
-        </div>
-        <div class="b-info-box">
-          <div class="b-info-title">數據落點解讀與觀察</div>
-          <div>① 綜合感知與行動落點於 <b>${currentQuadName}</b>。</div>
-          <div>② 評估 Matrix 與 Flow 對跨部門協作的驅動成效。</div>
-          <div>③ 檢視 Mirror 與 Safety 對問題回饋與信任氛圍的影響。</div>
-        </div>
+      <div class="b-info-box b-formula-box">
+        <div class="b-info-title">計算公式（各構面先由 0–25 轉為 0–5 尺度）</div>
+        <div><b>Awareness</b> = (Mirror + Safety) / 2</div>
+        <div class="b-formula-detail">= ${awarenessText} = <b>${awarenessValue} / 5</b></div>
+        <div style="margin-top:7px"><b>Action</b> = (Matrix + Flow) / 2</div>
+        <div class="b-formula-detail">= ${actionText} = <b>${actionValue} / 5</b></div>
+      </div>
+      <div class="b-score-grid">
+        <div class="b-score-card"><div class="b-score-label">Awareness</div><div class="b-score-value">${awarenessValue}<small> / 5</small></div></div>
+        <div class="b-score-card"><div class="b-score-label">Action</div><div class="b-score-value">${actionValue}<small> / 5</small></div></div>
+      </div>
+      <div class="b-current-quad">所在象限：${currentQuadName}</div>
+      <div class="b-info-box b-reading-box">
+        <div class="b-info-title">管理判讀與觀察</div>
+        ${interpretation.map((line,i)=>`<div class="b-reading-line"><span>${['①','②','③','④'][i]}</span>${line}</div>`).join('')}
       </div>
     `;
   }
