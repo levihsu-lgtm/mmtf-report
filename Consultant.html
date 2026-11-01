@@ -796,7 +796,6 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   if(!svg) return;
   const L=85, R=710, T=45, B=510, W=R-L, H=B-T;
   const x = v => L + (v/5)*W, y = v => B - (v/5)*H;
-  // 此處將 quadrantX/Y (0-5分) 直接對應到圖表像素位置
   const px = x(quadrantX), py = y(quadrantY);
 
   let svgContent = `<defs>
@@ -817,7 +816,6 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   <line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.5" stroke-dasharray="5 4"/>
   <rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="2"/>`;
 
-  // 四象限內部豐富標題與描述（對應參考圖二）
   const qWidth = W / 2 - 12;
   const qHeight = H / 2 - 12;
 
@@ -853,25 +851,20 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   <text x="${midX+18}" y="${midY+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 但未有效轉化為行動</text>
   <text x="${midX+18}" y="${midY+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 強化資源配置與追蹤</text>`;
 
-  // 繪製 0 到 25 的軸刻度與數值標籤（對應圖二風格）
   const ticks = [0, 5, 10, 15, 20, 25];
   ticks.forEach(val => {
-    // X軸對應 (0-25 映射到 0-5 分)
     const tx = x(val / 5);
     svgContent += `<line x1="${tx}" y1="${B}" x2="${tx}" y2="${B+6}" stroke="#111" stroke-width="1.2"/>`;
     svgContent += `<text x="${tx}" y="${B+22}" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">${val}</text>`;
 
-    // Y軸對應 (0-25 映射到 0-5 分)
     const ty = y(val / 5);
     svgContent += `<line x1="${L-6}" y1="${ty}" x2="${L}" y2="${ty}" stroke="#111" stroke-width="1.2"/>`;
     svgContent += `<text x="${L-12}" y="${ty+4}" text-anchor="end" font-size="12" font-weight="bold" fill="#333">${val}</text>`;
   });
 
-  // 軸標題
   svgContent += `<text x="${L-50}" y="${(T+B)/2}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-50} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
   svgContent += `<text x="${(L+R)/2}" y="${B+46}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
 
-  // 標註本次結果位置（紅點與紅標籤框）
   const resultLabelX = Math.min(Math.max(px - 75, L + 10), R - 160);
   const resultLabelY = Math.min(Math.max(py - 55, T + 10), B - 60);
 
