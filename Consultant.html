@@ -836,21 +836,9 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   svgContent += pill(L+10, midY+10, 245, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
   svgContent += pill(midX+10, midY+10, 245, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
 
-  // 弧形線為視覺輔助，並非統計迴歸或因果曲線。
-  svgContent += `<g clip-path="url(#qclip)" fill="none" stroke="#ffffff" stroke-width="1.35" opacity=".72">
-    <path d="M ${L} ${B-18} C ${L+95} ${B-80}, ${L+145} ${midY+55}, ${midX} ${midY+5}"/>
-    <path d="M ${L} ${B-42} C ${L+90} ${B-105}, ${L+155} ${midY+80}, ${midX} ${midY+28}"/>
-    <path d="M ${midX} ${B-18} C ${midX+85} ${B-90}, ${R-100} ${midY+70}, ${R} ${midY+8}"/>
-    <path d="M ${midX} ${B-45} C ${midX+95} ${B-120}, ${R-95} ${midY+42}, ${R} ${midY-18}"/>
-    <path d="M ${L} ${T+75} C ${L+95} ${T+5}, ${L+150} ${midY-20}, ${midX} ${T+15}"/>
-    <path d="M ${midX} ${T+65} C ${midX+90} ${T-5}, ${R-90} ${midY-15}, ${R} ${T+12}"/>
-  </g>
-  <g clip-path="url(#qclip)" fill="none" stroke="#263238" stroke-width="1.6" stroke-dasharray="5 5" opacity=".72">
-    <path d="M ${L+8} ${B-8} C ${L+115} ${B-120}, ${midX-55} ${midY+110}, ${midX+10} ${midY-5}"/>
-    <path d="M ${midX+8} ${B-8} C ${midX+110} ${B-125}, ${R-80} ${midY+105}, ${R-5} ${midY-5}"/>
-    <path d="M ${L+8} ${midY-5} C ${L+110} ${midY-105}, ${midX-75} ${T+100}, ${midX+8} ${T+8}"/>
-  </g>
-  <g font-size="12" fill="#263238" text-anchor="middle">
+  // 已移除各象限裝飾曲線，保留座標刻度與軸標題。
+  svgContent += `
+    <g font-size="12" fill="#263238" text-anchor="middle">
     <text x="${L}" y="${B+17}">0</text><text x="${midX}" y="${B+17}">2.5</text><text x="${R}" y="${B+17}">5</text>
     <text x="${L-14}" y="${B+4}">0</text><text x="${L-14}" y="${midY+4}">2.5</text><text x="${L-14}" y="${T+4}">5</text>
     <text x="${(L+R)/2}" y="${B+42}" font-weight="700">Awareness 覺察感知程度（Mirror＋Safety）/ 2</text>
