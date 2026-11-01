@@ -35,7 +35,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 .gen-btn{background:linear-gradient(120deg,#07528f,#087cf3);color:white;border:none;border-radius:8px;padding:12px;font-weight:900;cursor:pointer;font-size:15px;width:100%}
 
 /* 一排三張卡片區塊 */
-.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.45fr;gap:16px;align-items:stretch}
+.report-panel-grid{display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:16px;align-items:stretch}
 .r-card{background:linear-gradient(135deg,#fcf8ff,#fff);border:1px solid #d5bcff;border-radius:12px;padding:16px;display:flex;flex-direction:column;min-width:0}
 
 .r-card-head{background:linear-gradient(100deg,#f3eafc,#fff 88%);padding:10px 12px;border-bottom:3px solid #9a4efe;display:flex;align-items:center;gap:8px;color:#521493;font-weight:900;font-size:13.5px;margin-bottom:12px;border-radius:6px}
@@ -68,7 +68,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 /* 第三張卡片內部：上圖表、下說明 */
 .card3-stack{display:flex;flex-direction:column;gap:14px;height:100%}
 .plot-wrap-stacked{width:100%;display:flex;align-items:center;justify-content:center}
-#quadrantChart{display:block;width:100%;height:auto;max-height:500px;background:#fff;border-radius:8px}
+#quadrantChart{display:block;width:100%;height:auto;max-height:420px}
 
 /* 下方說明面板 */
 .bottom-info-panel{background:#f8f4ff;border:1.5px solid #d5bcff;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}
@@ -204,7 +204,7 @@ main{max-width:1650px;margin:auto;padding:16px}
         <div class="r-card-head"><span class="r-num">3</span>組織效能四象限圖 (Awareness × Action) 與本次數據落點判讀</div>
         <div class="card3-stack">
           <div class="plot-wrap-stacked">
-            <svg id="quadrantChart" viewBox="0 0 760 580" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
+            <svg id="quadrantChart" viewBox="0 0 660 540" role="img" aria-label="依四構面分數動態定位的四象限圖"></svg>
           </div>
           <div class="bottom-info-panel" id="card3-bottom-info">
             <!-- JS 動態更新 -->
@@ -456,6 +456,7 @@ function scrollToSection(id) {
   let targetSec = document.getElementById(id);
   if(!targetSec) return;
   
+  // 檢查是否已解鎖
   let secIdNum = parseInt(id.replace('stage', '').replace('-sec', ''));
   if(secIdNum > currentUnlockedStage && secIdNum !== 3 && secIdNum !== 4 && secIdNum !== 5) {
     alert('請先完成前置階段填答與確認！');
@@ -582,6 +583,7 @@ function runSimulation() {
   window.lowestDimKey = lowest.key;
   window.lowestDimName = lowest.name;
 
+  // 依四構面分數排序及兩個主要弱項的文獻脈絡，動態組合質性問題
   renderCombinationQuestions(scores);
 }
 
@@ -616,7 +618,7 @@ function renderCombinationQuestions() {
   const pairPrompts={
     'm-s':'當問題被發現或提出時，團隊是否因擔心負面反應而選擇不回饋？請描述「看見問題」到「敢於說出」之間的阻礙。',
     'm-mx':'當員工已察覺問題時，是否因權責不清或缺乏正式處理機制，導致問題無法被確認及追蹤？',
-    'f-m':'問題訊息從被察覺、回報到跨部門接收的過程，在哪個節點最容易遺漏或失真？',
+    'f-m':'問題訊息從被察覺、回報到跨部門接收的過程，在哪個環節最容易遺漏或失真？',
     'f-mx':'即使已有制度與權責分工，資訊交接、決策回覆或跨部門協作是否仍然延遲？請舉例說明。',
     'mx-s':'制度規範或主管權威是否影響員工提出異議、反映資源不足或要求釐清責任？',
     'f-s':'資訊是否能順利傳遞，是否也取決於員工敢不敢提出錯誤、不同意見或壞消息？請描述具體情境。'
@@ -668,7 +670,7 @@ function parseMMTFCsv(text) {
 function downloadMMTFValidityTemplate() {
   const header='case_id,mmtf_mirror,mmtf_matrix,mmtf_flow,mmtf_safety,fos_total,role_conflict,role_ambiguity,csq_total,edmondson_total,psc12_total';
   const sample='P001,18,14,12,17,3.8,2.4,2.1,3.6,4.1,3.2';
-  const blob=new Blob(['\uFEFF'+header+'\n'+sample+'\n'],{type: 'text/csv;charset=utf-8;'});
+  const blob=new Blob(['\uFEFF'+header+'\n'+sample+'\n'],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob); const a=document.createElement('a');
   a.href=url;a.download='MMTF_外部量表配對資料範本.csv';a.click();URL.revokeObjectURL(url);
 }
@@ -684,9 +686,6 @@ document.addEventListener('DOMContentLoaded',()=>{
       status.textContent=`已載入 ${f.name}：${parsed.rows.length} 筆資料；欄位：${parsed.headers.join('、')}`;
     }catch(err){alert('CSV 讀取失敗：'+err.message);}
   });
-  
-  // 確保網頁完全載入後立即執行一次初始化與繪圖
-  runSimulation();
 });
 
 function rankValues(values){
@@ -765,6 +764,7 @@ function runMMTFExternalValidity(){
 }
 function runInterventionEvaluation() {
   const dims=getCurrentDimensionScores();
+  const labels={m:'Mirror',mx:'Matrix',f:'Flow',s:'Safety'};
   const rows=[]; let invalid=false;
   dims.forEach(d=>{
     const el=document.getElementById('t2-'+d.key);
@@ -778,7 +778,7 @@ function runInterventionEvaluation() {
   if(invalid)return;
   if(!rows.length){alert('請至少回填一個 MMTF 構面的 T2 分數。');return;}
   const sum1=dims.reduce((a,d)=>a+d.score,0), sum2=rows.reduce((a,r)=>a+r.t2,0)+dims.filter(d=>!rows.some(r=>r.name===d.name)).reduce((a,d)=>a+d.score,0);
-  const body=rows.map(r=>`<tr><td>${r.name}</td><td>${r.t1}</td><td>${r.t2}</td><td>${r.delta>0?'+':''}${r.delta}</td><td>${r.delta>0?'分數上升':r.delta<0?'分數下降':'未變動'}</td><td>外部量表應依各自正式量尺另行分析</td></tr>`).join('');
+  const body=rows.map(r=>`<tr><td>${r.name}</td><td>${Number.isInteger(r.t1)?r.t1:r.t1}</td><td>${r.t2}</td><td>${r.delta>0?'+':''}${r.delta}</td><td>${r.delta>0?'分數上升':r.delta<0?'分數下降':'未變動'}</td><td>外部量表應依各自正式量尺另行分析</td></tr>`).join('');
   const feedback=document.getElementById('consultant-feedback').value.trim();
   const action=document.getElementById('improvement-action').value.trim();
   const owner=document.getElementById('improvement-owner').value.trim();
@@ -792,20 +792,21 @@ function runInterventionEvaluation() {
   window.mmtfInterventionEvaluation={rows,feedback,action,owner,status,evidence,complete,totalT1:sum1,totalT2:complete?sum2:null};
 }
 
-function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   const svg = document.getElementById('quadrantChart');
   if(!svg) return;
-  const L=85, R=710, T=45, B=510, W=R-L, H=B-T;
+  const L=75, R=620, T=35, B=485, W=R-L, H=B-T;
   const x = v => L + (v/5)*W, y = v => B - (v/5)*H;
   const px = x(quadrantX), py = y(quadrantY);
 
   let svgContent = `<defs>
-    <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff8d6"/><stop offset="100%" stop-color="#ffe6b8"/></linearGradient>
-    <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e1fce7"/><stop offset="100%" stop-color="#c6f6d5"/></linearGradient>
-    <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffebee"/><stop offset="100%" stop-color="#ffcdd2"/></linearGradient>
-    <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e3f2fd"/><stop offset="100%" stop-color="#bbdefb"/></linearGradient>
+    <linearGradient id="q2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffe891"/><stop offset="100%" stop-color="#ffc785"/></linearGradient>
+    <linearGradient id="q1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#abfcc2"/><stop offset="100%" stop-color="#b4f8e6"/></linearGradient>
+    <linearGradient id="q3bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff757b"/><stop offset="100%" stop-color="#ffe2e7"/></linearGradient>
+    <linearGradient id="q4bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0efff"/><stop offset="100%" stop-color="#bceeff"/></linearGradient>
+    <clipPath id="qclip"><rect x="${L}" y="${T}" width="${W}" height="${H}"/></clipPath>
   </defs>`;
 
   const midX = x(2.5), midY = y(2.5);
@@ -815,72 +816,23 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   <rect x="${midX}" y="${T}" width="${W/2}" height="${H/2}" fill="url(#q1bg)"/>
   <rect x="${L}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q3bg)"/>
   <rect x="${midX}" y="${midY}" width="${W/2}" height="${H/2}" fill="url(#q4bg)"/>
-  <line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.5" stroke-dasharray="5 4"/>
-  <line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.5" stroke-dasharray="5 4"/>
-  <rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="2"/>`;
+  <line x1="${midX}" y1="${T}" x2="${midX}" y2="${B}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><line x1="${L}" y1="${midY}" x2="${R}" y2="${midY}" stroke="#67776d" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="${L}" y="${T}" width="${W}" height="${H}" fill="none" stroke="#283a36" stroke-width="1.6"/>`;
 
-  const qWidth = W / 2 - 12;
-  const qHeight = H / 2 - 12;
+  const pill=(xx,yy,ww,label,fill,stroke)=>`<rect x="${xx}" y="${yy}" width="${ww}" height="34" rx="6" fill="${fill}" stroke="${stroke}"/><text x="${xx+ww/2}" y="${yy+22}" text-anchor="middle" font-size="13.5" font-weight="900" fill="#182a27">${label}</text>`;
 
-  // II 象限 (左上)
-  svgContent += `
-  <rect x="${L+6}" y="${T+6}" width="${qWidth}" height="${qHeight}" rx="6" fill="#fff" fill-opacity="0.6" stroke="#f6ad55" stroke-width="1"/>
-  <text x="${L+18}" y="${T+28}" font-size="13.5" font-weight="900" fill="#b45309">Ⅱ 制度主導型（高行動、低感知）</text>
-  <text x="${L+18}" y="${T+48}" font-size="11.5" font-weight="700" fill="#2d3748">• 具備回應與執行能力</text>
-  <text x="${L+18}" y="${T+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 但資訊基礎與問題覺察不足</text>
-  <text x="${L+18}" y="${T+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 需補足透明回饋機制</text>`;
+  svgContent += pill(L+10, T+10, 245, 'Ⅱ 潛能未釋放區 (高行動、低感知)', '#fff9e6', '#d9923b');
+  svgContent += pill(midX+10, T+10, 245, 'Ⅰ 最佳運作區 (高行動、高感知)', '#e6fff0', '#429e53');
+  svgContent += pill(L+10, midY+10, 245, 'Ⅲ 失衡風險區 (低行動、低感知)', '#ffebeb', '#e05650');
+  svgContent += pill(midX+10, midY+10, 245, 'Ⅳ 看見未轉化區 (低行動、高感知)', '#ebf5ff', '#4b88d9');
 
-  // I 象限 (右上)
-  svgContent += `
-  <rect x="${midX+6}" y="${T+6}" width="${qWidth}" height="${qHeight}" rx="6" fill="#fff" fill-opacity="0.6" stroke="#48bb78" stroke-width="1"/>
-  <text x="${midX+18}" y="${T+28}" font-size="13.5" font-weight="900" fill="#22543d">Ⅰ 高效協同發展區（高行動、高感知）</text>
-  <text x="${midX+18}" y="${T+48}" font-size="11.5" font-weight="700" fill="#2d3748">• 資訊透明，權責明確</text>
-  <text x="${midX+18}" y="${T+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 流程順暢，發聲安全</text>
-  <text x="${midX+18}" y="${T+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 支持協作與持續學習</text>`;
+  const resultLabelX = Math.min(Math.max(px-80, L+5), R-160);
+  const resultLabelY = Math.min(Math.max(py-62, T+5), B-55);
 
-  // III 象限 (左下)
-  svgContent += `
-  <rect x="${L+6}" y="${midY+6}" width="${qWidth}" height="${qHeight}" rx="6" fill="#fff" fill-opacity="0.6" stroke="#f56565" stroke-width="1"/>
-  <text x="${L+18}" y="${midY+28}" font-size="13.5" font-weight="900" fill="#9b2c2c">Ⅲ 失衡風險區（低行動、低感知）</text>
-  <text x="${L+18}" y="${midY+48}" font-size="11.5" font-weight="700" fill="#2d3748">• 資訊不透明、權責不清</text>
-  <text x="${L+18}" y="${midY+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 流動受阻、發聲不足</text>
-  <text x="${L+18}" y="${midY+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 優先建立回報與支持</text>`;
-
-  // IV 象限 (右下)
-  svgContent += `
-  <rect x="${midX+6}" y="${midY+6}" width="${qWidth}" height="${qHeight}" rx="6" fill="#fff" fill-opacity="0.6" stroke="#3182ce" stroke-width="1"/>
-  <text x="${midX+18}" y="${midY+28}" font-size="13.5" font-weight="900" fill="#2b6cb0">Ⅳ 看見未轉化區（低行動、高感知）</text>
-  <text x="${midX+18}" y="${midY+48}" font-size="11.5" font-weight="700" fill="#2d3748">• 能看見問題與風險</text>
-  <text x="${midX+18}" y="${midY+66}" font-size="11.5" font-weight="700" fill="#2d3748">• 但未有效轉化為行動</text>
-  <text x="${midX+18}" y="${midY+84}" font-size="11.5" font-weight="700" fill="#2d3748">• 強化資源配置與追蹤</text>`;
-
-  const ticks = [0, 5, 10, 15, 20, 25];
-  ticks.forEach(val => {
-    const tx = x(val / 5);
-    svgContent += `<line x1="${tx}" y1="${B}" x2="${tx}" y2="${B+6}" stroke="#111" stroke-width="1.2"/>`;
-    svgContent += `<text x="${tx}" y="${B+22}" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">${val}</text>`;
-
-    const ty = y(val / 5);
-    svgContent += `<line x1="${L-6}" y1="${ty}" x2="${L}" y2="${ty}" stroke="#111" stroke-width="1.2"/>`;
-    svgContent += `<text x="${L-12}" y="${ty+4}" text-anchor="end" font-size="12" font-weight="bold" fill="#333">${val}</text>`;
-  });
-
-  svgContent += `<text x="${L-50}" y="${(T+B)/2}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87" transform="rotate(-90 ${L-50} ${(T+B)/2})">Action 組織回應行動能力 (Matrix + Flow) / 2</text>`;
-  svgContent += `<text x="${(L+R)/2}" y="${B+46}" text-anchor="middle" font-size="13" font-weight="900" fill="#073f87">Awareness 資訊與感知基礎 (Mirror + Safety) / 2</text>`;
-
-  const resultLabelX = Math.min(Math.max(px - 75, L + 10), R - 160);
-  const resultLabelY = Math.min(Math.max(py - 55, T + 10), B - 60);
-
-  svgContent += `
-  <circle cx="${px}" cy="${py}" r="12" fill="#c90020" opacity="0.3"/>
-  <circle cx="${px}" cy="${py}" r="7" fill="#c90020" stroke="#fff" stroke-width="2"/>
-  <rect x="${resultLabelX}" y="${resultLabelY}" width="150" height="42" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/>
-  <text x="${resultLabelX + 75}" y="${resultLabelY + 17}" text-anchor="middle" font-size="12" fill="#fff" font-weight="900">本次結果位置</text>
-  <text x="${resultLabelX + 75}" y="${resultLabelY + 34}" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">(${(quadrantX*5).toFixed(1)}, ${(quadrantY*5).toFixed(1)})</text>`;
+  svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
   svg.innerHTML = svgContent;
 
-  let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜制度主導型') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜高效協同發展區');
+  let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
   let sumAw = m + s_val;
   let sumAc = mx + f;
 
@@ -978,6 +930,7 @@ function analyzeMMTFLanguage(text) {
   const features=[];
   featureRules.forEach(rule=>{if(rule.terms.some(term=>t.includes(term)))features.push(rule.name);});
   if(!features.length)features.push('未辨識到明確語態特徵');
+  // Basic negation scope guard: avoid treating negated fear phrases as positive risk evidence.
   const negatedHits=hits.filter(h=>['不怕被罵','不擔心被責備','沒有不敢','並非不敢'].some(p=>t.includes(p)));
   const activeHits=hits.filter(h=>!negatedHits.includes(h));
   const dimensions=[...new Set(activeHits.map(h=>h.dimension))];
@@ -997,7 +950,6 @@ function buildMMTFConsistencyStatement(dim,result){
   if(result.dimensions.includes(dim.name))return `文字中出現與 ${dim.name} 相關的語言線索，與量化結果呈現初步主題對應；目前僅為規則式辨識，仍須顧問核對原文與事件。`;
   return `目前辨識到的文字線索未明確對應 ${dim.name}；不能因此認定量化結果錯誤，應追問情境並檢查量表題項、受試者理解及其他資料來源。`;
 }
-
 function unlockStage4() {
   document.getElementById('stage4-sec').style.display = 'block';
   currentUnlockedStage = Math.max(currentUnlockedStage, 4);
@@ -1069,4 +1021,8 @@ function exportToExcel() {
   document.body.removeChild(link);
   alert('成功匯出案件 Excel / CSV 紀錄檔！可直接對接資料庫系統進行長期追蹤。');
 }
+
+window.onload = function() {
+  runSimulation();
+};
 </script></body></html>
