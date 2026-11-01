@@ -68,7 +68,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 /* 第三張卡片內部：上圖表、下說明 */
 .card3-stack{display:flex;flex-direction:column;gap:14px;height:100%}
 .plot-wrap-stacked{width:100%;display:flex;align-items:center;justify-content:center}
-#quadrantChart{display:block;width:100%;height:auto;max-height:480px}
+#quadrantChart{display:block;width:100%;height:auto;max-height:500px;background:#fff;border-radius:8px}
 
 /* 下方說明面板 */
 .bottom-info-panel{background:#f8f4ff;border:1.5px solid #d5bcff;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}
@@ -265,7 +265,7 @@ main{max-width:1650px;margin:auto;padding:16px}
     <div class="module-box" style="margin-top:16px;border-color:#087cf3">
   <div class="module-title">📊 外部量表選擇、指標設定與 MMTF 實證對照（T1）</div>
   <p style="font-size:13px;color:#6b5388">
-    本區不是把外部量表換算成 MMTF 分數。請先選擇實際施測的量表，再依該量表正式版本保留原有構面、分量表與計分規則；匯入匿名受試者逐筆資料後，系統才將外部量表指標與同一受試者第一次 MMTF 分數配對分析。PSC-12 與 Edmondson 團隊心理安全量表可同時施測、同時納入分析，兩者分別代表心理社會安全氣候與團隊心理安全感，不互相替代。
+    本區不是把外部量表換算成 MMTF 分數。請先選擇實際施測的量表，再依該量表正式版本保留原有構面、分量表與計分規則;匯入匿名受試者逐筆資料後，系統才將外部量表指標與同一受試者第一次 MMTF 分數配對分析。PSC-12 與 Edmondson 團隊心理安全量表可同時施測、同時納入分析，兩者分別代表心理社會安全氣候與團隊心理安全感，不互相替代。
   </p>
 
   <div class="qual-group" style="border:1px solid #cbb5f4;border-radius:9px;padding:13px;margin-bottom:12px">
@@ -873,7 +873,7 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   <circle cx="${px}" cy="${py}" r="7" fill="#c90020" stroke="#fff" stroke-width="2"/>
   <rect x="${resultLabelX}" y="${resultLabelY}" width="150" height="42" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/>
   <text x="${resultLabelX + 75}" y="${resultLabelY + 17}" text-anchor="middle" font-size="12" fill="#fff" font-weight="900">本次結果位置</text>
-  <text x="${resultLabelX + 75}" y="${resultLabelY + 34}" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">(${(quadrantX*5).toFixed(1)}, ${(quadrantY*5).toFixed(1)})</text>`;
+  <text x="${resultLabelX + 75}" y="${resultLabelY + 34}" text-anchor="middle" font-size="12" font-weight="700">(${(quadrantX*5).toFixed(1)}, ${(quadrantY*5).toFixed(1)})</text>`;
 
   svg.innerHTML = svgContent;
 
@@ -990,8 +990,8 @@ function analyzeMMTFLanguage(text) {
 }
 
 function buildMMTFConsistencyStatement(dim,result){
-  if(result.level==='E0')return `目前 ${dim.name} 分數為 ${dim.score}/25，但質性文字未提供足夠的構面證據；無法判定量化低分與回答是否一致。`;
-  if(result.dimensions.includes(dim.name))return `文字中出現與 ${dim.name} 相關的語言線索，與量化結果呈現初步主題對應；目前僅為規則式辨識，仍須顧問核對原文與事件。`;
+  if(result.level==='E0')return `目前 ${dim.name} 分數為 ${dim.score}/25，但質性文字未提供足夠的構面證據;無法判定量化低分與回答是否一致。`;
+  if(result.dimensions.includes(dim.name))return `文字中出現與 ${dim.name} 相關的語言線索，與量化結果呈現初步主題對應;目前僅為規則式辨識，仍須顧問核對原文與事件。`;
   return `目前辨識到的文字線索未明確對應 ${dim.name}；不能因此認定量化結果錯誤，應追問情境並檢查量表題項、受試者理解及其他資料來源。`;
 }
 
