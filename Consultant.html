@@ -419,7 +419,7 @@ main{max-width:1650px;margin:auto;padding:16px}
 
   <!-- 模組四：個人報告與文獻摘要 -->
   <section class="module-box" id="stage4-sec" style="display:none">
-    <div class="module-title"><span>🎨</span> 模組四：參與者個人報告（六大繽紛精簡區塊 ── 含文獻理論簡述）</div>
+    <div class="module-title"><span>🎨</span> 模組四：參與者個人診斷與行動回饋報告 <span style="font-size:11px;color:#64748b;font-weight:500">（動態報告版）</span></div>
     <div class="report-grid-6">
       <div class="report-card rc-1">
         <div class="rc-title">01｜我的整體診斷結果 <span id="r1-tag">總分 --</span></div>
@@ -448,6 +448,7 @@ main{max-width:1650px;margin:auto;padding:16px}
     </div>
     
     <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="next-btn" type="button" onclick="populatePersonalReport()">↻ 依目前填答重新產生個人報告</button>
       <button class="next-btn" onclick="unlockStage5()">進入第五階段：持續追蹤與重測覆盤 ➔</button>
       <button class="export-btn" onclick="exportToExcel()">📥 匯出案件 Excel 紀錄（供資料庫系統化追蹤）</button>
     </div>
@@ -1102,8 +1103,13 @@ function populatePersonalReport() {
 }
 
 function unlockStage4() {
-  populatePersonalReport();
   document.getElementById('stage4-sec').style.display = 'block';
+  try {
+    populatePersonalReport();
+  } catch (err) {
+    console.error('MMTF 個人報告產生失敗：', err);
+    alert('個人報告產生失敗：' + (err && err.message ? err.message : err) + '。請檢查填答資料或聯絡系統管理者。');
+  }
   currentUnlockedStage = Math.max(currentUnlockedStage, 4);
   let nav4 = document.getElementById('nav-stage4');
   nav4.style.opacity = '1';
