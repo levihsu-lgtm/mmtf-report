@@ -1002,13 +1002,16 @@ function populatePersonalReport() {
   const dims=getCurrentDimensionScores();
   const total=dims.reduce((sum,d)=>sum+d.score,0);
   const avg=(total/20).toFixed(2);
+  const byKey=Object.fromEntries(dims.map(d=>[d.key,d]));
   const sorted=[...dims].sort((a,b)=>b.score-a.score);
-  const high=sorted[0], low=sorted[sorted.length-1], secondLow=sorted[sorted.length-2];
+  const high=sorted[0], low=sorted[3], secondLow=sorted[2];
+  const lowTwo=[low,secondLow].sort((a,b)=>a.score-b.score);
   const esc=v=>escapeHtml(String(v??''));
-  const modelEl=document.getElementById('v-type');
-  const model=modelEl?.innerText?.trim()||'尚未產生類型判讀';
-  const modelDesc=document.getElementById('v-type-desc')?.innerText?.trim()||'';
   const band=score=>score>=18?'相對較高':score>=12?'中間區間':'相對較低';
+  const axisAw=(byKey.m.score+byKey.s.score)/10;
+  const axisAc=(byKey.mx.score+byKey.f.score)/10;
+  const axisGap=Number((axisAw-axisAc).toFixed(1));
+  const spread=high.score-low.score;
   const r1=document.getElementById('personal-r1');
   const r2=document.getElementById('personal-r2');
   const r3=document.getElementById('personal-r3');
@@ -1018,88 +1021,117 @@ function populatePersonalReport() {
   const tag=document.getElementById('r1-tag');
   if(tag) tag.textContent=`總分 ${total}/100`;
 
+  // 五層分析的共用摘要，供六張卡片分別呈現。
+  let modelTitle, modelDesc;
+  if(total>=75){modelTitle='高分區間（操作性分類）';modelDesc='整體自評分數偏高；仍須檢視四構面是否均衡，不能僅憑總分認定組織已高效運作。';}
+  else if(total>=50){modelTitle='中間區間（操作性分類）';modelDesc='整體自評呈現一定基礎，但可能存在構面差異；需由最低分構面及具體情境進一步定位。';}
+  else {modelTitle='較低區間（操作性分類）';modelDesc='整體自評分數偏低，建議優先確認最低分構面的實際工作情境、資源與制度因素。';}
+  const pairKey=lowTwo.map(d=>d.key).sort().join('-');
+  const pairLogic={
+    'm-mx':'覺察與回饋可能已出現，但權責、決策權或資源安排可能影響問題能否被接手與處理。',
+    'f-m':'問題即使被察覺，也可能在回報、傳遞、接收或回覆過程中中斷；需確認資訊流程的實際節點。',
+    'm-s':'自我覺察與發聲安全可能互相牽涉；需分辨「知道問題」與「願意／能夠提出」是否發生在同一事件。',
+    'f-mx':'資訊傳遞與權責安排可能同時形成協作瓶頸；需追查訊息交接、決策等待與責任歸屬。',
+    'mx-s':'正式權責與團隊發聲環境可能共同影響問題回報；需查明制度規範與人際反應各自扮演的角色。',
+    'f-s':'資訊是否完整流動，可能與成員是否願意提出錯誤或不同意見有關；需以具體事件確認兩者是否連動。'
+  };
+  const pairStatement=pairLogic[pairKey]||'最低兩構面呈現相對弱項組合，應回到具體工作事件確認其是否共同發生。';
+  const dimensionInterpretation={
+    m:'觀察自我認知、他人回饋與工作現場訊息是否能互相校準。',
+    mx:'觀察角色、責任、決策權、資源與組織設計是否相互配合。',
+    f:'觀察資訊從產生、傳遞、接收、理解到回饋的完整性與延遲。',
+    s:'觀察團隊成員提出問題、承認錯誤或表達不同意見時的人際安全感。'
+  };
+  const literature={
+    m:{ref:'Luft & Ingham（1955），Johari Window',fit:'概念對應合理，但屬自我覺察與人際回饋的概念架構，不是可直接套用的標準化量表。',limit:'MMTF Mirror 題項仍須透過專家內容效度、認知訪談及因素分析檢驗。'},
+    mx:{ref:'Galbraith（1977；Star Model 組織設計脈絡）',fit:'可作為策略、結構、流程、獎酬與人員配置的組織設計參照，與權責及資源配置具有概念關聯。',limit:'Star Model 是組織設計框架，不是個人心理構念或心理量表；需明確界定 MMTF Matrix 的測量層次。'},
+    f:{ref:'Shannon & Weaver（1949），資訊傳播模型',fit:'可協助分析訊息來源、傳遞、干擾與接收等流程，適合做資訊流動的基礎概念參照。',limit:'原模型偏向訊號傳輸，不足以單獨涵蓋組織中的意義協商、權力與雙向互動；需補充組織溝通文獻。'},
+    s:{ref:'Edmondson（1999），Team Psychological Safety',fit:'與團隊成員能否承擔人際風險、提出疑問及承認錯誤的概念相符。',limit:'Edmondson 團隊心理安全與 PSC-12 心理社會安全氣候屬不同層次／構念，應分開施測、計分與解釋。'}
+  };
+  const literatureFit=(key)=>literature[key];
+
+  // 第一層：總分與整體輪廓。
   if(r1) r1.innerHTML=`
-    <p class="pr-intro">本次 MMTF 自評總分為 <b>${total}/100</b>，四構面平均為 <b>${avg}/5</b>。</p>
+    <p class="pr-intro">本次四構面合計 <b>${total}/100</b>，平均 <b>${avg}/5</b>。這是依目前自編 MMTF 計分規則得到的描述性結果。</p>
     <div class="pr-metric-grid">
-      <div class="pr-metric"><span>MMTF 總分</span><b>${total}<small style="font-size:11px;color:#64748b"> / 100</small></b></div>
-      <div class="pr-metric"><span>四構面平均</span><b>${avg}<small style="font-size:11px;color:#64748b"> / 5</small></b></div>
+      <div class="pr-metric"><span>總分</span><b>${total}<small style="font-size:11px"> / 100</small></b></div>
+      <div class="pr-metric"><span>平均</span><b>${avg}<small style="font-size:11px"> / 5</small></b></div>
     </div>
-    <p><b>目前分數區間對應：</b>${esc(model)}</p>
-    ${modelDesc?`<p>${esc(modelDesc)}</p>`:''}
-    <p class="pr-muted">此類型依目前系統操作性分級呈現，並非經臨床或常模診斷的個人標籤。</p>`;
+    <p><b>整體區間：</b>${modelTitle}</p><p>${modelDesc}</p>
+    <p><b>邏輯檢核：</b>總分呈現整體量表加總結果，但可能掩蓋構面間差異；因此須同時閱讀第二、三層的構面輪廓與兩軸差距。</p>
+    <p class="pr-muted">目前 0–49、50–74、75–100 等區間屬系統操作性分類，尚非經常模或實證研究驗證的診斷切點；不可作臨床診斷或個人績效定論。</p>`;
 
-  if(r2) r2.innerHTML=dims.map(d=>`
-    <div class="pr-dim"><b>${esc(d.name)}｜${d.score}/25</b> <span class="pr-chip">${band(d.score)}</span>
-      <div>${esc(d.zh)}；理論參照：${esc(d.theory)}。</div>
-      <div class="pr-muted">工具／量表參照：${esc(d.scale)}</div>
-    </div>`).join('');
+  // 第二層：四構面數值、理論對照與文獻合理性檢核。
+  if(r2) r2.innerHTML=`
+    <p><b>四構面分數與概念對照</b></p>
+    ${dims.map(d=>{const lit=literatureFit(d.key);return `
+      <div class="pr-dim"><b>${esc(d.name)}｜${d.score}/25</b> <span class="pr-chip">${band(d.score)}</span>
+        <div>${esc(dimensionInterpretation[d.key])}</div>
+        <div><b>理論參照：</b>${esc(lit.ref)}</div>
+        <div><b>文獻適配判斷：</b>${esc(lit.fit)}</div>
+        <div class="pr-muted"><b>合理性限制：</b>${esc(lit.limit)}</div>
+      </div>`;}).join('')}
+    <p class="pr-muted"><b>整體文獻判斷：</b>四個理論可作為構念形成的概念來源，但理論名稱與構面相似，不等於題項內容效度、因素結構、信度或效標關聯效度已成立。</p>`;
 
-  const gap=high.score-low.score;
+  // 第三層：構面組合、Awareness / Action 軸線與邏輯推論。
   if(r3) r3.innerHTML=`
-    <p><b>相對優勢構面：</b>${esc(high.name)}（${high.score}/25）。</p>
-    <p><b>優先了解構面：</b>${esc(low.name)}（${low.score}/25）；其次為 ${esc(secondLow.name)}（${secondLow.score}/25）。</p>
+    <p><b>相對優勢：</b>${esc(high.name)}（${high.score}/25）；<b>優先了解：</b>${esc(low.name)}（${low.score}/25），其次 ${esc(secondLow.name)}（${secondLow.score}/25）。</p>
     <div class="pr-metric-grid">
-      <div class="pr-metric"><span>最高構面</span><b>${high.score}<small style="font-size:11px"> / 25</small></b></div>
-      <div class="pr-metric"><span>最低構面</span><b>${low.score}<small style="font-size:11px"> / 25</small></b></div>
+      <div class="pr-metric"><span>Awareness（Mirror＋Safety）</span><b>${axisAw.toFixed(1)}<small style="font-size:11px"> / 5</small></b></div>
+      <div class="pr-metric"><span>Action（Matrix＋Flow）</span><b>${axisAc.toFixed(1)}<small style="font-size:11px"> / 5</small></b></div>
     </div>
-    <p>最高與最低構面相差 <b>${gap}</b> 分。這代表本次自評中各構面的相對差異，不能單憑分數差距推定實際原因或責任歸屬。</p>
-    <p class="pr-muted">相對優勢不代表已無改善空間；相對低分則應搭配具體事件、工作流程及其他資料來源再確認。</p>`;
+    <p><b>兩軸差距：</b>${Math.abs(axisGap).toFixed(1)} 分，${Math.abs(axisGap)<0.5?'兩軸接近':axisGap>0?'Awareness 高於 Action':'Action 高於 Awareness'}。</p>
+    <p><b>最低兩構面組合的邏輯假設：</b>${esc(pairStatement)}</p>
+    <p><b>最高／最低構面差距：</b>${spread} 分。此為描述性落差，不代表因果關係，也不代表低分構面必然造成高分構面的問題。</p>
+    <p class="pr-muted">Awareness 與 Action 是 MMTF 自訂的組合指標，需另行檢驗其理論依據、內部結構及測量品質；不宜直接視為已驗證的二階構面。</p>`;
 
+  // 第四層：質性回答、規則式線索、量化—質性一致性。
   const answers=[
     {label:'問題一',text:document.getElementById('qual-ans-1')?.value?.trim()||''},
     {label:'問題二',text:document.getElementById('qual-ans-2')?.value?.trim()||''}
   ];
   if(r4) {
     const answerHtml=answers.map(a=>{
-      if(!a.text) return `<div class="pr-quote"><b>${a.label}：</b>未填答，沒有可供分析的文字。</div>`;
+      if(!a.text) return `<div class="pr-quote"><b>${a.label}：</b>未填答，無可供交叉檢核的文字資料。</div>`;
       const lpa=analyzeMMTFLanguage(a.text);
+      const related=dims.filter(d=>lpa.dimensions.includes(d.name));
+      const matched=related.length?related.map(d=>`${d.name}（${d.score}/25）`).join('、'):'目前沒有明確對應構面';
       return `<div class="pr-quote"><b>${a.label}原始回答：</b>${esc(a.text)}</div>
-        <div><b>語言線索：</b>${lpa.hits.length?lpa.hits.map(h=>`<span class="pr-chip">${esc(h.term)}｜${esc(h.dimension||h.type)}</span>`).join(''):'目前詞庫未辨識到明確線索'}</div>
-        <div><b>可能構面：</b>${lpa.dimensions.length?lpa.dimensions.map(esc).join('、'):'無明確構面線索'}</div>
-        <div><b>證據等級：</b>${esc(lpa.level)}｜${esc(lpa.levelName)}</div>
-        <div class="pr-muted"><b>限制：</b>${esc(lpa.limit)} <b>建議追問：</b>${esc(lpa.followup)}</div>`;
+        <div><b>辨識線索：</b>${lpa.hits.length?lpa.hits.map(h=>`<span class="pr-chip">${esc(h.term)}｜${esc(h.dimension||h.type)}</span>`).join(''):'目前詞庫未辨識到明確構面詞彙'}</div>
+        <div><b>可能對應構面：</b>${esc(matched)}</div>
+        <div><b>證據層級：</b>${esc(lpa.level)}｜${esc(lpa.levelName)}</div>
+        <div><b>量化—質性邏輯檢核：</b>${related.length?'文字線索與相關構面出現初步主題對應，仍須核對事件內容、發生頻率及其他資料來源。':'目前文字線索不足以支持與特定構面一致或不一致的判斷，不能因未命中就否定量化結果。'}</div>
+        <div class="pr-muted"><b>判讀限制：</b>${esc(lpa.limit)} <b>建議追問：</b>${esc(lpa.followup)}</div>`;
     }).join('');
-    r4.innerHTML=`${answerHtml}<p class="pr-muted">LPA 為詞庫規則式語言線索提示，不是心理診斷；命中不代表問題成立，未命中也不代表沒有問題。</p>`;
+    r4.innerHTML=`${answerHtml}
+      <p class="pr-muted"><b>方法限制：</b>目前 LPA 為詞庫規則式辨識，未經語料標註與效度檢驗；無法可靠處理否定範圍、反諷、語境或口語變體。它只提供追問線索，不可作為心理診斷或效度成立證據。</p>`;
   }
 
+  // 第五層：依構面分數、組合邏輯與文獻限制提出可檢核的改善假設。
   const actionMap={
-    m:[
-      '選定一項近期工作事件，記錄自己原先的判斷、他人回饋與事後差異。',
-      '安排一次具體、聚焦工作事實的雙向回饋對話，記錄可採取的修正。',
-      '於兩週後回看回饋紀錄，確認是否出現新的觀察或行動。'
-    ],
-    mx:[
-      '挑選一項常延遲的工作流程，列出提出、決策、執行及核准角色。',
-      '與相關角色確認責任邊界、決策權及所需資源，形成簡明 RACI 表。',
-      '兩週後檢查是否仍有責任空缺、重複核准或等待情形。'
-    ],
-    f:[
-      '選定一個跨單位資訊交接案例，記錄資訊來源、接收者、回覆及完成時間。',
-      '建立單一交接紀錄，明訂必要欄位、回覆期限及逾期提醒方式。',
-      '兩週後抽查交接紀錄，檢視資訊遺漏、延遲與重工情形。'
-    ],
-    s:[
-      '盤點一個曾經不容易提出疑問或不同意見的工作情境，先描述事件與反應。',
-      '與主管或團隊約定固定的提問／回饋時段及不責備的回應原則。',
-      '兩週後檢視提出問題後是否獲得回應、處理及回饋。'
-    ]
+    m:['選定一件近期工作事件，記錄原先判斷、他人回饋及事後差異。','安排一次聚焦工作事實的雙向回饋對話，記錄可採取的修正。','兩週後回看紀錄，確認是否出現新的觀察或行動。'],
+    mx:['挑選一項常延遲的工作流程，列出提出、決策、執行及核准角色。','與相關角色確認責任邊界、決策權及所需資源，形成簡明 RACI 表。','兩週後檢查是否仍有責任空缺、重複核准或等待情形。'],
+    f:['選定一個資訊交接案例，記錄資訊來源、接收者、回覆及完成時間。','建立交接紀錄，明訂必要欄位、回覆期限及逾期處理方式。','兩週後抽查紀錄，檢視資訊遺漏、延遲與重工情形。'],
+    s:['盤點一個不容易提出疑問或不同意見的工作情境，描述事件與反應。','與團隊討論固定的提問／回饋時段及尊重發聲的回應原則。','兩週後檢視提出問題後是否獲得回應、處理及回饋。']
   };
-  if(r5) {
-    const acts=actionMap[low.key]||[];
-    r5.innerHTML=`<p>依本次相對低分構面 <b>${esc(low.name)}</b>，以下提供可討論的行動草案；請依實際職務與組織情境確認後再採用。</p>
-      ${acts.map((a,i)=>`<div class="pr-action"><b>行動 ${i+1}</b><br>${esc(a)}<div class="pr-muted">建議檢核：保留事件紀錄、執行證據與參與者回饋；實際負責人及期限由使用者確認。</div></div>`).join('')}
-      <p class="pr-muted">以上為依分數所作的初步行動建議，不代表已確認組織根因或已完成改善。</p>`;
-  }
+  if(r5) r5.innerHTML=`
+    <p><b>優先改善假設：</b>先檢視 ${esc(low.name)}，並留意 ${esc(secondLow.name)} 是否在同一事件中共同出現。</p>
+    <p><b>依分數與理論提出的行動草案：</b></p>
+    ${(actionMap[low.key]||[]).map((a,i)=>`<div class="pr-action"><b>行動 ${i+1}</b><br>${esc(a)}<div class="pr-muted">檢核證據：事件紀錄、流程文件、會議紀錄或參與者回饋。</div></div>`).join('')}
+    <p><b>文獻合理性：</b>上述作法屬於由構念與管理框架推導的實務介入假設，不代表相關文獻已證明此行動必然改善該分數；需記錄執行程度與前後變化。</p>
+    <p class="pr-muted">請由參與者與顧問依實際工作情境確認負責角色、期限及可行性，不應由系統自動認定根因。</p>`;
 
+  // 第六卡：研究與顧問追蹤的證據要求。
   if(r6) r6.innerHTML=`
     <div class="pr-metric-grid">
       <div class="pr-metric"><span>T1 基準總分</span><b>${total}<small style="font-size:11px"> / 100</small></b></div>
       <div class="pr-metric"><span>建議追蹤區間</span><b>30–90<small style="font-size:11px"> 天</small></b></div>
     </div>
-    <p><b>T1 四構面基準：</b>${dims.map(d=>`${esc(d.name)} ${d.score}/25`).join('｜')}</p>
-    <p><b>追蹤方式：</b>改善措施執行後，盡可能使用相同版本、相同計分方向及相同或可配對的填答對象進行 T2 複測。</p>
-    <p><b>比較原則：</b>逐構面比較 T1 與 T2；外部量表仍依各自量尺及計分規則獨立分析。</p>
-    <p class="pr-muted">目前只建立 T1 基準，尚未取得 T2 資料；系統不會預先宣稱已改善或已同步資料庫。</p>`;
+    <p><b>T1 四構面：</b>${dims.map(d=>`${esc(d.name)} ${d.score}/25`).join('｜')}</p>
+    <p><b>追蹤分析：</b>比較 T1／T2 各構面及總分變化，並同步記錄措施執行程度、樣本是否相同、施測間隔與外部環境變化。</p>
+    <p><b>研究解釋：</b>單組前後測的分數改變只能描述變化，不能單獨證明顧問介入造成改善；若要推論介入效果，需更嚴謹的對照或準實驗設計。</p>
+    <p><b>文獻與測量品質待辦：</b>確認題項內容效度、專家審查、認知訪談、信度、因素結構及外部效標關聯；Edmondson 團隊心理安全與 PSC-12 心理社會安全氣候須分開計分與解釋。</p>
+    <p class="pr-muted">目前僅建立 T1 基準，尚無 T2 實測結果；外部量表原始分數不得換算成 MMTF 0–25 分混合比較。</p>`;
 }
 
 function unlockStage4() {
