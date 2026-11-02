@@ -1167,24 +1167,65 @@ function unlockStage5() {
 }
 
 function runStage5Review() {
-  let rem = Number(document.getElementById('re-m').value)||0;
-  let remx = Number(document.getElementById('re-mx').value)||0;
-  let ref = Number(document.getElementById('re-f').value)||0;
-  let res = Number(document.getElementById('re-s').value)||0;
-  let reTotal = rem + remx + ref + res;
-
-  let origTotal = Number(document.getElementById('mirror').value) + Number(document.getElementById('matrix').value) + Number(document.getElementById('flow').value) + Number(document.getElementById('safe').value);
-  let diff = reTotal - origTotal;
-
-  let box = document.getElementById('reivew-result-box');
+  const fields = [
+    {key:'m', name:'Mirror', t1:'mirror', t2:'re-m'},
+    {key:'mx', name:'Matrix', t1:'matrix', t2:'re-mx'},
+    {key:'f', name:'Flow', t1:'flow', t2:'re-f'},
+    {key:'s', name:'Safety', t1:'safe', t2:'re-s'}
+  ];
+  const rows = fields.map(d => {
+    const before = Number(document.getElementById(d.t1).value);
+    const after = Number(document.getElementById(d.t2).value);
+    return {...d, before, after, delta:after-before};
+  });
+  const invalid = rows.find(r => !Number.isInteger(r.before) || r.before<0 || r.before>25 ||
+                                  !Number.isInteger(r.after) || r.after<0 || r.after>25);
+  const box = document.getElementById('reivew-result-box');
   box.style.display = 'block';
+  if (invalid) {
+    box.innerHTML = `<b>無法產生覆盤報告</b><br>請確認 ${invalid.name} 的前測與複測分數皆為 0～25 的整數。`;
+    return;
+  }
+
+  const origTotal = rows.reduce((sum,r)=>sum+r.before,0);
+  const reTotal = rows.reduce((sum,r)=>sum+r.after,0);
+  const diff = reTotal-origTotal;
+  const increased = rows.filter(r=>r.delta>0);
+  const unchanged = rows.filter(r=>r.delta===0);
+  const decreased = rows.filter(r=>r.delta<0);
+  const fmt = n => `${n>0?'+':''}${n}`;
+  const rowHtml = rows.map(r => {
+    const label = r.delta>0?'上升':r.delta<0?'下降':'持平';
+    const color = r.delta>0?'#16845b':r.delta<0?'#c62828':'#64748b';
+    return `<tr>
+      <td style="padding:6px;border-bottom:1px solid #eee">${r.name}</td>
+      <td style="padding:6px;text-align:center;border-bottom:1px solid #eee">${r.before}</td>
+      <td style="padding:6px;text-align:center;border-bottom:1px solid #eee">${r.after}</td>
+      <td style="padding:6px;text-align:center;border-bottom:1px solid #eee;color:${color};font-weight:700">${fmt(r.delta)}（${label}）</td>
+    </tr>`;
+  }).join('');
+
+  let conclusion;
+  if (diff>0) {
+    conclusion = `複測總分較前測增加 ${diff} 分，呈現<strong>整體分數上升</strong>。上升構面：${increased.map(r=>r.name).join('、')||'無'}；下降構面：${decreased.map(r=>r.name).join('、')||'無'}；持平構面：${unchanged.map(r=>r.name).join('、')||'無'}。`;
+  } else if (diff<0) {
+    conclusion = `複測總分較前測減少 ${Math.abs(diff)} 分，呈現<strong style="color:#c62828">整體分數下降</strong>，不能解讀為成長。下降構面：${decreased.map(r=>r.name).join('、')||'無'}；上升構面：${increased.map(r=>r.name).join('、')||'無'}；持平構面：${unchanged.map(r=>r.name).join('、')||'無'}。建議回到實際工作情境，確認變化原因及是否有外部因素影響。`;
+  } else {
+    conclusion = `前後測總分相同，呈現<strong>整體分數持平</strong>。仍須查看各構面是否有升降互抵。`;
+  }
+
   box.innerHTML = `
-    <b>📊 30-90 天成效迭代覆盤報告：</b><br>
-    • <b>前測總分：</b> ${origTotal} 分 ➔ <b>複測總分：</b> ${reTotal} 分（<b>${diff >= 0 ? '+' + diff : diff} 分</b>）<br>
-    • <b>系統狀態：</b> 資料已成功同步至後端資料庫，各構面改善幅度顯著，組織韌性與行動力呈現正向成長！
+    <b>📊 30–90 天成效迭代覆盤報告</b><br>
+    • <b>前測總分：</b>${origTotal} 分 → <b>複測總分：</b>${reTotal} 分（<b>${fmt(diff)} 分</b>）<br>
+    <table style="width:100%;border-collapse:collapse;margin:10px 0;font-size:12px">
+      <thead><tr style="background:#f4effb"><th style="padding:6px;text-align:left">構面</th><th>前測</th><th>複測</th><th>差異</th></tr></thead>
+      <tbody>${rowHtml}</tbody>
+    </table>
+    • <b>結果判讀：</b>${conclusion}<br>
+    • <b>資料狀態：</b>本頁已完成前後測數值比較；目前此 HTML 為前端計算，尚未連接後端資料庫，因此不代表資料已同步或永久保存。<br>
+    • <b>解讀限制：</b>分數上升／下降僅表示自評數值變化；未進行統計顯著性檢定，也不能單憑前後測差異證明改善措施造成變化。
   `;
 }
-
 function exportToExcel() {
   let m = document.getElementById('mirror').value;
   let mx = document.getElementById('matrix').value;
