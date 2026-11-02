@@ -111,6 +111,20 @@ main{max-width:1650px;margin:auto;padding:16px}
 .rc-title{font-size:14px;font-weight:900;color:#174875;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 .rc-title span{background:#521493;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px}
 .report-card p{font-size:13px;line-height:1.5;margin:0}
+.personal-report-content{font-size:13px;line-height:1.65;color:#23415f}
+.personal-report-content .pr-intro{margin:0 0 8px}
+.personal-report-content .pr-metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:9px 0}
+.personal-report-content .pr-metric{background:rgba(255,255,255,.82);border:1px solid #e4eaf2;border-radius:8px;padding:8px}
+.personal-report-content .pr-metric b{display:block;font-size:19px;color:#521493}
+.personal-report-content .pr-list{margin:6px 0 0;padding-left:18px}
+.personal-report-content .pr-list li{margin:4px 0}
+.personal-report-content .pr-dim{padding:7px 0;border-bottom:1px solid #e7edf5}
+.personal-report-content .pr-dim:last-child{border-bottom:0}
+.personal-report-content .pr-muted{font-size:11px;color:#64748b}
+.personal-report-content .pr-chip{display:inline-block;border-radius:4px;padding:2px 7px;background:#f0e8ff;color:#521493;font-size:11px;font-weight:800;margin:2px 3px 2px 0}
+.personal-report-content .pr-action{padding:8px;margin:7px 0;background:#fff;border:1px solid #eadff8;border-radius:7px}
+.personal-report-content .pr-quote{padding:7px 9px;margin:6px 0;background:rgba(255,255,255,.8);border-left:3px solid #a78bfa;border-radius:4px;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:700px){.personal-report-content .pr-metric-grid{grid-template-columns:1fr 1fr}}
 
 /* 第五階段覆盤樣式 */
 .stage5-box{background:linear-gradient(135deg,#f3eafc,#fff);border:2px dashed #9a4efe;border-radius:12px;padding:16px;margin-top:16px}
@@ -408,28 +422,28 @@ main{max-width:1650px;margin:auto;padding:16px}
     <div class="module-title"><span>🎨</span> 模組四：參與者個人報告（六大繽紛精簡區塊 ── 含文獻理論簡述）</div>
     <div class="report-grid-6">
       <div class="report-card rc-1">
-        <div class="rc-title">01｜我的 MMTF 回饋總覽 <span id="r1-tag">總分 35</span></div>
-        <p>呈現四構面量化分數、總分，以及類型初步解讀。</p>
+        <div class="rc-title">01｜我的整體診斷結果 <span id="r1-tag">總分 --</span></div>
+        <div id="personal-r1" class="personal-report-content">完成前面階段後，這裡會呈現本次個人量化結果。</div>
       </div>
       <div class="report-card rc-2">
-        <div class="rc-title">02｜四構面輪廓與文獻參照 <span>理論基礎</span></div>
-        <p><b>Mirror</b>(Johari Window 賈哈里窗) ╳ <b>Matrix</b>(Galbraith Star Model 星狀模型) ╳ <b>Flow</b>(Shannon & Weaver 資訊傳播模型) ╳ <b>Safety</b>(Edmondson 心理安全感模型)。</p>
+        <div class="rc-title">02｜我的四構面分析 <span>理論參照</span></div>
+        <div id="personal-r2" class="personal-report-content">依四構面分數呈現各自的觀察與理論參照。</div>
       </div>
       <div class="report-card rc-3">
-        <div class="rc-title">03｜我可以看見什麼？ <span>客觀鏡像</span></div>
-        <p>相對較高與較低構面之落差，以非批判性文字協助理解。</p>
+        <div class="rc-title">03｜我的優勢與待改善處 <span>相對差異</span></div>
+        <div id="personal-r3" class="personal-report-content">依本次分數辨識相對優勢與需要進一步了解的構面。</div>
       </div>
       <div class="report-card rc-4">
-        <div class="rc-title">04｜值得思考的問題 <span>情境連結</span></div>
-        <p>結合量化數據與質性填答，反思跨部門專案中面臨的挑戰。</p>
+        <div class="rc-title">04｜我的填答與情境觀察 <span>質性線索</span></div>
+        <div id="personal-r4" class="personal-report-content">整理本次實際填答及規則式語言線索。</div>
       </div>
       <div class="report-card rc-5">
-        <div class="rc-title">05｜我的下一步行動 <span>IDP 行動</span></div>
-        <p>提供 1 至 3 項可執行的小行動、預計完成時間與個人檢視方式。</p>
+        <div class="rc-title">05｜我的改善行動建議 <span>IDP 行動</span></div>
+        <div id="personal-r5" class="personal-report-content">依相對低分構面提出可討論、可追蹤的改善行動。</div>
       </div>
       <div class="report-card rc-6">
-        <div class="rc-title">06｜我的後續追蹤 <span>永續覆盤</span></div>
-        <p>記錄個人反思與改善項目，設定 30-90 天後重新複測與迭代日期。</p>
+        <div class="rc-title">06｜我的改善追蹤與再評估 <span>T1 → T2</span></div>
+        <div id="personal-r6" class="personal-report-content">保留本次 T1 基準，供 30～90 天後追蹤比較。</div>
       </div>
     </div>
     
@@ -851,6 +865,9 @@ function drawQuadrant(quadrantX, quadrantY, m, mx, f, s_val) {
   svgContent += `<line x1="${px}" y1="${py}" x2="${px}" y2="${py-26}" stroke="#c90020" stroke-width="2.5"/><circle cx="${px}" cy="${py}" r="11" fill="#c90020" stroke="#fff" stroke-width="2.5"/><rect x="${resultLabelX}" y="${resultLabelY}" width="160" height="44" rx="6" fill="#c90020" stroke="#fff" stroke-width="1.2"/><text x="${resultLabelX+80}" y="${resultLabelY+18}" text-anchor="middle" font-size="13" fill="#fff" font-weight="900">本次結果位置</text><text x="${resultLabelX+80}" y="${resultLabelY+36}" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">(${quadrantX.toFixed(1)}, ${quadrantY.toFixed(1)})</text>`;
 
   svg.innerHTML = svgContent;
+  // 防護清理：圖表只允許象限底色、標籤、中央分隔線、座標文字與本次落點；
+  // 移除任何殘留的裝飾曲線（path / polyline），避免舊版曲線混入。
+  svg.querySelectorAll('path, polyline').forEach(node => node.remove());
 
   let currentQuadName = quadrantX < 2.5 ? (quadrantY < 2.5 ? '第三象限｜失衡風險區' : '第二象限｜潛能未釋放區') : (quadrantY < 2.5 ? '第四象限｜看見未轉化區' : '第一象限｜最佳運作區');
   let sumAw = m + s_val;
@@ -980,7 +997,112 @@ function buildMMTFConsistencyStatement(dim,result){
   if(result.dimensions.includes(dim.name))return `文字中出現與 ${dim.name} 相關的語言線索，與量化結果呈現初步主題對應；目前僅為規則式辨識，仍須顧問核對原文與事件。`;
   return `目前辨識到的文字線索未明確對應 ${dim.name}；不能因此認定量化結果錯誤，應追問情境並檢查量表題項、受試者理解及其他資料來源。`;
 }
+function populatePersonalReport() {
+  const dims=getCurrentDimensionScores();
+  const total=dims.reduce((sum,d)=>sum+d.score,0);
+  const avg=(total/20).toFixed(2);
+  const sorted=[...dims].sort((a,b)=>b.score-a.score);
+  const high=sorted[0], low=sorted[sorted.length-1], secondLow=sorted[sorted.length-2];
+  const esc=v=>escapeHtml(String(v??''));
+  const modelEl=document.getElementById('v-type');
+  const model=modelEl?.innerText?.trim()||'尚未產生類型判讀';
+  const modelDesc=document.getElementById('v-type-desc')?.innerText?.trim()||'';
+  const band=score=>score>=18?'相對較高':score>=12?'中間區間':'相對較低';
+  const r1=document.getElementById('personal-r1');
+  const r2=document.getElementById('personal-r2');
+  const r3=document.getElementById('personal-r3');
+  const r4=document.getElementById('personal-r4');
+  const r5=document.getElementById('personal-r5');
+  const r6=document.getElementById('personal-r6');
+  const tag=document.getElementById('r1-tag');
+  if(tag) tag.textContent=`總分 ${total}/100`;
+
+  if(r1) r1.innerHTML=`
+    <p class="pr-intro">本次 MMTF 自評總分為 <b>${total}/100</b>，四構面平均為 <b>${avg}/5</b>。</p>
+    <div class="pr-metric-grid">
+      <div class="pr-metric"><span>MMTF 總分</span><b>${total}<small style="font-size:11px;color:#64748b"> / 100</small></b></div>
+      <div class="pr-metric"><span>四構面平均</span><b>${avg}<small style="font-size:11px;color:#64748b"> / 5</small></b></div>
+    </div>
+    <p><b>目前分數區間對應：</b>${esc(model)}</p>
+    ${modelDesc?`<p>${esc(modelDesc)}</p>`:''}
+    <p class="pr-muted">此類型依目前系統操作性分級呈現，並非經臨床或常模診斷的個人標籤。</p>`;
+
+  if(r2) r2.innerHTML=dims.map(d=>`
+    <div class="pr-dim"><b>${esc(d.name)}｜${d.score}/25</b> <span class="pr-chip">${band(d.score)}</span>
+      <div>${esc(d.zh)}；理論參照：${esc(d.theory)}。</div>
+      <div class="pr-muted">工具／量表參照：${esc(d.scale)}</div>
+    </div>`).join('');
+
+  const gap=high.score-low.score;
+  if(r3) r3.innerHTML=`
+    <p><b>相對優勢構面：</b>${esc(high.name)}（${high.score}/25）。</p>
+    <p><b>優先了解構面：</b>${esc(low.name)}（${low.score}/25）；其次為 ${esc(secondLow.name)}（${secondLow.score}/25）。</p>
+    <div class="pr-metric-grid">
+      <div class="pr-metric"><span>最高構面</span><b>${high.score}<small style="font-size:11px"> / 25</small></b></div>
+      <div class="pr-metric"><span>最低構面</span><b>${low.score}<small style="font-size:11px"> / 25</small></b></div>
+    </div>
+    <p>最高與最低構面相差 <b>${gap}</b> 分。這代表本次自評中各構面的相對差異，不能單憑分數差距推定實際原因或責任歸屬。</p>
+    <p class="pr-muted">相對優勢不代表已無改善空間；相對低分則應搭配具體事件、工作流程及其他資料來源再確認。</p>`;
+
+  const answers=[
+    {label:'問題一',text:document.getElementById('qual-ans-1')?.value?.trim()||''},
+    {label:'問題二',text:document.getElementById('qual-ans-2')?.value?.trim()||''}
+  ];
+  if(r4) {
+    const answerHtml=answers.map(a=>{
+      if(!a.text) return `<div class="pr-quote"><b>${a.label}：</b>未填答，沒有可供分析的文字。</div>`;
+      const lpa=analyzeMMTFLanguage(a.text);
+      return `<div class="pr-quote"><b>${a.label}原始回答：</b>${esc(a.text)}</div>
+        <div><b>語言線索：</b>${lpa.hits.length?lpa.hits.map(h=>`<span class="pr-chip">${esc(h.term)}｜${esc(h.dimension||h.type)}</span>`).join(''):'目前詞庫未辨識到明確線索'}</div>
+        <div><b>可能構面：</b>${lpa.dimensions.length?lpa.dimensions.map(esc).join('、'):'無明確構面線索'}</div>
+        <div><b>證據等級：</b>${esc(lpa.level)}｜${esc(lpa.levelName)}</div>
+        <div class="pr-muted"><b>限制：</b>${esc(lpa.limit)} <b>建議追問：</b>${esc(lpa.followup)}</div>`;
+    }).join('');
+    r4.innerHTML=`${answerHtml}<p class="pr-muted">LPA 為詞庫規則式語言線索提示，不是心理診斷；命中不代表問題成立，未命中也不代表沒有問題。</p>`;
+  }
+
+  const actionMap={
+    m:[
+      '選定一項近期工作事件，記錄自己原先的判斷、他人回饋與事後差異。',
+      '安排一次具體、聚焦工作事實的雙向回饋對話，記錄可採取的修正。',
+      '於兩週後回看回饋紀錄，確認是否出現新的觀察或行動。'
+    ],
+    mx:[
+      '挑選一項常延遲的工作流程，列出提出、決策、執行及核准角色。',
+      '與相關角色確認責任邊界、決策權及所需資源，形成簡明 RACI 表。',
+      '兩週後檢查是否仍有責任空缺、重複核准或等待情形。'
+    ],
+    f:[
+      '選定一個跨單位資訊交接案例，記錄資訊來源、接收者、回覆及完成時間。',
+      '建立單一交接紀錄，明訂必要欄位、回覆期限及逾期提醒方式。',
+      '兩週後抽查交接紀錄，檢視資訊遺漏、延遲與重工情形。'
+    ],
+    s:[
+      '盤點一個曾經不容易提出疑問或不同意見的工作情境，先描述事件與反應。',
+      '與主管或團隊約定固定的提問／回饋時段及不責備的回應原則。',
+      '兩週後檢視提出問題後是否獲得回應、處理及回饋。'
+    ]
+  };
+  if(r5) {
+    const acts=actionMap[low.key]||[];
+    r5.innerHTML=`<p>依本次相對低分構面 <b>${esc(low.name)}</b>，以下提供可討論的行動草案；請依實際職務與組織情境確認後再採用。</p>
+      ${acts.map((a,i)=>`<div class="pr-action"><b>行動 ${i+1}</b><br>${esc(a)}<div class="pr-muted">建議檢核：保留事件紀錄、執行證據與參與者回饋；實際負責人及期限由使用者確認。</div></div>`).join('')}
+      <p class="pr-muted">以上為依分數所作的初步行動建議，不代表已確認組織根因或已完成改善。</p>`;
+  }
+
+  if(r6) r6.innerHTML=`
+    <div class="pr-metric-grid">
+      <div class="pr-metric"><span>T1 基準總分</span><b>${total}<small style="font-size:11px"> / 100</small></b></div>
+      <div class="pr-metric"><span>建議追蹤區間</span><b>30–90<small style="font-size:11px"> 天</small></b></div>
+    </div>
+    <p><b>T1 四構面基準：</b>${dims.map(d=>`${esc(d.name)} ${d.score}/25`).join('｜')}</p>
+    <p><b>追蹤方式：</b>改善措施執行後，盡可能使用相同版本、相同計分方向及相同或可配對的填答對象進行 T2 複測。</p>
+    <p><b>比較原則：</b>逐構面比較 T1 與 T2；外部量表仍依各自量尺及計分規則獨立分析。</p>
+    <p class="pr-muted">目前只建立 T1 基準，尚未取得 T2 資料；系統不會預先宣稱已改善或已同步資料庫。</p>`;
+}
+
 function unlockStage4() {
+  populatePersonalReport();
   document.getElementById('stage4-sec').style.display = 'block';
   currentUnlockedStage = Math.max(currentUnlockedStage, 4);
   let nav4 = document.getElementById('nav-stage4');
